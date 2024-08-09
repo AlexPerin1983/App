@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de M² e Orçamento de Películas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <style>
+        /* Importação de fonte */
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@600;700&display=swap');
+
+        /* Estilos gerais do corpo da página */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f4f8;
+            color: #333;
+        }
+
+        /* Container principal */
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Estilos do cabeçalho */
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 24px;
+            color: #2c3e50;
+            margin: 0;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        /* Estilos do container de cliente */
+        .cliente-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .cliente-container select,
+        .cliente-container input,
+        .cliente-container button {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            transition: all 0.3s ease;
+        }
+
+        .cliente-container button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .cliente-container button:hover {
+            background: #45a049;
+        }
+
+        .cliente-container .hidden {
+            display: none;
+        }
+
+        /* Estilos do grupo de medidas */
+        .medida-group {
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .medida-group:hover {
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .medida-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 5px;
+            flex-wrap: wrap; /* Allow items to wrap to the next line */
+        }
+
+        /* Estilos dos inputs numéricos */
+        .medida-group input[type="number"] {
+            flex: 1;
+            min-width: 0;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .medida-group input[placeholder="T"] {
+            flex: 1.5;
+        }
+
+        /* Estilo da checkbox */
+        .medida-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
+            flex-shrink: 0;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+
+        /* Estilos dos botões de ação dentro dos grupos de medidas */
+        .medida-row .toggle-icon,
+        .medida-row .delete-button,
+        .medida-row .duplicate-button {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+            transition: all 0.3s ease;
+            margin-left: 5px;
+        }
+
+        .medida-row .toggle-icon {
+            background-color: #2196F3;
+        }
+
+        .medida-row .delete-button {
+            background-color: #f44336;
+        }
+
+        .medida-row .duplicate-button {
+            background-color: #4CAF50;
+        }
+
+        .medida-row .toggle-icon:hover,
+        .medida-row .delete-button:hover,
+        .medida-row .duplicate-button:hover {
+            transform: scale(1.1);
+        }
+
+        /* Estilo do resultado total */
+        .resultado {
+            text-align: right;
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        /* Estilos do container de botões */
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        /* Estilos dos botões principais */
+        .button-container .add-button,
+        .button-container .clear-button,
+        .button-container .pdf-button,
+        .button-container .duplicate-button {
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+            flex-grow: 1;
+            text-align: center;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        .button-container .add-button {
+            background: linear-gradient(45deg, #4CAF50, #388E3C);
+        }
+
+        .button-container .clear-button {
+            background: linear-gradient(45deg, #FF5722, #E64A19);
+        }
+
+        .button-container .pdf-button {
+            background: linear-gradient(45deg, #2196F3, #1976D2);
+        }
+
+        .button-container .duplicate-button {
+            background: linear-gradient(45deg, #FFC107, #FFA000);
+        }
+
+        .button-container .add-button:hover,
+        .button-container .clear-button:hover,
+        .button-container .pdf-button:hover,
+        .button-container .duplicate-button:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Estilos dos campos adicionais */
+        .additional-fields {
+            display: none;
+            gap: 10px;
+        }
+
+        .additional-fields select {
+            flex: 1;
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        /* Estilo para o dropdown de películas */
+        .pelicula-select-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .pelicula-select {
+            flex: 1;
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            max-width: 750px; /* Defina um valor adequado para a largura máxima */
+        }
+
+        /* Estilos para dispositivos móveis */
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+                margin: 10px;
+            }
+
+            .medida-group {
+                padding: 8px 5px;
+            }
+
+            .medida-row {
+                flex-wrap: wrap;
+            }
+
+            .medida-group input[type="checkbox"] {
+                width: 16px;
+                height: 16px;
+                margin-right: 5px;
+            }
+
+            .medida-group input[type="number"] {
+                padding: 8px;
+                font-size: 15px;
+            }
+
+            .medida-row .toggle-icon,
+            .medida-row .delete-button,
+            .medida-row .duplicate-button {
+                width: 20px;
+                height: 20px;
+                font-size: 12px;
+            }
+
+            .additional-fields {
+                flex-direction: column;
+            }
+
+            .button-container {
+                flex-direction: column;
+            }
+
+            .button-container .add-button,
+            .button-container .clear-button,
+            .button-container .pdf-button,
+            .button-container .duplicate-button {
+                width: 100%;
+                margin: 5px 0;
+            }
+        }
+
+        /* Estilo do modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Calculadora de M² e Orçamento de Películas</h1>
+        </div>
+        <div class="cliente-container">
+            <select id="clienteSelect" class="hidden" onchange="onClienteChange()">
+                <option value="">Selecione um cliente</option>
+            </select>
+            <div id="editIconContainer" class="hidden">
+                <button onclick="editarCliente()">✏️</button>
+                <button onclick="confirmClearMedidas()">🗑️</button>
+            </div>
+            <div id="clienteFields" class="hidden">
+                <input type="text" id="novoClienteInput" placeholder="Novo cliente">
+                <input type="text" id="telefoneClienteInput" placeholder="Telefone">
+                <input type="text" id="enderecoClienteInput" placeholder="Endereço">
+                <input type="text" id="cpfClienteInput" placeholder="CPF">
+                <button onclick="adicionarCliente()">Adicionar Cliente</button>
+            </div>
+            <button id="addNewClienteBtn" onclick="mostrarCamposNovoCliente()">Adicionar Cliente</button>
+        </div>
+        <div id="medidasContainer"></div>
+        <div class="resultado" id="resultado">Total M²: 0,00 | Preço Total: R$ 0,00</div>
+        <div class="button-container">
+            <button class="add-button" onclick="addMedidaGroup(true)">Adicionar Medida</button>
+            <button class="duplicate-button" onclick="duplicarMedidas()">Duplicar Medidas</button>
+            <button class="pdf-button" id="generatePdfButton">Gerar PDF</button>
+            <button class="share-button" onclick="gerarUrlCompartilhamento()">Compartilhar URL</button>
+        </div>
+    </div>
+
+    <!-- Modal de Edição -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="fecharModal()">&times;</span>
+            <h2>Editar Cliente</h2>
+            <input type="text" id="editNomeCliente" placeholder="Nome">
+            <input type="text" id="editTelefoneCliente" placeholder="Telefone">
+            <input type="text" id="editEnderecoCliente" placeholder="Endereço">
+            <input type="text" id="editCpfCliente" placeholder="CPF">
+            <button onclick="salvarEdicaoCliente()">Salvar</button>
+        </div>
+    </div>
+
+    <script>
+        const peliculas = [
+            { nome: "Reflecta 15", infravermelho: 90, ultravioleta: 99, vlt: 20, preco: 120 },
+            { nome: "Window BLUE", infravermelho: 90, ultravioleta: 99, vlt: 75, preco: 220 },
+            { nome: "Carbono Window Usa", infravermelho: 80, ultravioleta: 99, vlt: 5, preco: 100 },
+            { nome: "Silver 10 Externa", infravermelho: 95, ultravioleta: 99, vlt: 10, preco: 280 },
+            { nome: "Prata Reflecta", infravermelho: 95, ultravioleta: 99, vlt: 5, preco: 120 },
+            { nome: "Prata Reflecta 15", infravermelho: 90, ultravioleta: 99, vlt: 20, preco: 120 },
+            { nome: "Origin Carbon", infravermelho: 90, ultravioleta: 99, vlt: 5, preco: 150 },
+            { nome: "Vinil Blackout", infravermelho: 80, ultravioleta: 99, vlt: 0, preco: 130 },
+            { nome: "Vinil Jateado", infravermelho: 28, ultravioleta: 99, vlt: 10, preco: 120 },
+            { nome: "Vinil Perfurado", infravermelho: 18, ultravioleta: 50, vlt: 70, preco: 85 },
+            { nome: "Window Premium", infravermelho: 90, ultravioleta: 99, vlt: 5, preco: 160 }
+        ];
+
+        let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
+        const clienteSelect = document.getElementById('clienteSelect');
+
+        document.addEventListener('DOMContentLoaded', () => {
+            carregarClientes();
+            document.getElementById('generatePdfButton').addEventListener('click', generatePDF_v7_10);
+
+            // Verifica se a URL contém parâmetros e recupera os dados
+            const params = new URLSearchParams(window.location.search);
+
+            const nomeCliente = params.get('nome');
+            const larguras = (params.get('largura') || '').split(',');
+            const alturas = (params.get('altura') || '').split(',');
+            const quantidades = (params.get('quantidade') || '').split(',');
+            const peliculas = (params.get('pelicula') || '').split(',');
+
+            if (nomeCliente) {
+                document.getElementById('novoClienteInput').value = nomeCliente;
+            }
+
+            if (larguras.length > 0 && alturas.length > 0 && quantidades.length > 0 && peliculas.length > 0) {
+                larguras.forEach((largura, index) => {
+                    addMedidaGroup(false, larguras[index], alturas[index], quantidades[index], true, "", "", peliculas[index]);
+                });
+            }
+
+            if (clientes.length === 0) {
+                document.getElementById('clienteFields').classList.remove('hidden');
+                document.getElementById('addNewClienteBtn').classList.add('hidden');
+            }
+        });
+
+        function salvarClientesNoStorage() {
+            localStorage.setItem('clientes', JSON.stringify(clientes));
+        }
+
+        function salvarClienteSelecionadoNoStorage(cliente) {
+            localStorage.setItem('clienteSelecionado', cliente);
+        }
+
+        function carregarClienteSelecionadoDoStorage() {
+            return localStorage.getItem('clienteSelecionado');
+        }
+
+        function adicionarCliente() {
+            const novoClienteInput = document.getElementById('novoClienteInput');
+            const telefoneClienteInput = document.getElementById('telefoneClienteInput');
+            const enderecoClienteInput = document.getElementById('enderecoClienteInput');
+            const cpfClienteInput = document.getElementById('cpfClienteInput');
+            const novoCliente = novoClienteInput.value.trim();
+            const telefoneCliente = telefoneClienteInput.value.trim();
+            const enderecoCliente = enderecoClienteInput.value.trim();
+            const cpfCliente = cpfClienteInput.value.trim();
+
+            if (novoCliente && !clientes.some(cliente => cliente.nome === novoCliente)) {
+                const novoClienteObj = {
+                    nome: novoCliente,
+                    telefone: telefoneCliente,
+                    endereco: enderecoCliente,
+                    cpf: cpfCliente
+                };
+                clientes.push(novoClienteObj);
+                salvarClientesNoStorage();
+                carregarClientes(novoCliente);
+                novoClienteInput.value = '';
+                telefoneClienteInput.value = '';
+                enderecoClienteInput.value = '';
+                cpfClienteInput.value = '';
+                document.getElementById('clienteFields').classList.add('hidden');
+                document.getElementById('addNewClienteBtn').classList.remove('hidden');
+            }
+        }
+
+        function carregarClientes(clienteSelecionado = '') {
+            clienteSelect.innerHTML = '<option value="">Selecione um cliente</option>';
+            if (clientes.length > 0) {
+                clienteSelect.classList.remove('hidden');
+                clientes.forEach(cliente => {
+                    const option = document.createElement('option');
+                    option.value = cliente.nome;
+                    option.textContent = cliente.nome;
+                    clienteSelect.appendChild(option);
+                });
+
+                if (clienteSelecionado) {
+                    clienteSelect.value = clienteSelecionado;
+                    loadMedidas();
+                } else {
+                    const ultimoClienteSelecionado = carregarClienteSelecionadoDoStorage();
+                    if (ultimoClienteSelecionado && clientes.some(cliente => cliente.nome === ultimoClienteSelecionado)) {
+                        clienteSelect.value = ultimoClienteSelecionado;
+                    } else if (clientes.length > 0) {
+                        clienteSelect.value = clientes[clientes.length - 1].nome;
+                    }
+                    loadMedidas();
+                }
+            } else {
+                clienteSelect.classList.add('hidden');
+            }
+        }
+
+        function onClienteChange() {
+            const clienteSelecionado = clienteSelect.value;
+            salvarClienteSelecionadoNoStorage(clienteSelecionado);
+            loadMedidas();
+
+            if (clienteSelecionado) {
+                document.getElementById('editIconContainer').classList.remove('hidden');
+            } else {
+                document.getElementById('editIconContainer').classList.add('hidden');
+            }
+        }
+
+        function editarCliente() {
+            const clienteSelecionado = clienteSelect.value;
+            if (clienteSelecionado) {
+                const cliente = clientes.find(c => c.nome === clienteSelecionado);
+                document.getElementById('editNomeCliente').value = cliente.nome;
+                document.getElementById('editTelefoneCliente').value = cliente.telefone;
+                document.getElementById('editEnderecoCliente').value = cliente.endereco;
+                document.getElementById('editCpfCliente').value = cliente.cpf;
+                document.getElementById('editModal').style.display = 'block';
+            }
+        }
+
+        function fecharModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        function salvarEdicaoCliente() {
+            const clienteSelecionado = clienteSelect.value;
+            const cliente = clientes.find(c => c.nome === clienteSelecionado);
+            cliente.nome = document.getElementById('editNomeCliente').value;
+            cliente.telefone = document.getElementById('editTelefoneCliente').value;
+            cliente.endereco = document.getElementById('editEnderecoCliente').value;
+            cliente.cpf = document.getElementById('editCpfCliente').value;
+            salvarClientesNoStorage();
+            carregarClientes(cliente.nome);
+            fecharModal();
+        }
+
+        function mostrarCamposNovoCliente() {
+            document.getElementById('clienteFields').classList.remove('hidden');
+            document.getElementById('addNewClienteBtn').classList.add('hidden');
+        }
+
+        function addMedidaGroup(isFirst, largura = '', altura = '', quantidade = 1, isChecked = true, ambiente = '', tipoAplicacao = '', peliculaSelecionada = '') {
+            const container = document.getElementById('medidasContainer');
+            const medidaGroup = document.createElement('div');
+            medidaGroup.classList.add('medida-group');
+
+            medidaGroup.innerHTML = `
+                <div class="medida-row">
+                    <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleInputs(this)">
+                    <input type="number" inputmode="decimal" placeholder="L" value="${largura}" class="largura-input" oninput="calculateTotal()">
+                    <input type="number" inputmode="decimal" placeholder="A" value="${altura}" class="altura-input" oninput="calculateTotal()">
+                    <input type="number" inputmode="numeric" placeholder="Q" value="${quantidade}" class="quantidade-input" oninput="calculateTotal()">
+                    <input type="number" placeholder="T" disabled>
+                </div>
+                <div class="pelicula-select-row">
+                    <select class="pelicula-select" onchange="calculateTotal()">
+                        <option value="">Película</option>
+                        ${peliculas.map(p => `<option value="${p.nome}" ${p.nome === peliculaSelecionada ? 'selected' : ''}>${p.nome}</option>`).join('')}
+                    </select>
+                    <button class="toggle-icon" onclick="toggleAdditionalFields(this)">▼</button>
+                    <button class="delete-button" onclick="deleteMedidaGroup(this)">×</button>
+                    <button class="duplicate-button" onclick="duplicarGrupo(this)">⎘</button>
+                </div>
+                <div class="additional-fields">
+                    <select onchange="calculateTotal()">
+                        <option value="">Ambiente</option>
+                        <!-- Opções de ambiente -->
+                    </select>
+                    <select onchange="calculateTotal()">
+                        <option value="">Tipo de Aplicação</option>
+                        <!-- Opções de tipo de aplicação -->
+                    </select>
+                </div>
+            `;
+
+            container.appendChild(medidaGroup);
+            calculateTotal();
+        }
+
+        function duplicarGrupo(button) {
+            const group = button.closest('.medida-group');
+            const largura = group.querySelector('input[placeholder="L"]').value || '';
+            const altura = group.querySelector('input[placeholder="A"]').value || '';
+            const quantidade = group.querySelector('input[placeholder="Q"]').value || '';
+            const ambiente = group.querySelector('.additional-fields select:nth-of-type(1)').value || '';
+            const tipoAplicacao = group.querySelector('.additional-fields select:nth-of-type(2)').value || '';
+            const peliculaSelecionada = group.querySelector('.pelicula-select').value || '';
+
+            addMedidaGroup(false, largura, altura, quantidade, true, ambiente, tipoAplicacao, peliculaSelecionada);
+        }
+
+        function toggleAdditionalFields(button) {
+            const fields = button.closest('.medida-group').querySelector('.additional-fields');
+            if (fields.style.display === 'none' || fields.style.display === '') {
+                fields.style.display = 'flex';
+                button.textContent = '▲';
+            } else {
+                fields.style.display = 'none';
+                button.textContent = '▼';
+            }
+        }
+
+        function deleteMedidaGroup(button) {
+            if (confirm('Tem certeza que deseja excluir este grupo de medidas?')) {
+                button.closest('.medida-group').remove();
+                calculateTotal();
+                saveMedidas();
+            }
+        }
+
+        function duplicarMedidas() {
+            const medidaGroups = document.querySelectorAll('.medida-group');
+            medidaGroups.forEach(group => {
+                const largura = group.querySelector('input[placeholder="L"]').value || '';
+                const altura = group.querySelector('input[placeholder="A"]').value || '';
+                const quantidade = group.querySelector('input[placeholder="Q"]').value || '';
+                const ambiente = group.querySelector('.additional-fields select:nth-of-type(1)').value || '';
+                const tipoAplicacao = group.querySelector('.additional-fields select:nth-of-type(2)').value || '';
+                const peliculaSelecionada = group.querySelector('.pelicula-select').value || '';
+
+                addMedidaGroup(false, largura, altura, quantidade, true, ambiente, tipoAplicacao, peliculaSelecionada);
+            });
+            calculateTotal();
+        }
+
+        function calculateTotal() {
+            const medidaGroups = document.querySelectorAll('.medida-group');
+            let totalM2 = 0;
+            let precoTotal = 0;
+
+            medidaGroups.forEach(group => {
+                const isChecked = group.querySelector('input[type="checkbox"]').checked;
+                const largura = parseFloat(group.querySelector('input[placeholder="L"]').value) || 0;
+                const altura = parseFloat(group.querySelector('input[placeholder="A"]').value) || 0;
+                const quantidade = parseInt(group.querySelector('input[placeholder="Q"]').value) || 0;
+                const peliculaNome = group.querySelector('.pelicula-select').value;
+                const pelicula = peliculas.find(p => p.nome === peliculaNome);
+
+                const area = largura * altura * quantidade;
+                const preco = pelicula ? area * pelicula.preco : 0;
+
+                if (isChecked) {
+                    totalM2 += area;
+                    precoTotal += preco;
+                    group.querySelector('input[placeholder="T"]').value = area.toFixed(2);
+                } else {
+                    group.querySelector('input[placeholder="T"]').value = '0.00';
+                }
+            });
+
+            document.getElementById('resultado').innerText = `Total M²: ${totalM2.toFixed(2)} | Preço Total: R$ ${precoTotal.toFixed(2)}`;
+            saveMedidas();
+        }
+
+        function toggleInputs(checkbox) {
+            const inputs = checkbox.closest('.medida-row').querySelectorAll('input[type="number"]');
+            inputs.forEach(input => {
+                input.disabled = !checkbox.checked;
+            });
+            calculateTotal();
+        }
+
+        function saveMedidas() {
+            const cliente = clienteSelect.value;
+            if (!cliente) return;
+
+            const medidaGroups = document.querySelectorAll('.medida-group');
+            const medidas = Array.from(medidaGroups).map(group => {
+                const isChecked = group.querySelector('input[type="checkbox"]').checked;
+                const largura = group.querySelector('input[placeholder="L"]').value || '';
+                const altura = group.querySelector('input[placeholder="A"]').value || '';
+                const quantidade = group.querySelector('input[placeholder="Q"]').value || '';
+                const ambiente = group.querySelector('.additional-fields select:nth-of-type(1)').value || '';
+                const tipoAplicacao = group.querySelector('.additional-fields select:nth-of-type(2)').value || '';
+                const pelicula = group.querySelector('.pelicula-select').value || '';
+                return { isChecked, largura, altura, quantidade, ambiente, tipoAplicacao, pelicula };
+            });
+
+            localStorage.setItem(`medidas_${cliente}`, JSON.stringify(medidas));
+        }
+
+        function loadMedidas() {
+            const cliente = clienteSelect.value;
+            const savedMedidas = localStorage.getItem(`medidas_${cliente}`);
+            const medidasContainer = document.getElementById('medidasContainer');
+            medidasContainer.innerHTML = '';
+
+            if (savedMedidas) {
+                const medidas = JSON.parse(savedMedidas);
+                medidas.forEach(medida => {
+                    addMedidaGroup(false, medida.largura, medida.altura, medida.quantidade, medida.isChecked, medida.ambiente, medida.tipoAplicacao, medida.pelicula);
+                });
+            } else {
+                addMedidaGroup(true);
+            }
+            calculateTotal();
+        }
+
+        function clearMedidas() {
+            const cliente = clienteSelect.value;
+            if (!cliente) {
+                alert('Selecione um cliente.');
+                return;
+            }
+
+            localStorage.removeItem(`medidas_${cliente}`);
+            const index = clientes.findIndex(c => c.nome === cliente);
+            if (index > -1) {
+                clientes.splice(index, 1);
+                localStorage.setItem('clientes', JSON.stringify(clientes));
+            }
+
+            carregarClientes();
+            document.getElementById('medidasContainer').innerHTML = '';
+            addMedidaGroup(true);
+            calculateTotal();
+        }
+
+        function confirmClearMedidas() {
+            if (confirm("Tem certeza que deseja apagar este cliente e suas medidas?")) {
+                clearMedidas();
+            }
+        }
+
+        function gerarUrlCompartilhamento() {
+            const nomeCliente = document.getElementById('novoClienteInput').value;
+            const medidaGroups = document.querySelectorAll('.medida-group');
+            
+            let largura = [];
+            let altura = [];
+            let quantidade = [];
+            let pelicula = [];
+
+            medidaGroups.forEach(group => {
+                largura.push(group.querySelector('input[placeholder="L"]').value);
+                altura.push(group.querySelector('input[placeholder="A"]').value);
+                quantidade.push(group.querySelector('input[placeholder="Q"]').value);
+                pelicula.push(group.querySelector('.pelicula-select').value);
+            });
+
+            const baseUrl = window.location.origin + window.location.pathname;
+            const url = `${baseUrl}?nome=${encodeURIComponent(nomeCliente)}&largura=${encodeURIComponent(largura.join(','))}&altura=${encodeURIComponent(altura.join(','))}&quantidade=${encodeURIComponent(quantidade.join(','))}&pelicula=${encodeURIComponent(pelicula.join(','))}`;
+
+            alert(`URL para compartilhar: ${url}`);
+        }
+
+        function generatePDF_v7_10() {
+            try {
+                const clienteNome = clienteSelect.value;
+                if (!clienteNome) {
+                    alert('Selecione um cliente.');
+                    return;
+                }
+
+                const cliente = clientes.find(c => c.nome === clienteNome);
+                if (!cliente) {
+                    alert('Informações do cliente não encontradas.');
+                    return;
+                }
+
+                const { jsPDF } = jspdf;
+                const doc = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: 'a4'
+                });
+
+                const pageWidth = doc.internal.pageSize.width;
+                const pageHeight = doc.internal.pageSize.height;
+                const margin = 20;
+
+                // Paleta de cores simplificada
+                const colors = {
+                    primary: [41, 128, 185],    // Azul principal
+                    secondary: [52, 152, 219],  // Azul secundário
+                    text: [52, 73, 94],         // Azul escuro para texto
+                    lightGray: [236, 240, 241]  // Cinza claro
+                };
+
+                function addCover() {
+                    // Fundo
+                    doc.setFillColor(...colors.lightGray);
+                    doc.rect(0, 0, pageWidth, pageHeight, 'F');
+
+                    // Retângulo superior
+                    doc.setFillColor(...colors.primary);
+                    doc.rect(0, 0, pageWidth, 60, 'F');
+
+                    // Título
+                    doc.setTextColor(255, 255, 255);
+                    doc.setFontSize(30);
+                    doc.setFont("helvetica", 'bold');
+                    doc.text("ORÇAMENTO DE", margin, 40);
+                    doc.text("PELÍCULAS", margin, 55);
+
+                    // Informações do cliente
+                    doc.setTextColor(...colors.text);
+                    doc.setFontSize(14);
+                    doc.setFont("helvetica", 'normal');
+                    doc.text(`Cliente: ${cliente.nome}`, margin, 80);
+                    doc.text(`Telefone: ${cliente.telefone || 'N/A'}`, margin, 90);
+                    doc.text(`Endereço: ${cliente.endereco || 'N/A'}`, margin, 100);
+                    doc.text(`CPF: ${cliente.cpf || 'N/A'}`, margin, 110);
+                    doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')}`, margin, 120);
+
+                    // Slogan da empresa
+                    doc.setTextColor(...colors.secondary);
+                    doc.setFontSize(12);
+                    doc.setFont("helvetica", 'italic');
+                    doc.text("Soluções em Películas de Alta Qualidade", margin, pageHeight - 40);
+
+                    // Linha decorativa
+                    doc.setDrawColor(...colors.primary);
+                    doc.setLineWidth(1);
+                    doc.line(margin, pageHeight - 35, pageWidth - margin, pageHeight - 35);
+                }
+
+                function addFooter() {
+                    const footerHeight = 20;
+                    const footerY = pageHeight - footerHeight;
+
+                    // Fundo do rodapé
+                    doc.setFillColor(...colors.primary);
+                    doc.rect(0, footerY, pageWidth, footerHeight, 'F');
+
+                    // Informações de contato
+                    doc.setTextColor(255, 255, 255);
+                    doc.setFontSize(8);
+                    doc.setFont("helvetica", 'normal');
+                    doc.text("FUME JP | (83) 99301-5765 | www.fumejp.com.br", margin, footerY + 8);
+
+                    // Número da página
+                    doc.text(`Página ${doc.internal.getNumberOfPages()}`, pageWidth - margin, footerY + 8, { align: 'right' });
+                }
+
+                function addPage() {
+                    doc.addPage();
+                    addFooter();
+                    return margin + 20;
+                }
+
+                function addContent() {
+                    let y = addPage();
+
+                    function addSectionTitle(title) {
+                        if (y > pageHeight - 40) y = addPage();
+                        doc.setFillColor(...colors.secondary);
+                        doc.rect(0, y, pageWidth, 10, 'F');
+                        doc.setTextColor(255, 255, 255);
+                        doc.setFontSize(12);
+                        doc.setFont("helvetica", 'bold');
+                        doc.text(title, margin, y + 7);
+                        y += 15;
+                    }
+
+                    function addTableHeader() {
+                        const headers = ["Item", "Dimensões", "Película", "Ambiente", "Tipo", "Área", "Preço"];
+                        const colWidths = [15, 30, 35, 30, 30, 20, 25];
+                        
+                        doc.setFillColor(...colors.primary);
+                        doc.rect(margin, y, pageWidth - 2 * margin, 10, 'F');
+                        doc.setTextColor(255, 255, 255);
+                        doc.setFontSize(9);
+                        doc.setFont("helvetica", 'bold');
+
+                        let xOffset = margin;
+                        headers.forEach((header, index) => {
+                            doc.text(header, xOffset + 2, y + 6.5);
+                            xOffset += colWidths[index];
+                        });
+
+                        y += 12;
+                    }
+
+                    function addMedidaItem(medida, index) {
+                        if (y > pageHeight - 20) y = addPage();
+
+                        const largura = medida.querySelector('input[placeholder="L"]')?.value || '0';
+                        const altura = medida.querySelector('input[placeholder="A"]')?.value || '0';
+                        const quantidade = medida.querySelector('input[placeholder="Q"]')?.value || '0';
+                        const totalM2 = medida.querySelector('input[placeholder="T"]')?.value || '0';
+                        const ambiente = medida.querySelector('.additional-fields select:first-child')?.value || '';
+                        const tipoAplicacao = medida.querySelector('.additional-fields select:last-child')?.value || '';
+                        const peliculaNome = medida.querySelector('.pelicula-select').value || '';
+                        const pelicula = peliculas.find(p => p.nome === peliculaNome);
+
+                        const colWidths = [15, 30, 35, 30, 30, 20, 25];
+                        let xOffset = margin;
+
+                        if (index % 2 === 0) {
+                            doc.setFillColor(...colors.lightGray);
+                        } else {
+                            doc.setFillColor(255, 255, 255);
+                        }
+                        doc.rect(margin, y - 2, pageWidth - 2 * margin, 10, 'F');
+
+                        doc.setTextColor(...colors.text);
+                        doc.setFontSize(8);
+                        doc.setFont("helvetica", 'normal');
+
+                        doc.text(`${index + 1}`, xOffset + 2, y + 4);
+                        xOffset += colWidths[0];
+                        doc.text(`${largura}x${altura} (${quantidade})`, xOffset + 2, y + 4);
+                        xOffset += colWidths[1];
+                        doc.text(peliculaNome, xOffset + 2, y + 4);
+                        xOffset += colWidths[2];
+                        doc.text(ambiente, xOffset + 2, y + 4);
+                        xOffset += colWidths[3];
+                        doc.text(tipoAplicacao, xOffset + 2, y + 4);
+                        xOffset += colWidths[4];
+                        doc.text(`${totalM2} m²`, xOffset + 2, y + 4);
+                        xOffset += colWidths[5];
+                        
+                        if (pelicula) {
+                            const preco = (pelicula.preco * parseFloat(totalM2)).toFixed(2);
+                            doc.text(`R$ ${preco}`, xOffset + 2, y + 4);
+                        }
+
+                        y += 12;
+                    }
+
+                    function addTotalSection(peliculaNome, total) {
+                        if (y > pageHeight - 30) y = addPage();
+
+                        doc.setFillColor(...colors.secondary);
+                        doc.rect(margin, y, pageWidth - 2 * margin, 20, 'F');
+
+                        doc.setTextColor(255, 255, 255);
+                        doc.setFontSize(11);
+                        doc.setFont("helvetica", 'bold');
+                        doc.text(`Total para ${peliculaNome}:`, margin + 5, y + 8);
+                        doc.text(`Área Total: ${total.totalM2.toFixed(2)} m²`, margin + 5, y + 15);
+                        doc.text(`Preço Total: R$ ${total.precoTotal.toFixed(2)}`, pageWidth - margin - 5, y + 15, { align: 'right' });
+
+                        y += 25;
+                    }
+                    
+                    const medidaGroups = document.querySelectorAll('.medida-group');
+                    const medidasPorPelicula = {};
+                    const totaisGerais = { totalM2: 0, precoTotal: 0 };
+
+                    medidaGroups.forEach(group => {
+                        const peliculaNome = group.querySelector('.pelicula-select').value || 'Sem Película';
+                        if (!medidasPorPelicula[peliculaNome]) {
+                            medidasPorPelicula[peliculaNome] = [];
+                        }
+                        medidasPorPelicula[peliculaNome].push(group);
+
+                        const largura = parseFloat(group.querySelector('input[placeholder="L"]').value) || 0;
+                        const altura = parseFloat(group.querySelector('input[placeholder="A"]').value) || 0;
+                        const quantidade = parseInt(group.querySelector('input[placeholder="Q"]').value) || 0;
+                        const pelicula = peliculas.find(p => p.nome === peliculaNome);
+                        const area = largura * altura * quantidade;
+                        const preco = pelicula ? area * pelicula.preco : 0;
+
+                        totaisGerais.totalM2 += area;
+                        totaisGerais.precoTotal += preco;
+                    });
+
+                    Object.entries(medidasPorPelicula).forEach(([peliculaNome, medidas], index) => {
+                        if (index > 0) y = addPage();
+                        addSectionTitle(`Orçamento para: ${peliculaNome}`);
+                        addTableHeader();
+                        medidas.forEach((group, idx) => {
+                            addMedidaItem(group, idx + 1);
+                        });
+
+                        const totalPelicula = {
+                            totalM2: medidas.reduce((sum, group) => sum + (parseFloat(group.querySelector('input[placeholder="T"]').value) || 0), 0),
+                            precoTotal: medidas.reduce((sum, group) => {
+                                const area = parseFloat(group.querySelector('input[placeholder="T"]').value) || 0;
+                                const pelicula = peliculas.find(p => p.nome === peliculaNome);
+                                return sum + (pelicula ? area * pelicula.preco : 0);
+                            }, 0)
+                        };
+
+                        addTotalSection(peliculaNome, totalPelicula);
+                    });
+
+                    y = addPage();
+                    addSectionTitle("Total Geral do Orçamento");
+                    addTotalSection("Todas as Películas", totaisGerais);
+                }
+
+                addCover();
+                addContent();
+
+                doc.save(`orcamento_${cliente.nome.replace(/\s+/g, '_').toLowerCase()}.pdf`);
+            } catch (error) {
+                console.error("Erro ao gerar PDF:", error);
+                alert("Ocorreu um erro ao gerar o PDF. Por favor, verifique o console para mais detalhes.");
+            }
+        }
+    </script>
+</body>
+</html>
