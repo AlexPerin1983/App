@@ -571,11 +571,68 @@ body {
                 <div class="additional-fields">
                     <select onchange="calculateTotal()">
                         <option value="">Ambiente</option>
-                        <!-- Opções de ambiente -->
+                         <option value="Sala de estar" ${ambiente === "Sala de estar" ? 'selected' : ''}>Sala de estar</option>
+                        <option value="Sala de jantar" ${ambiente === "Sala de jantar" ? 'selected' : ''}>Sala de jantar</option>
+                        <option value="Cozinha" ${ambiente === "Cozinha" ? 'selected' : ''}>Cozinha</option>
+                        <option value="Copa" ${ambiente === "Copa" ? 'selected' : ''}>Copa</option>
+                        <option value="Suite 1" ${ambiente === "Suite 1" ? 'selected' : ''}>Suite 1</option>
+                        <option value="Suite 2" ${ambiente === "Suite 2" ? 'selected' : ''}>Suite 2</option>
+                        <option value="Escritorio 1" ${ambiente === "Escritorio 1" ? 'selected' : ''}>Escritorio 1</option>
+                        <option value="Escritorio 2" ${ambiente === "Escritorio 2" ? 'selected' : ''}>Escritorio 2</option>
+                        <option value="Escritorio 3" ${ambiente === "Escritorio 3" ? 'selected' : ''}>Escritorio 3</option>
+                        <option value="Sala de Espera" ${ambiente === "Sala de Espera" ? 'selected' : ''}>Sala de Espera</option>
+                        <option value="Loja" ${ambiente === "Loja" ? 'selected' : ''}>Loja</option>
+                        <option value="Recepção" ${ambiente === "Recepção" ? 'selected' : ''}>Recepção</option>
+                        <option value="Garita" ${ambiente === "Garita" ? 'selected' : ''}>Garita</option>
+                        <option value="Garita fundo" ${ambiente === "Garita fundo" ? 'selected' : ''}>Garita fundo</option>
+                        <option value="Portaria" ${ambiente === "Portaria" ? 'selected' : ''}>Portaria</option>
+                        <option value="Portaria fundo" ${ambiente === "Portaria fundo" ? 'selected' : ''}>Portaria fundo</option>
+                        <option value="Refeitorio" ${ambiente === "Refeitorio" ? 'selected' : ''}>Refeitorio</option>
+                        <option value="Quarto 1" ${ambiente === "Quarto 1" ? 'selected' : ''}>Quarto 1</option>
+                        <option value="Quarto 2" ${ambiente === "Quarto 2" ? 'selected' : ''}>Quarto 2</option>
+                        <option value="Quarto 3" ${ambiente === "Quarto 3" ? 'selected' : ''}>Quarto 3</option>
+                        <option value="Quarto 4" ${ambiente === "Quarto 4" ? 'selected' : ''}>Quarto 4</option>
+                        <option value="Quarto empregada" ${ambiente === "Quarto empregada" ? 'selected' : ''}>Quarto empregada</option>
+                        <option value="Quarto principal" ${ambiente === "Quarto principal" ? 'selected' : ''}>Quarto principal</option>
+                        <option value="Quarto de hóspedes" ${ambiente === "Quarto de hóspedes" ? 'selected' : ''}>Quarto de hóspedes</option>
+                        <option value="Banheiro 1" ${ambiente === "Banheiro 1" ? 'selected' : ''}>Banheiro 1</option>
+                        <option value="Banheiro 2" ${ambiente === "Banheiro 2" ? 'selected' : ''}>Banheiro 2</option>
+                        <option value="Banheiro 3" ${ambiente === "Banheiro 3" ? 'selected' : ''}>Banheiro 3</option>
+                        <option value="Banheiro de hóspedes" ${ambiente === "Banheiro de hóspedes" ? 'selected' : ''}>Banheiro de hóspedes</option>
+                        <option value="Corredor" ${ambiente === "Corredor" ? 'selected' : ''}>Corredor</option>
+                        <option value="Escada" ${ambiente === "Escada" ? 'selected' : ''}>Escada</option>
+                        <option value="Escritório" ${ambiente === "Escritório" ? 'selected' : ''}>Escritório</option>
+                        <option value="Lavanderia" ${ambiente === "Lavanderia" ? 'selected' : ''}>Lavanderia</option>
+                        <option value="Garagem" ${ambiente === "Garagem" ? 'selected' : ''}>Garagem</option>
+                        <option value="Varanda" ${ambiente === "Varanda" ? 'selected' : ''}>Varanda</option>
+                        <option value="Jardim" ${ambiente === "Jardim" ? 'selected' : ''}>Jardim</option>
+                        <option value="Sotão" ${ambiente === "Sotão" ? 'selected' : ''}>Sotão</option>
+                        <option value="Porão" ${ambiente === "Porão" ? 'selected' : ''}>Porão</option>
+                        <option value="Elevador" ${ambiente === "Elevador" ? 'selected' : ''}>Elevador</option>
+                        <option value="Outros" ${ambiente === "Outros" ? 'selected' : ''}>Outros</option>
                     </select>
                     <select onchange="calculateTotal()">
                         <option value="">Tipo de Aplicação</option>
-                        <!-- Opções de tipo de aplicação -->
+                         <option value="Vidro Fixo" ${tipoAplicacao === "Vidro Fixo" ? 'selected' : ''}>Vidro Fixo</option>
+                        <option value="Janela Padrão" ${tipoAplicacao === "Janela Padrão" ? 'selected' : ''}>Janela Padrão</option>
+                        <option value="Janelão" ${tipoAplicacao === "Janelão" ? 'selected' : ''}>Janelão</option>
+                        <option value="Janela de correr" ${tipoAplicacao === "Janela de correr" ? 'selected' : ''}>Janela de correr</option>
+                        <option value="Janela pivotante" ${tipoAplicacao === "Janela pivotante" ? 'selected' : ''}>Janela pivotante</option>
+                        <option value="Basculante" ${tipoAplicacao === "Basculante" ? 'selected' : ''}>Basculante</option>
+                        <option value="Porta" ${tipoAplicacao === "Porta" ? 'selected' : ''}>Porta</option>
+                        <option value="Porta Balcão" ${tipoAplicacao === "Porta Balcão" ? 'selected' : ''}>Porta Balcão</option>
+                        <option value="Vitrine" ${tipoAplicacao === "Vitrine" ? 'selected' : ''}>Vitrine</option>
+                        <option value="Tampo de mesa" ${tipoAplicacao === "Tampo de mesa" ? 'selected' : ''}>Tampo de mesa</option>
+                        <option value="Box de banheiro" ${tipoAplicacao === "Box de banheiro" ? 'selected' : ''}>Box de banheiro</option>
+                        <option value="Guarda-corpo" ${tipoAplicacao === "Guarda-corpo" ? 'selected' : ''}>Guarda-corpo</option>
+                        <option value="Dispensa" ${tipoAplicacao === "Dispensa" ? 'selected' : ''}>Dispensa</option>
+                        <option value="Armário" ${tipoAplicacao === "Armário" ? 'selected' : ''}>Armário</option>
+                        <option value="Teto" ${tipoAplicacao === "Teto" ? 'selected' : ''}>Teto</option>
+                        <option value="Parede divisória" ${tipoAplicacao === "Parede divisória" ? 'selected' : ''}>Parede divisória</option>
+                        <option value="Fachada" ${tipoAplicacao === "Fachada" ? 'selected' : ''}>Fachada</option>
+                        <option value="Claraboia" ${tipoAplicacao === "Claraboia" ? 'selected' : ''}>Claraboia</option>
+                        <option value="Balcão" ${tipoAplicacao === "Balcão" ? 'selected' : ''}>Balcão</option>
+                        <option value="Outras" ${tipoAplicacao === "Outras" ? 'selected' : ''}>Outras</option>
                     </select>
                 </div>
             `;
