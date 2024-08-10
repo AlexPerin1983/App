@@ -301,9 +301,9 @@
             medidaGroup.innerHTML = `
                 <div class="flex items-center space-x-2">
                     <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleInputs(this)" class="form-checkbox h-4 w-4 text-blue-600 rounded focus:ring-0">
-                    <input type="number" placeholder="L" value="${largura}" class="w-1/4 p-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 largura-input" oninput="focusNextInput(this, event)" maxlength="3">
-                    <input type="number" placeholder="A" value="${altura}" class="w-1/4 p-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 altura-input" oninput="focusNextInput(this, event)" maxlength="3">
-                    <input type="number" placeholder="Q" value="${quantidade}" class="w-1/4 p-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 quantidade-input" oninput="focusNextInput(this, event)" maxlength="3">
+                    <input type="number" placeholder="L" value="${largura}" class="w-1/4 p-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 largura-input" oninput="atualizarTotal(this, event)" maxlength="3">
+                    <input type="number" placeholder="A" value="${altura}" class="w-1/4 p-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 altura-input" oninput="atualizarTotal(this, event)" maxlength="3">
+                    <input type="number" placeholder="Q" value="${quantidade}" class="w-1/4 p-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 quantidade-input" oninput="atualizarTotal(this, event)" maxlength="3">
                     <input type="text" placeholder="M²" disabled class="w-1/4 p-1 border border-gray-300 rounded-md bg-gray-100 text-gray-600">
                 </div>
                 <div class="flex items-center space-x-1">
@@ -339,6 +339,29 @@
 
             if (isFirst) {
                 medidaGroup.querySelector('.largura-input').focus();
+            }
+
+            calculateTotal();
+        }
+
+        // Função para atualizar o valor do Total M² automaticamente
+        function atualizarTotal(input, event) {
+            const group = input.closest('.bg-white');
+            const largura = parseFloat(group.querySelector('.largura-input').value) || 0;
+            const altura = parseFloat(group.querySelector('.altura-input').value) || 0;
+            const quantidade = parseInt(group.querySelector('.quantidade-input').value) || 1;
+            const totalM2 = largura * altura * quantidade;
+            group.querySelector('input[placeholder="M²"]').value = totalM2.toFixed(2);
+
+            // Verifica se há 3 números e muda o foco para o próximo input
+            const numericValue = event.target.value.replace(/\D/g, ''); // Remove caracteres não numéricos
+            if (numericValue.length === 3) {
+                const nextInput = input.nextElementSibling;
+                if (nextInput && nextInput.tagName === 'INPUT') {
+                    nextInput.focus();
+                } else if (nextInput && nextInput.tagName === 'SELECT') {
+                    nextInput.focus();
+                }
             }
 
             calculateTotal();
@@ -453,18 +476,6 @@
             }, (err) => {
                 console.error('Erro ao copiar a URL: ', err);
             });
-        }
-
-        // Função para focar no próximo input ao preencher
-        function focusNextInput(currentInput, event) {
-            if (event.target.value.length === 4) {
-                const nextInput = currentInput.nextElementSibling;
-                if (nextInput && nextInput.tagName === 'INPUT') {
-                    nextInput.focus();
-                } else if (nextInput && nextInput.tagName === 'SELECT') {
-                    nextInput.focus();
-                }
-            }
         }
 
         // Função que carrega as informações ao iniciar
