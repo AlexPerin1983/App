@@ -8,6 +8,8 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 </head>
 <body class="bg-gradient-to-r from-blue-50 via-white to-blue-50 text-gray-700 min-h-screen flex items-center justify-center font-roboto">
     <div class="max-w-lg w-full p-6 bg-white rounded-xl shadow-lg relative">
@@ -32,6 +34,7 @@
                 <input type="text" id="telefoneClienteInput" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-purple-500" placeholder="Telefone">
                 <input type="text" id="enderecoClienteInput" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-purple-500" placeholder="Endereço">
                 <input type="text" id="cpfClienteInput" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-purple-500" placeholder="CPF">
+                <input type="text" id="cnpjClienteInput" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-purple-500" placeholder="CNPJ">
                 <button onclick="adicionarCliente()" class="w-full p-2 bg-gradient-to-r from-green-400 to-green-600 text-white rounded-md shadow-md hover:opacity-90 transition">
                     Adicionar Cliente
                 </button>
@@ -76,6 +79,7 @@
             <input type="text" id="editTelefoneCliente" class="w-full p-3 border border-gray-300 rounded-md mb-4 focus:ring-2 focus:ring-blue-500 shadow-sm" placeholder="Telefone">
             <input type="text" id="editEnderecoCliente" class="w-full p-3 border border-gray-300 rounded-md mb-4 focus:ring-2 focus:ring-blue-500 shadow-sm" placeholder="Endereço">
             <input type="text" id="editCpfCliente" class="w-full p-3 border border-gray-300 rounded-md mb-4 focus:ring-2 focus:ring-blue-500 shadow-sm" placeholder="CPF">
+            <input type="text" id="editCnpjCliente" class="w-full p-3 border border-gray-300 rounded-md mb-4 focus:ring-2 focus:ring-blue-500 shadow-sm" placeholder="CNPJ">
             <button class="w-full p-3 bg-gradient-to-r from-green-400 to-green-600 text-white rounded-md shadow-md hover:opacity-90 transition" onclick="salvarEdicaoCliente()">
                 Salvar
             </button>
@@ -83,6 +87,13 @@
     </div>
 
     <script>
+        $(document).ready(function() {
+            // Aplicar máscaras nos campos
+            $('#telefoneClienteInput, #editTelefoneCliente').mask('(00) 00000-0000');
+            $('#cpfClienteInput, #editCpfCliente').mask('000.000.000-00');
+            $('#cnpjClienteInput, #editCnpjCliente').mask('00.000.000/0000-00');
+        });
+
         // Lista de películas
         const peliculas = [
             { nome: "Window Blue Performance", preco: 240 },
@@ -244,17 +255,20 @@
             const telefoneClienteInput = document.getElementById('telefoneClienteInput');
             const enderecoClienteInput = document.getElementById('enderecoClienteInput');
             const cpfClienteInput = document.getElementById('cpfClienteInput');
+            const cnpjClienteInput = document.getElementById('cnpjClienteInput');
             const novoCliente = novoClienteInput.value.trim();
             const telefoneCliente = telefoneClienteInput.value.trim();
             const enderecoCliente = enderecoClienteInput.value.trim();
             const cpfCliente = cpfClienteInput.value.trim();
+            const cnpjCliente = cnpjClienteInput.value.trim();
 
             if (novoCliente && !clientes.some(cliente => cliente.nome === novoCliente)) {
                 const novoClienteObj = {
                     nome: novoCliente,
                     telefone: telefoneCliente,
                     endereco: enderecoCliente,
-                    cpf: cpfCliente
+                    cpf: cpfCliente,
+                    cnpj: cnpjCliente
                 };
                 clientes.push(novoClienteObj);
                 salvarClientesNoStorage();
@@ -263,6 +277,7 @@
                 telefoneClienteInput.value = '';
                 enderecoClienteInput.value = '';
                 cpfClienteInput.value = '';
+                cnpjClienteInput.value = '';
                 document.getElementById('clienteFields').classList.add('hidden');
                 document.getElementById('addNewClienteBtn').classList.remove('hidden');
             }
@@ -316,6 +331,7 @@
                 document.getElementById('editTelefoneCliente').value = cliente.telefone;
                 document.getElementById('editEnderecoCliente').value = cliente.endereco;
                 document.getElementById('editCpfCliente').value = cliente.cpf;
+                document.getElementById('editCnpjCliente').value = cliente.cnpj;
                 document.getElementById('editModal').classList.remove('hidden');
             }
         }
@@ -331,6 +347,7 @@
             cliente.telefone = document.getElementById('editTelefoneCliente').value;
             cliente.endereco = document.getElementById('editEnderecoCliente').value;
             cliente.cpf = document.getElementById('editCpfCliente').value;
+            cliente.cnpj = document.getElementById('editCnpjCliente').value;
             salvarClientesNoStorage();
             carregarClientes(cliente.nome);
             fecharModal();
@@ -486,6 +503,7 @@
                     doc.text(`Telefone: ${cliente.telefone || 'N/A'}`, margin, 90);
                     doc.text(`Endereço: ${cliente.endereco || 'N/A'}`, margin, 100);
                     doc.text(`CPF: ${cliente.cpf || 'N/A'}`, margin, 110);
+                    doc.text(`CNPJ: ${cliente.cnpj || 'N/A'}`, margin, 115);
                     doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')}`, margin, 120);
 
                     doc.setTextColor(...colors.secondary);
