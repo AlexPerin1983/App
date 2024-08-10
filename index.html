@@ -18,14 +18,24 @@
         </div>
 
         <div class="space-y-4">
-            <div class="flex items-center space-x-2">
-                <select id="clienteSelect" class="flex-grow p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 transition" onchange="onClienteChange()">
-                    <option value="">Selecione um cliente</option>
+            <div class="flex flex-wrap items-center space-x-2">
+                <select class="flex-grow min-w-0 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 pelicula-select" onchange="calculateTotal()">
+                    <option value="">Película</option>
+                    ${peliculas.map(p => `<option value="${p.nome}" ${p.nome === peliculaSelecionada ? 'selected' : ''}>${p.nome}</option>`).join('')}
                 </select>
-                <button id="addNewClienteBtn" class="p-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-md shadow-md hover:opacity-90 transition" onclick="mostrarCamposNovoCliente()">
-                    <i class="fas fa-user-plus"></i>
-                </button>
+                <div class="flex space-x-1">
+                    <button class="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition shadow-md flex-shrink-0" onclick="duplicarGrupo(this)">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                    <button class="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition shadow-md flex-shrink-0" onclick="toggleAdditionalFields(this)">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition shadow-md flex-shrink-0" onclick="deleteMedidaGroup(this)">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
             </div>
+            
 
             <div id="clienteFields" class="space-y-4 hidden">
                 <input type="text" id="novoClienteInput" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-purple-500" placeholder="Nome do cliente">
@@ -102,7 +112,7 @@
         const clienteSelect = document.getElementById('clienteSelect');
 
         // Função para adicionar um grupo de medidas
-        function addMedidaGroup(isFirst, largura = '', altura = '', quantidade = 1, isChecked = true, peliculaSelecionada = '') {
+        function addMedidaGroup(isFirst, largura = '', altura = '', quantidade = 1, isChecked = true, ambiente = '', tipoAplicacao = '', peliculaSelecionada = '') {
             const container = document.getElementById('medidasContainer');
             const medidaGroup = document.createElement('div');
             medidaGroup.classList.add('bg-white', 'shadow-md', 'rounded-lg', 'p-4', 'space-y-2');
@@ -133,6 +143,21 @@
                             <i class="fas fa-trash-alt"></i>
                         </button>
                     </div>
+                </div>
+                <!-- Terceira Linha: Ambiente e Tipo de Aplicação -->
+                <div class="additional-fields hidden mt-2">
+                    <select onchange="calculateTotal()" class="w-full p-2 mb-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500">
+                        <option value="">Ambiente</option>
+                        <option value="Sala de estar" ${ambiente === "Sala de estar" ? 'selected' : ''}>Sala de estar</option>
+                        <option value="Sala de jantar" ${ambiente === "Sala de jantar" ? 'selected' : ''}>Sala de jantar</option>
+                        <!-- Adicione mais opções de ambiente aqui -->
+                    </select>
+                    <select onchange="calculateTotal()" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500">
+                        <option value="">Tipo de Aplicação</option>
+                        <option value="Vidro Fixo" ${tipoAplicacao === "Vidro Fixo" ? 'selected' : ''}>Vidro Fixo</option>
+                        <option value="Janela Padrão" ${tipoAplicacao === "Janela Padrão" ? 'selected' : ''}>Janela Padrão</option>
+                        <!-- Adicione mais opções de tipo de aplicação aqui -->
+                    </select>
                 </div>
             `;
 
@@ -177,7 +202,7 @@
 
         // Função para focar no próximo input ao preencher 3 caracteres
         function focusNextInput(currentInput, event) {
-            if (event.target.value.length === 4) {
+            if (event.target.value.length === 3) {
                 const nextInput = currentInput.nextElementSibling;
                 if (nextInput && nextInput.tagName === 'INPUT') {
                     nextInput.focus();
@@ -193,9 +218,11 @@
             const largura = group.querySelector('.largura-input').value || '';
             const altura = group.querySelector('.altura-input').value || '';
             const quantidade = group.querySelector('.quantidade-input').value || '';
+            const ambiente = group.querySelector('.additional-fields select:nth-of-type(1)').value || '';
+            const tipoAplicacao = group.querySelector('.additional-fields select:nth-of-type(2)').value || '';
             const peliculaSelecionada = group.querySelector('.pelicula-select').value || '';
 
-            addMedidaGroup(false, largura, altura, quantidade, true, peliculaSelecionada);
+            addMedidaGroup(false, largura, altura, quantidade, true, ambiente, tipoAplicacao, peliculaSelecionada);
             calculateTotal();
         }
 
@@ -205,9 +232,11 @@
                 const largura = group.querySelector('.largura-input').value || '';
                 const altura = group.querySelector('.altura-input').value || '';
                 const quantidade = group.querySelector('.quantidade-input').value || '';
+                const ambiente = group.querySelector('.additional-fields select:nth-of-type(1)').value || '';
+                const tipoAplicacao = group.querySelector('.additional-fields select:nth-of-type(2)').value || '';
                 const peliculaSelecionada = group.querySelector('.pelicula-select').value || '';
 
-                addMedidaGroup(false, largura, altura, quantidade, true, peliculaSelecionada);
+                addMedidaGroup(false, largura, altura, quantidade, true, ambiente, tipoAplicacao, peliculaSelecionada);
             });
             calculateTotal();
         }
@@ -370,6 +399,8 @@
                 largura: group.querySelector('.largura-input').value,
                 altura: group.querySelector('.altura-input').value,
                 quantidade: group.querySelector('.quantidade-input').value,
+                ambiente: group.querySelector('.additional-fields select:nth-of-type(1)').value,
+                tipoAplicacao: group.querySelector('.additional-fields select:nth-of-type(2)').value,
                 pelicula: group.querySelector('.pelicula-select').value
             }));
 
@@ -385,7 +416,7 @@
             if (savedMedidas) {
                 const medidas = JSON.parse(savedMedidas);
                 medidas.forEach(medida => {
-                    addMedidaGroup(false, medida.largura, medida.altura, medida.quantidade, true, medida.pelicula);
+                    addMedidaGroup(false, medida.largura, medida.altura, medida.quantidade, true, medida.ambiente, medida.tipoAplicacao, medida.pelicula);
                 });
             } else {
                 addMedidaGroup(true);
