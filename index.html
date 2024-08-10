@@ -24,19 +24,8 @@
                 <select id="clienteSelect" class="flex-grow p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 transition" onchange="onClienteChange()">
                     <option value="">Selecione um cliente</option>
                 </select>
-                <button id="addNewClienteBtn" class="p-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-md shadow-md hover:opacity-90 transition" onclick="mostrarCamposNovoCliente()">
+                <button id="addNewClienteBtn" class="p-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-md shadow-md hover:opacity-90 transition" onclick="mostrarPopupNovoCliente()">
                     <i class="fas fa-user-plus"></i>
-                </button>
-            </div>
-
-            <div id="clienteFields" class="space-y-4 hidden">
-                <input type="text" id="novoClienteInput" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-purple-500" placeholder="Nome do cliente">
-                <input type="text" id="telefoneClienteInput" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-purple-500" placeholder="Telefone">
-                <input type="text" id="enderecoClienteInput" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-purple-500" placeholder="Endereço">
-                <input type="text" id="cpfClienteInput" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-purple-500" placeholder="CPF">
-                <input type="text" id="cnpjClienteInput" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-purple-500" placeholder="CNPJ">
-                <button onclick="adicionarCliente()" class="w-full p-2 bg-gradient-to-r from-green-400 to-green-600 text-white rounded-md shadow-md hover:opacity-90 transition">
-                    Adicionar Cliente
                 </button>
             </div>
 
@@ -86,12 +75,28 @@
         </div>
     </div>
 
+    <!-- Modal para Adicionar Novo Cliente -->
+    <div id="popupNovoCliente" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg shadow-lg relative max-w-lg w-full">
+            <span class="close text-2xl font-bold cursor-pointer absolute top-2 right-2" onclick="fecharPopup()">&times;</span>
+            <h2 class="text-xl font-semibold mb-4 text-gray-800">Adicionar Novo Cliente</h2>
+            <input type="text" id="popupNovoClienteNome" class="w-full p-2 border border-gray-300 rounded-md mb-4 focus:ring-2 focus:ring-purple-500 shadow-sm" placeholder="Nome do Cliente">
+            <input type="text" id="popupNovoClienteTelefone" class="w-full p-2 border border-gray-300 rounded-md mb-4 focus:ring-2 focus:ring-purple-500 shadow-sm" placeholder="Telefone">
+            <input type="text" id="popupNovoClienteEndereco" class="w-full p-2 border border-gray-300 rounded-md mb-4 focus:ring-2 focus:ring-purple-500 shadow-sm" placeholder="Endereço">
+            <input type="text" id="popupNovoClienteCPF" class="w-full p-2 border border-gray-300 rounded-md mb-4 focus:ring-2 focus:ring-purple-500 shadow-sm" placeholder="CPF">
+            <input type="text" id="popupNovoClienteCNPJ" class="w-full p-2 border border-gray-300 rounded-md mb-6 focus:ring-2 focus:ring-purple-500 shadow-sm" placeholder="CNPJ">
+            <button class="w-full p-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-md shadow-md hover:opacity-90 transition" onclick="adicionarClientePopup()">
+                Adicionar Cliente
+            </button>
+        </div>
+    </div>
+
     <script>
         $(document).ready(function() {
             // Aplicar máscaras nos campos
-            $('#telefoneClienteInput, #editTelefoneCliente').mask('(00) 00000-0000');
-            $('#cpfClienteInput, #editCpfCliente').mask('000.000.000-00');
-            $('#cnpjClienteInput, #editCnpjCliente').mask('00.000.000/0000-00');
+            $('#telefoneClienteInput, #popupNovoClienteTelefone, #editTelefoneCliente').mask('(00) 00000-0000');
+            $('#cpfClienteInput, #popupNovoClienteCPF, #editCpfCliente').mask('000.000.000-00');
+            $('#cnpjClienteInput, #popupNovoClienteCNPJ, #editCnpjCliente').mask('00.000.000/0000-00');
         });
 
         // Lista de películas
@@ -119,7 +124,6 @@
             medidaGroup.classList.add('bg-white', 'shadow-md', 'rounded-lg', 'p-4', 'space-y-2');
 
             medidaGroup.innerHTML = `
-                <!-- Primeira Linha: Medidas -->
                 <div class="flex items-center space-x-2">
                     <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleInputs(this)" class="form-checkbox h-4 w-4 text-blue-600 rounded focus:ring-0">
                     <input type="number" placeholder="L" value="${largura}" class="w-1/4 p-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 largura-input" oninput="focusNextInput(this, event)" maxlength="3">
@@ -127,7 +131,6 @@
                     <input type="number" placeholder="Q" value="${quantidade}" class="w-1/4 p-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 quantidade-input" oninput="focusNextInput(this, event)" maxlength="3">
                     <input type="text" placeholder="M²" disabled class="w-1/4 p-1 border border-gray-300 rounded-md bg-gray-100 text-gray-600">
                 </div>
-                <!-- Segunda Linha: Película e Ícones -->
                 <div class="flex items-center space-x-1">
                     <select class="flex-grow min-w-0 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 pelicula-select" onchange="calculateTotal()">
                         <option value="">Película</option>
@@ -143,19 +146,16 @@
                         <i class="fas fa-trash-alt"></i>
                     </button>
                 </div>
-                <!-- Terceira Linha: Ambiente e Tipo de Aplicação -->
                 <div class="additional-fields hidden mt-2">
                     <select onchange="calculateTotal()" class="w-full p-2 mb-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500">
                         <option value="">Ambiente</option>
                         <option value="Sala de estar" ${ambiente === "Sala de estar" ? 'selected' : ''}>Sala de estar</option>
                         <option value="Sala de jantar" ${ambiente === "Sala de jantar" ? 'selected' : ''}>Sala de jantar</option>
-                        <!-- Adicione mais opções de ambiente aqui -->
                     </select>
                     <select onchange="calculateTotal()" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500">
                         <option value="">Tipo de Aplicação</option>
                         <option value="Vidro Fixo" ${tipoAplicacao === "Vidro Fixo" ? 'selected' : ''}>Vidro Fixo</option>
                         <option value="Janela Padrão" ${tipoAplicacao === "Janela Padrão" ? 'selected' : ''}>Janela Padrão</option>
-                        <!-- Adicione mais opções de tipo de aplicação aqui -->
                     </select>
                 </div>
             `;
@@ -249,40 +249,34 @@
             }
         }
 
-        // Outras funções (adicionar cliente, carregar clientes, etc.)...
-        function adicionarCliente() {
-            const novoClienteInput = document.getElementById('novoClienteInput');
-            const telefoneClienteInput = document.getElementById('telefoneClienteInput');
-            const enderecoClienteInput = document.getElementById('enderecoClienteInput');
-            const cpfClienteInput = document.getElementById('cpfClienteInput');
-            const cnpjClienteInput = document.getElementById('cnpjClienteInput');
-            const novoCliente = novoClienteInput.value.trim();
-            const telefoneCliente = telefoneClienteInput.value.trim();
-            const enderecoCliente = enderecoClienteInput.value.trim();
-            const cpfCliente = cpfClienteInput.value.trim();
-            const cnpjCliente = cnpjClienteInput.value.trim();
+        // Função para adicionar um cliente via popup
+        function adicionarClientePopup() {
+            const nome = document.getElementById('popupNovoClienteNome').value.trim();
+            const telefone = document.getElementById('popupNovoClienteTelefone').value.trim();
+            const endereco = document.getElementById('popupNovoClienteEndereco').value.trim();
+            const cpf = document.getElementById('popupNovoClienteCPF').value.trim();
+            const cnpj = document.getElementById('popupNovoClienteCNPJ').value.trim();
 
-            if (novoCliente && !clientes.some(cliente => cliente.nome === novoCliente)) {
-                const novoClienteObj = {
-                    nome: novoCliente,
-                    telefone: telefoneCliente,
-                    endereco: enderecoCliente,
-                    cpf: cpfCliente,
-                    cnpj: cnpjCliente
-                };
-                clientes.push(novoClienteObj);
+            if (nome && !clientes.some(cliente => cliente.nome === nome)) {
+                const novoCliente = { nome, telefone, endereco, cpf, cnpj };
+                clientes.push(novoCliente);
                 salvarClientesNoStorage();
-                carregarClientes(novoCliente);
-                novoClienteInput.value = '';
-                telefoneClienteInput.value = '';
-                enderecoClienteInput.value = '';
-                cpfClienteInput.value = '';
-                cnpjClienteInput.value = '';
-                document.getElementById('clienteFields').classList.add('hidden');
-                document.getElementById('addNewClienteBtn').classList.remove('hidden');
+                carregarClientes(novoCliente.nome);
+                limparCamposPopup(); // Limpa os campos após salvar
+                fecharPopup();
             }
         }
 
+        // Função para limpar os campos do popup
+        function limparCamposPopup() {
+            document.getElementById('popupNovoClienteNome').value = '';
+            document.getElementById('popupNovoClienteTelefone').value = '';
+            document.getElementById('popupNovoClienteEndereco').value = '';
+            document.getElementById('popupNovoClienteCPF').value = '';
+            document.getElementById('popupNovoClienteCNPJ').value = '';
+        }
+
+        // Função para carregar clientes no select
         function carregarClientes(clienteSelecionado = '') {
             clienteSelect.innerHTML = '<option value="">Selecione um cliente</option>';
             if (clientes.length > 0) {
@@ -353,9 +347,12 @@
             fecharModal();
         }
 
-        function mostrarCamposNovoCliente() {
-            document.getElementById('clienteFields').classList.remove('hidden');
-            document.getElementById('addNewClienteBtn').classList.add('hidden');
+        function mostrarPopupNovoCliente() {
+            document.getElementById('popupNovoCliente').classList.remove('hidden');
+        }
+
+        function fecharPopup() {
+            document.getElementById('popupNovoCliente').classList.add('hidden');
         }
 
         function toggleAdditionalFields(button) {
