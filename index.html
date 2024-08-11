@@ -525,48 +525,18 @@
 
             const pageWidth = doc.internal.pageSize.width;
             const pageHeight = doc.internal.pageSize.height;
-            const margin = 20;
+            const margin = 15;
+
 
             const colors = {
-                primary: [58, 45, 123],
-                secondary: [147, 112, 219],
-                text: [30, 30, 30],
-                lightGray: [245, 245, 245],
-                header: [234, 76, 137]
-            };
+    primary: [28, 4, 56],                         // Novo azul (você pode ajustar esses valores RGB)
+    secondary: [242, 182, 3],                       // Novo verde (você pode ajustar esses valores RGB)
+    text: [44, 62, 80],                             // Mantenha esta cor para o texto, ou ajuste se necessário
+    lightGray: [236, 240, 241],                     // Para linhas alternadas da tabela
+    header: [236, 240, 241]                         // Novo vermelho (você pode ajustar esses valores RGB)
+};
 
-            function addCover() {
-                doc.setFillColor(...colors.lightGray);
-                doc.rect(0, 0, pageWidth, pageHeight, 'F');
 
-                doc.setFillColor(...colors.primary);
-                doc.rect(0, 0, pageWidth, 60, 'F');
-
-                doc.setTextColor(255, 255, 255);
-                doc.setFontSize(30);
-                doc.setFont("helvetica", 'bold');
-                doc.text("ORÇAMENTO DE", margin, 40);
-                doc.text("PELÍCULAS", margin, 55);
-
-                doc.setTextColor(...colors.text);
-                doc.setFontSize(14);
-                doc.setFont("helvetica", 'normal');
-                doc.text(`Cliente: ${cliente.nome}`, margin, 80);
-                doc.text(`Telefone: ${cliente.telefone || 'N/A'}`, margin, 90);
-                doc.text(`Endereço: ${cliente.endereco || 'N/A'}`, margin, 100);
-                doc.text(`CPF: ${cliente.cpf || 'N/A'}`, margin, 110);
-                doc.text(`CNPJ: ${cliente.cnpj || 'N/A'}`, margin, 115);
-                doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')}`, margin, 120);
-
-                doc.setTextColor(...colors.secondary);
-                doc.setFontSize(12);
-                doc.setFont("helvetica", 'italic');
-                doc.text("Soluções em Películas de Alta Qualidade", margin, pageHeight - 40);
-
-                doc.setDrawColor(...colors.primary);
-                doc.setLineWidth(1);
-                doc.line(margin, pageHeight - 35, pageWidth - margin, pageHeight - 35);
-            }
 
             function addFooter() {
                 const footerHeight = 20;
