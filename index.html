@@ -536,7 +536,48 @@
     header: [236, 240, 241]                         // Novo vermelho (você pode ajustar esses valores RGB)
 };
 
+function addCover() {
+    const pageWidth = doc.internal.pageSize.width;
+    const pageHeight = doc.internal.pageSize.height;
+    const margin = 30;
 
+    // Fundo da página
+    doc.setFillColor(245, 245, 245);  // Cinza muito claro
+    doc.rect(0, 0, pageWidth, pageHeight, 'F');
+
+    // Barras graduais no topo
+    const barColors = ['#000000', '#1a1a1a', '#333333', '#4d4d4d', '#666666', '#808080', '#999999', '#b3b3b3', '#cccccc', '#e6e6e6'];
+    const barWidth = pageWidth / barColors.length;
+    barColors.forEach((color, index) => {
+        doc.setFillColor(color);
+        doc.rect(index * barWidth, 0, barWidth, 40, 'F');
+    });
+
+    // Informações do cliente
+    doc.setTextColor(44, 62, 80);  // Azul escuro para o texto
+    doc.setFont("helvetica", 'bold');
+    doc.setFontSize(18);
+    doc.text(`Cliente: ${cliente.nome}`, margin, 70);
+
+    doc.setFont("helvetica", 'normal');
+    doc.setFontSize(12);
+    doc.text(`Telefone: ${cliente.telefone}`, margin, 90);
+    doc.text(`Endereço: ${cliente.endereco}`, margin, 105);
+    doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')}`, margin, 120);
+    
+    // Adicionar "VÁLIDO POR 90 DIAS"
+    doc.text("VÁLIDO POR 90 DIAS", margin, 135);
+
+    // Rodapé
+    doc.setDrawColor(41, 128, 185);  // Azul para a linha
+    doc.setLineWidth(1);
+    doc.line(margin, pageHeight - 40, pageWidth - margin, pageHeight - 40);
+
+    doc.setTextColor(41, 128, 185);  // Azul para o texto do rodapé
+    doc.setFontSize(12);
+    doc.setFont("helvetica", 'italic');
+    doc.text("Soluções em Películas de Alta Qualidade", pageWidth / 2, pageHeight - 25, { align: 'center' });
+}
 
             function addFooter() {
                 const footerHeight = 20;
