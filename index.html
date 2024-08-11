@@ -5,8 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de M² e Orçamento de Películas</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
@@ -15,7 +14,7 @@
 </head>
 
 <body class="bg-gradient-to-r from-blue-50 via-white to-blue-50 text-gray-700 min-h-screen flex items-center justify-center font-roboto">
-    <div class="max-w-lg w-full p-6 bg-white rounded-xl shadow-lg relative">
+    <div class="w-full max-w-lg md:max-w-3xl lg:max-w-4xl p-2 bg-white rounded-xl shadow-lg relative"> <!-- Ajustado aqui -->
         <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-t-xl"></div>
         <div class="text-center mb-6">
             <h1 class="text-3xl font-montserrat text-gray-900 font-bold">Calculadora de M² e Orçamento</h1>
@@ -25,370 +24,354 @@
         <div class="space-y-4">
             <!-- Seletor de Cliente e Botão de Adição -->
             <div class="flex items-center space-x-2">
-                <select id="clienteSelect" class="flex-grow p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2
-                focus:ring-blue-500 transition" onchange="onClienteChange()">
-                <option value="">Selecione um cliente</option>
-            </select>
-            <button id="addNewClienteBtn" class="p-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-md shadow-md hover:opacity-90 transition" onclick="abrirPopup('adicionar')">
-                <i class="fas fa-user-plus"></i>
-            </button>
-        </div>
-
-        <!-- Ícones de Edição e Exclusão -->
-        <div id="editIconContainer" class="hidden flex justify-end space-x-2">
-            <button onclick="abrirPopup('editar')" class="p-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition shadow-sm">
-                <i class="fas fa-edit"></i>
-            </button>
-            <button onclick="confirmClearMedidas()" class="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition shadow-sm">
-                <i class="fas fa-trash-alt"></i>
-            </button>
-        </div>
-
-        <!-- Container de Medidas -->
-        <div id="medidasContainer" class="space-y-4"></div>
-
-        <!-- Resultado -->
-        <div id="resultado" class="text-right text-2xl font-bold text-green-500">Total M²: 0,00 | Preço Total: R$ 0,00</div>
-
-        <!-- Botões de Ação -->
-        <div class="grid grid-cols-2 gap-4">
-            <button class="p-4 bg-gradient-to-r from-green-400 to-green-600 text-white rounded-lg shadow-md hover:opacity-90 transition" onclick="addMedidaGroup(true)">
-                Adicionar Medida
-            </button>
-            <button class="p-4 bg-gradient-to-r from-yellow-400 to-yellow-600 text-white rounded-lg shadow-md hover:opacity-90 transition" onclick="duplicarMedidas()">
-                Duplicar Medidas
-            </button>
-            <button class="p-4 bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-lg shadow-md hover:opacity-90 transition" id="generatePdfButton">
-                Gerar PDF
-            </button>
-            <button class="p-4 bg-gradient-to-r from-indigo-400 to-indigo-600 text-white rounded-lg shadow-md hover:opacity-90 transition" onclick="copyShareURL()">
-                Compartilhar URL
-            </button>
-        </div>
-    </div>
-</div>
-
-<!-- Modal para Adicionar/Editar Cliente -->
-<div id="popupCliente" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-    <div class="bg-white p-6 rounded-lg shadow-lg relative max-w-lg w-full">
-        <span class="close text-2xl font-bold cursor-pointer absolute top-2 right-2" onclick="fecharPopup()">&times;</span>
-        <h2 id="popupTitulo" class="text-xl font-semibold mb-4 text-gray-800">Adicionar Novo Cliente</h2>
-        <input type="text" id="popupClienteNome" class="w-full p-2 border border-gray-300 rounded-md mb-4 focus:ring-2 focus:ring-purple-500 shadow-sm" placeholder="Nome do Cliente">
-        <input type="text" id="popupClienteTelefone" class="w-full p-2 border border-gray-300 rounded-md mb-4 focus:ring-2 focus:ring-purple-500 shadow-sm" placeholder="Telefone">
-        <input type="text" id="popupClienteEndereco" class="w-full p-2 border border-gray-300 rounded-md mb-4 focus:ring-2 focus:ring-purple-500 shadow-sm" placeholder="Endereço">
-        <input type="text" id="popupClienteCPF" class="w-full p-2 border border-gray-300 rounded-md mb-4 focus:ring-2 focus:ring-purple-500 shadow-sm" placeholder="CPF">
-        <input type="text" id="popupClienteCNPJ" class="w-full p-2 border border-gray-300 rounded-md mb-6 focus:ring-2 focus:ring-purple-500 shadow-sm" placeholder="CNPJ">
-        <button id="popupClienteBtnSalvar" class="w-full p-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-md shadow-md hover:opacity-90 transition" onclick="salvarCliente()">
-            Salvar Cliente
-        </button>
-    </div>
-</div>
-
-<script>
-    // Inicializa máscaras nos campos
-    $(document).ready(function() {
-        $('#popupClienteTelefone, #telefoneClienteInput').mask('(00) 00000-0000');
-        $('#popupClienteCPF, #cpfClienteInput').mask('000.000.000-00');
-        $('#popupClienteCNPJ, #cnpjClienteInput').mask('00.000.000/0000-00');
-    });
-
-    // Lista de películas e clientes
-    const peliculas = [
-        { nome: "Window Blue Performance", preco: 240 },
-        { nome: "Window BLUE 70", preco: 200 },
-        { nome: "Carbono Window Usa", preco: 100 },
-        { nome: "Silver 10 Externa", preco: 280 },
-        { nome: "Prata Reflecta", preco: 120 },
-        { nome: "Prata Reflecta 15", preco: 120 },
-        { nome: "Origin Carbon", preco: 150 },
-        { nome: "Vinil Blackout", preco: 130 },
-        { nome: "Vinil Jateado", preco: 120 },
-        { nome: "Vinil Perfurado", preco: 85 },
-        { nome: "Window Premium", preco: 160 }
-    ];
-
-    let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
-    let clienteSelecionado = '';
-    const clienteSelect = document.getElementById('clienteSelect');
-
-    // Função para abrir o popup de adicionar ou editar cliente
-    function abrirPopup(acao) {
-        const popupTitulo = document.getElementById('popupTitulo');
-        if (acao === 'adicionar') {
-            popupTitulo.innerText = 'Adicionar Novo Cliente';
-            limparCamposPopup();
-            clienteSelecionado = '';
-        } else if (acao === 'editar') {
-            popupTitulo.innerText = 'Editar Cliente';
-            carregarDadosCliente();
-            clienteSelecionado = clienteSelect.value;
-        }
-        document.getElementById('popupCliente').classList.remove('hidden');
-    }
-
-    // Função para carregar dados do cliente no popup de edição
-    function carregarDadosCliente() {
-        const cliente = clientes.find(c => c.nome === clienteSelect.value);
-        if (cliente) {
-            document.getElementById('popupClienteNome').value = cliente.nome;
-            document.getElementById('popupClienteTelefone').value = cliente.telefone;
-            document.getElementById('popupClienteEndereco').value = cliente.endereco;
-            document.getElementById('popupClienteCPF').value = cliente.cpf;
-            document.getElementById('popupClienteCNPJ').value = cliente.cnpj;
-        }
-    }
-
-    // Função para salvar o cliente (adicionar ou editar)
-    function salvarCliente() {
-        const nome = document.getElementById('popupClienteNome').value.trim();
-        const telefone = document.getElementById('popupClienteTelefone').value.trim();
-        const endereco = document.getElementById('popupClienteEndereco').value.trim();
-        const cpf = document.getElementById('popupClienteCPF').value.trim();
-        const cnpj = document.getElementById('popupClienteCNPJ').value.trim();
-
-        if (nome && (clienteSelecionado === '' || nome === clienteSelecionado || !clientes.some(cliente => cliente.nome === nome))) {
-            const novoCliente = { nome, telefone, endereco, cpf, cnpj };
-
-            if (clienteSelecionado) {
-                const index = clientes.findIndex(c => c.nome === clienteSelecionado);
-                clientes[index] = novoCliente;
-            } else {
-                clientes.push(novoCliente);
-            }
-
-            salvarClientesNoStorage();
-            carregarClientes(novoCliente.nome);
-            fecharPopup();
-        } else {
-            alert("O nome do cliente já existe ou não foi informado.");
-        }
-    }
-
-    // Função para limpar os campos do popup
-    function limparCamposPopup() {
-        document.getElementById('popupClienteNome').value = '';
-        document.getElementById('popupClienteTelefone').value = '';
-        document.getElementById('popupClienteEndereco').value = '';
-        document.getElementById('popupClienteCPF').value = '';
-        document.getElementById('popupClienteCNPJ').value = '';
-    }
-
-    // Função para carregar a lista de clientes no select
-    function carregarClientes(clienteSelecionado = '') {
-        clienteSelect.innerHTML = '<option value="">Selecione um cliente</option>';
-        if (clientes.length > 0) {
-            clienteSelect.classList.remove('hidden');
-            clientes.forEach(cliente => {
-                const option = document.createElement('option');
-                option.value = cliente.nome;
-                option.textContent = cliente.nome;
-                clienteSelect.appendChild(option);
-            });
-
-            if (clienteSelecionado) {
-                clienteSelect.value = clienteSelecionado;
-                loadMedidas();
-                mostrarEditIconContainer(true);
-            } else {
-                const ultimoClienteSelecionado = carregarClienteSelecionadoDoStorage();
-                if (ultimoClienteSelecionado && clientes.some(cliente => cliente.nome === ultimoClienteSelecionado)) {
-                    clienteSelect.value = ultimoClienteSelecionado;
-                } else if (clientes.length > 0) {
-                    clienteSelect.value = clientes[clientes.length - 1].nome;
-                }
-                loadMedidas();
-            }
-        } else {
-            clienteSelect.classList.add('hidden');
-            mostrarEditIconContainer(false);
-        }
-    }
-
-    // Função que executa ao mudar o cliente selecionado
-    function onClienteChange() {
-        clienteSelecionado = clienteSelect.value;
-        salvarClienteSelecionadoNoStorage(clienteSelecionado);
-        loadMedidas();
-
-        if (clienteSelecionado) {
-            mostrarEditIconContainer(true);
-        } else {
-            mostrarEditIconContainer(false);
-        }
-    }
-
-    // Função para exibir ou esconder o container de edição
-    function mostrarEditIconContainer(exibir) {
-        const editIconContainer = document.getElementById('editIconContainer');
-        if (exibir && clientes.length > 0) {
-            editIconContainer.classList.remove('hidden');
-        } else {
-            editIconContainer.classList.add('hidden');
-        }
-    }
-
-    // Função para fechar o popup de cliente
-    function fecharPopup() {
-        document.getElementById('popupCliente').classList.add('hidden');
-    }
-
-    // Função para confirmar a exclusão das medidas do cliente
-    function confirmClearMedidas() {
-        if (confirm("Tem certeza que deseja apagar este cliente e suas medidas?")) {
-            clearMedidas();
-        }
-    }
-
-    // Função para apagar medidas do cliente
-    function clearMedidas() {
-        const cliente = clienteSelect.value;
-        if (!cliente) {
-            alert('Selecione um cliente.');
-            return;
-        }
-
-        localStorage.removeItem(`medidas_${cliente}`);
-        const index = clientes.findIndex(c => c.nome === cliente);
-        if (index > -1) {
-            clientes.splice(index, 1);
-            localStorage.setItem('clientes', JSON.stringify(clientes));
-        }
-
-        carregarClientes();
-        document.getElementById('medidasContainer').innerHTML = '';
-        addMedidaGroup(true);
-        calculateTotal();
-    }
-
-    // Função para salvar medidas no local storage
-    function saveMedidas() {
-        const cliente = clienteSelect.value;
-        if (!cliente) return;
-
-        const medidaGroups = document.querySelectorAll('#medidasContainer > div');
-        const medidas = Array.from(medidaGroups).map(group => ({
-            largura: group.querySelector('.largura-input').value,
-            altura: group.querySelector('.altura-input').value,
-            quantidade: group.querySelector('.quantidade-input').value,
-            ambiente: group.querySelector('.additional-fields select:nth-of-type(1)').value,
-            tipoAplicacao: group.querySelector('.additional-fields select:nth-of-type(2)').value,
-            pelicula: group.querySelector('.pelicula-select').value
-        }));
-
-        localStorage.setItem(`medidas_${cliente}`, JSON.stringify(medidas));
-    }
-
-    // Função para carregar medidas do local storage
-    function loadMedidas() {
-        const cliente = clienteSelect.value;
-        const savedMedidas = localStorage.getItem(`medidas_${cliente}`);
-        const medidasContainer = document.getElementById('medidasContainer');
-        medidasContainer.innerHTML = '';
-
-        if (savedMedidas) {
-            const medidas = JSON.parse(savedMedidas);
-            medidas.forEach(medida => {
-                addMedidaGroup(false, medida.largura, medida.altura, medida.quantidade, true, medida.ambiente, medida.tipoAplicacao, medida.pelicula);
-            });
-        } else {
-            addMedidaGroup(true);
-        }
-        calculateTotal();
-    }
-
-    // Função para adicionar um grupo de medida
-    function addMedidaGroup(isFirst, largura = '', altura = '', quantidade = 1, isChecked = true, ambiente = '', tipoAplicacao = '', peliculaSelecionada = '') {
-        const container = document.getElementById('medidasContainer');
-        const medidaGroup = document.createElement('div');
-        medidaGroup.classList.add('bg-white', 'shadow-md', 'rounded-lg', 'p-4', 'space-y-2');
-
-        medidaGroup.innerHTML = `
-            <div class="flex items-center space-x-2">
-                <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleInputs(this)" class="form-checkbox h-4 w-4 text-blue-600 rounded focus:ring-0">
-                <input type="number" placeholder="L" value="${largura}" class="w-1/4 p-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 largura-input" oninput="atualizarTotal(this, event)" maxlength="3">
-                <input type="number" placeholder="A" value="${altura}" class="w-1/4 p-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 altura-input" oninput="atualizarTotal(this, event)" maxlength="3">
-                <input type="number" placeholder="Q" value="${quantidade}" class="w-1/4 p-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 quantidade-input" oninput="atualizarTotal(this, event)" maxlength="3">
-                <input type="text" placeholder="M²" disabled class="w-1/4 p-1 border border-gray-300 rounded-md bg-gray-100 text-gray-600">
-            </div>
-            <div class="flex items-center space-x-1">
-                <select class="flex-grow min-w-0 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 pelicula-select" onchange="calculateTotal()">
-                    <option value="">Película</option>
-                    ${peliculas.map(p => `<option value="${p.nome}" ${p.nome === peliculaSelecionada ? 'selected' : ''}>${p.nome}</option>`).join('')}
+                <select id="clienteSelect" class="flex-grow p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 transition" onchange="onClienteChange()">
+                    <option value="">Selecione um cliente</option>
                 </select>
-                <button class="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition shadow-md flex-shrink-0 w-8 h-8 flex items-center justify-center" onclick="duplicarGrupo(this)">
-                    <i class="fas fa-copy"></i>
+                <button id="addNewClienteBtn" class="p-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-md shadow-md hover:opacity-90 transition" onclick="abrirPopup('adicionar')">
+                    <i class="fas fa-user-plus"></i>
                 </button>
-                <button class="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition shadow-md flex-shrink-0 w-8 h-8 flex items-center justify-center" onclick="toggleAdditionalFields(this)">
-                    <i class="fas fa-eye"></i>
+            </div>
+
+            <!-- Ícones de Edição e Exclusão -->
+            <div id="editIconContainer" class="hidden flex justify-end space-x-2">
+                <button onclick="abrirPopup('editar')" class="p-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition shadow-sm">
+                    <i class="fas fa-edit"></i>
                 </button>
-                <button class="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition shadow-md flex-shrink-0 w-8 h-8 flex items-center justify-center" onclick="deleteMedidaGroup(this)">
+                <button onclick="confirmClearMedidas()" class="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition shadow-sm">
                     <i class="fas fa-trash-alt"></i>
                 </button>
             </div>
-            <div class="additional-fields hidden mt-2">
-                <select onchange="calculateTotal()" class="w-full p-2 mb-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500">
-                    <option value="">Ambiente</option>
-                    <option value="Sala de estar" ${ambiente === "Sala de estar" ? 'selected' : ''}>Sala de estar</option>
-                    <option value="Sala de jantar" ${ambiente === "Sala de jantar" ? 'selected' : ''}>Sala de jantar</option>
-                </select>
-                <select onchange="calculateTotal()" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500">
-                    <option value="">Tipo de Aplicação</option>
-                    <option value="Vidro Fixo" ${tipoAplicacao === "Vidro Fixo" ? 'selected' : ''}>Vidro Fixo</option>
-                    <option value="Janela Padrão" ${tipoAplicacao === "Janela Padrão" ? 'selected' : ''}>Janela Padrão</option>
-                </select>
+
+            <!-- Container de Medidas -->
+            <div id="medidasContainer" class="space-y-4"></div>
+
+            <!-- Resultado -->
+            <div id="resultado" class="text-right text-2xl font-bold text-green-500">Total M²: 0,00 | Preço Total: R$ 0,00</div>
+
+            <!-- Botões de Ação -->
+            <div class="grid grid-cols-2 gap-4">
+                <button class="p-4 bg-gradient-to-r from-green-400 to-green-600 text-white rounded-lg shadow-md hover:opacity-90 transition" onclick="addMedidaGroup(true)">
+                    Adicionar Medida
+                </button>
+                <button class="p-4 bg-gradient-to-r from-yellow-400 to-yellow-600 text-white rounded-lg shadow-md hover:opacity-90 transition" onclick="duplicarMedidas()">
+                    Duplicar Medidas
+                </button>
+                <button class="p-4 bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-lg shadow-md hover:opacity-90 transition" id="generatePdfButton">
+                    Gerar PDF
+                </button>
+                <button class="p-4 bg-gradient-to-r from-indigo-400 to-indigo-600 text-white rounded-lg shadow-md hover:opacity-90 transition" onclick="copyShareURL()">
+                    Compartilhar URL
+                </button>
             </div>
-        `;
+        </div>
+    </div>
 
-        container.appendChild(medidaGroup);
+    <!-- Modal para Adicionar/Editar Cliente -->
+    <div id="popupCliente" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg shadow-lg relative max-w-lg w-full">
+            <span class="close text-2xl font-bold cursor-pointer absolute top-2 right-2" onclick="fecharPopup()">&times;</span>
+            <h2 id="popupTitulo" class="text-xl font-semibold mb-4 text-gray-800">Adicionar Novo Cliente</h2>
+            <input type="text" id="popupClienteNome" class="w-full p-2 border border-gray-300 rounded-md mb-4 focus:ring-2 focus:ring-purple-500 shadow-sm" placeholder="Nome do Cliente">
+            <input type="text" id="popupClienteTelefone" class="w-full p-2 border border-gray-300 rounded-md mb-4 focus:ring-2 focus:ring-purple-500 shadow-sm" placeholder="Telefone">
+            <input type="text" id="popupClienteEndereco" class="w-full p-2 border border-gray-300 rounded-md mb-4 focus:ring-2 focus:ring-purple-500 shadow-sm" placeholder="Endereço">
+            <input type="text" id="popupClienteCPF" class="w-full p-2 border border-gray-300 rounded-md mb-4 focus:ring-2 focus:ring-purple-500 shadow-sm" placeholder="CPF">
+            <input type="text" id="popupClienteCNPJ" class="w-full p-2 border border-gray-300 rounded-md mb-6 focus:ring-2 focus:ring-purple-500 shadow-sm" placeholder="CNPJ">
+            <button id="popupClienteBtnSalvar" class="w-full p-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-md shadow-md hover:opacity-90 transition" onclick="salvarCliente()">
+                Salvar Cliente
+            </button>
+        </div>
+    </div>
 
-        if (isFirst) {
-            medidaGroup.querySelector('.largura-input').focus();
+    <script>
+        // Inicializa máscaras nos campos
+        $(document).ready(function () {
+            $('#popupClienteTelefone, #telefoneClienteInput').mask('(00) 00000-0000');
+            $('#popupClienteCPF, #cpfClienteInput').mask('000.000.000-00');
+            $('#popupClienteCNPJ, #cnpjClienteInput').mask('00.000.000/0000-00');
+        });
+
+        // Lista de películas e clientes
+        const peliculas = [
+            { nome: "Window Blue Performance", preco: 240 },
+            { nome: "Window BLUE 70", preco: 200 },
+            { nome: "Carbono Window Usa", preco: 100 },
+            { nome: "Silver 10 Externa", preco: 280 },
+            { nome: "Prata Reflecta", preco: 120 },
+            { nome: "Prata Reflecta 15", preco: 120 },
+            { nome: "Origin Carbon", preco: 150 },
+            { nome: "Vinil Blackout", preco: 130 },
+            { nome: "Vinil Jateado", preco: 120 },
+            { nome: "Vinil Perfurado", preco: 85 },
+            { nome: "Window Premium", preco: 160 }
+        ];
+
+        let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
+        let clienteSelecionado = '';
+        const clienteSelect = document.getElementById('clienteSelect');
+
+        // Função para abrir o popup de adicionar ou editar cliente
+        function abrirPopup(acao) {
+            const popupTitulo = document.getElementById('popupTitulo');
+            if (acao === 'adicionar') {
+                popupTitulo.innerText = 'Adicionar Novo Cliente';
+                limparCamposPopup();
+                clienteSelecionado = '';
+            } else if (acao === 'editar') {
+                popupTitulo.innerText = 'Editar Cliente';
+                carregarDadosCliente();
+                clienteSelecionado = clienteSelect.value;
+            }
+            document.getElementById('popupCliente').classList.remove('hidden');
         }
 
-        calculateTotal();
-    }
-
-    // Função para atualizar o valor do Total M² automaticamente
-    function atualizarTotal(input, event) {
-        const group = input.closest('.bg-white');
-        const largura = parseFloat(group.querySelector('.largura-input').value) || 0;
-        const altura = parseFloat(group.querySelector('.altura-input').value) || 0;
-        const quantidade = parseInt(group.querySelector('.quantidade-input').value) || 1;
-        const totalM2 = largura * altura * quantidade;
-        group.querySelector('input[placeholder="M²"]').value = totalM2.toFixed(2);
-
-        // Verifica se há 3 números e muda o foco para o próximo input
-        const numericValue = event.target.value.replace(/\D/g, ''); // Remove caracteres não numéricos
-        if (numericValue.length === 3) {
-            const nextInput = input.nextElementSibling;
-            if (nextInput && nextInput.tagName === 'INPUT') {
-                nextInput.focus();
-            } else if (nextInput && nextInput.tagName === 'SELECT') {
-                nextInput.focus();
+        // Função para carregar dados do cliente no popup de edição
+        function carregarDadosCliente() {
+            const cliente = clientes.find(c => c.nome === clienteSelect.value);
+            if (cliente) {
+                document.getElementById('popupClienteNome').value = cliente.nome;
+                document.getElementById('popupClienteTelefone').value = cliente.telefone;
+                document.getElementById('popupClienteEndereco').value = cliente.endereco;
+                document.getElementById('popupClienteCPF').value = cliente.cpf;
+                document.getElementById('popupClienteCNPJ').value = cliente.cnpj;
             }
         }
 
-        calculateTotal();
-    }
+        // Função para salvar o cliente (adicionar ou editar)
+        function salvarCliente() {
+            const nome = document.getElementById('popupClienteNome').value.trim();
+            const telefone = document.getElementById('popupClienteTelefone').value.trim();
+            const endereco = document.getElementById('popupClienteEndereco').value.trim();
+            const cpf = document.getElementById('popupClienteCPF').value.trim();
+            const cnpj = document.getElementById('popupClienteCNPJ').value.trim();
 
-    // Função para duplicar um grupo de medida
-    function duplicarGrupo(button) {
-        const group = button.closest('.bg-white');
-        const largura = group.querySelector('.largura-input').value || '';
-        const altura = group.querySelector('.altura-input').value || '';
-        const quantidade = group.querySelector('.quantidade-input').value || '';
-        const ambiente = group.querySelector('.additional-fields select:nth-of-type(1)').value || '';
-        const tipoAplicacao = group.querySelector('.additional-fields select:nth-of-type(2)').value || '';
-        const peliculaSelecionada = group.querySelector('.pelicula-select').value || '';
+            if (nome && (clienteSelecionado === '' || nome === clienteSelecionado || !clientes.some(cliente => cliente.nome === nome))) {
+                const novoCliente = { nome, telefone, endereco, cpf, cnpj };
 
-        addMedidaGroup(false, largura, altura, quantidade, true, ambiente, tipoAplicacao, peliculaSelecionada);
-        calculateTotal();
-    }
+                if (clienteSelecionado) {
+                    const index = clientes.findIndex(c => c.nome === clienteSelecionado);
+                    clientes[index] = novoCliente;
+                } else {
+                    clientes.push(novoCliente);
+                }
 
-    // Função para duplicar todas as medidas
-    function duplicarMedidas() {
-        const medidaGroups = document.querySelectorAll('#medidasContainer > div');
-        medidaGroups.forEach(group => {
+                salvarClientesNoStorage();
+                carregarClientes(novoCliente.nome);
+                fecharPopup();
+            } else {
+                alert("O nome do cliente já existe ou não foi informado.");
+            }
+        }
+
+        // Função para limpar os campos do popup
+        function limparCamposPopup() {
+            document.getElementById('popupClienteNome').value = '';
+            document.getElementById('popupClienteTelefone').value = '';
+            document.getElementById('popupClienteEndereco').value = '';
+            document.getElementById('popupClienteCPF').value = '';
+            document.getElementById('popupClienteCNPJ').value = '';
+        }
+
+        // Função para carregar a lista de clientes no select
+        function carregarClientes(clienteSelecionado = '') {
+            clienteSelect.innerHTML = '<option value="">Selecione um cliente</option>';
+            if (clientes.length > 0) {
+                clienteSelect.classList.remove('hidden');
+                clientes.forEach(cliente => {
+                    const option = document.createElement('option');
+                    option.value = cliente.nome;
+                    option.textContent = cliente.nome;
+                    clienteSelect.appendChild(option);
+                });
+
+                if (clienteSelecionado) {
+                    clienteSelect.value = clienteSelecionado;
+                    loadMedidas();
+                    mostrarEditIconContainer(true);
+                } else {
+                    const ultimoClienteSelecionado = carregarClienteSelecionadoDoStorage();
+                    if (ultimoClienteSelecionado && clientes.some(cliente => cliente.nome === ultimoClienteSelecionado)) {
+                        clienteSelect.value = ultimoClienteSelecionado;
+                    } else if (clientes.length > 0) {
+                        clienteSelect.value = clientes[clientes.length - 1].nome;
+                    }
+                    loadMedidas();
+                }
+            } else {
+                clienteSelect.classList.add('hidden');
+                mostrarEditIconContainer(false);
+            }
+        }
+
+        // Função que executa ao mudar o cliente selecionado
+        function onClienteChange() {
+            clienteSelecionado = clienteSelect.value;
+            salvarClienteSelecionadoNoStorage(clienteSelecionado);
+            loadMedidas();
+
+            if (clienteSelecionado) {
+                mostrarEditIconContainer(true);
+            } else {
+                mostrarEditIconContainer(false);
+            }
+        }
+
+        // Função para exibir ou esconder o container de edição
+        function mostrarEditIconContainer(exibir) {
+            const editIconContainer = document.getElementById('editIconContainer');
+            if (exibir && clientes.length > 0) {
+                editIconContainer.classList.remove('hidden');
+            } else {
+                editIconContainer.classList.add('hidden');
+            }
+        }
+
+        // Função para fechar o popup de cliente
+        function fecharPopup() {
+            document.getElementById('popupCliente').classList.add('hidden');
+        }
+
+        // Função para confirmar a exclusão das medidas do cliente
+        function confirmClearMedidas() {
+            if (confirm("Tem certeza que deseja apagar este cliente e suas medidas?")) {
+                clearMedidas();
+            }
+        }
+
+        // Função para apagar medidas do cliente
+        function clearMedidas() {
+            const cliente = clienteSelect.value;
+            if (!cliente) {
+                alert('Selecione um cliente.');
+                return;
+            }
+
+            localStorage.removeItem(`medidas_${cliente}`);
+            const index = clientes.findIndex(c => c.nome === cliente);
+            if (index > -1) {
+                clientes.splice(index, 1);
+                localStorage.setItem('clientes', JSON.stringify(clientes));
+            }
+
+            carregarClientes();
+            document.getElementById('medidasContainer').innerHTML = '';
+            addMedidaGroup(true);
+            calculateTotal();
+        }
+
+        // Função para salvar medidas no local storage
+        function saveMedidas() {
+            const cliente = clienteSelect.value;
+            if (!cliente) return;
+
+            const medidaGroups = document.querySelectorAll('#medidasContainer > div');
+            const medidas = Array.from(medidaGroups).map(group => ({
+                largura: group.querySelector('.largura-input').value,
+                altura: group.querySelector('.altura-input').value,
+                quantidade: group.querySelector('.quantidade-input').value,
+                ambiente: group.querySelector('.additional-fields select:nth-of-type(1)').value,
+                tipoAplicacao: group.querySelector('.additional-fields select:nth-of-type(2)').value,
+                pelicula: group.querySelector('.pelicula-select').value
+            }));
+
+            localStorage.setItem(`medidas_${cliente}`, JSON.stringify(medidas));
+        }
+
+        // Função para carregar medidas do local storage
+        function loadMedidas() {
+            const cliente = clienteSelect.value;
+            const savedMedidas = localStorage.getItem(`medidas_${cliente}`);
+            const medidasContainer = document.getElementById('medidasContainer');
+            medidasContainer.innerHTML = '';
+
+            if (savedMedidas) {
+                const medidas = JSON.parse(savedMedidas);
+                medidas.forEach(medida => {
+                    addMedidaGroup(false, medida.largura, medida.altura, medida.quantidade, true, medida.ambiente, medida.tipoAplicacao, medida.pelicula);
+                });
+            } else {
+                addMedidaGroup(true);
+            }
+            calculateTotal();
+        }
+
+        // Função para adicionar um grupo de medida
+        function addMedidaGroup(isFirst, largura = '', altura = '', quantidade = 1, isChecked = true, ambiente = '', tipoAplicacao = '', peliculaSelecionada = '') {
+            const container = document.getElementById('medidasContainer');
+            const medidaGroup = document.createElement('div');
+            medidaGroup.classList.add('bg-white', 'shadow-md', 'rounded-lg', 'p-4', 'space-y-2');
+
+            medidaGroup.innerHTML = `
+                <div class="flex items-center space-x-2">
+                    <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleInputs(this)" class="form-checkbox h-4 w-4 text-blue-600 rounded focus:ring-0">
+                    <input type="number" placeholder="L" value="${largura}" class="w-1/4 p-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 largura-input" oninput="atualizarTotal(this, event)" maxlength="3">
+                    <input type="number" placeholder="A" value="${altura}" class="w-1/4 p-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 altura-input" oninput="atualizarTotal(this, event)" maxlength="3">
+                    <input type="number" placeholder="Q" value="${quantidade}" class="w-1/4 p-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 quantidade-input" oninput="atualizarTotal(this, event)" maxlength="3">
+                    <input type="text" placeholder="M²" disabled class="w-1/4 p-1 border border-gray-300 rounded-md bg-gray-100 text-gray-600">
+                </div>
+                <div class="flex items-center space-x-1">
+                    <select class="flex-grow min-w-0 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 pelicula-select" onchange="calculateTotal()">
+                        <option value="">Película</option>
+                        ${peliculas.map(p => `<option value="${p.nome}" ${p.nome === peliculaSelecionada ? 'selected' : ''}>${p.nome}</option>`).join('')}
+                    </select>
+                    <button class="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition shadow-md flex-shrink-0 w-8 h-8 flex items-center justify-center" onclick="duplicarGrupo(this)">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                    <button class="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition shadow-md flex-shrink-0 w-8 h-8 flex items-center justify-center" onclick="toggleAdditionalFields(this)">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition shadow-md flex-shrink-0 w-8 h-8 flex items-center justify-center" onclick="deleteMedidaGroup(this)">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+                <div class="additional-fields hidden mt-2">
+                    <select onchange="calculateTotal()" class="w-full p-2 mb-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500">
+                        <option value="">Ambiente</option>
+                        <option value="Sala de estar" ${ambiente === "Sala de estar" ? 'selected' : ''}>Sala de estar</option>
+                        <option value="Sala de jantar" ${ambiente === "Sala de jantar" ? 'selected' : ''}>Sala de jantar</option>
+                    </select>
+                    <select onchange="calculateTotal()" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500">
+                        <option value="">Tipo de Aplicação</option>
+                        <option value="Vidro Fixo" ${tipoAplicacao === "Vidro Fixo" ? 'selected' : ''}>Vidro Fixo</option>
+                        <option value="Janela Padrão" ${tipoAplicacao === "Janela Padrão" ? 'selected' : ''}>Janela Padrão</option>
+                    </select>
+                </div>
+            `;
+
+            container.appendChild(medidaGroup);
+
+            if (isFirst) {
+                medidaGroup.querySelector('.largura-input').focus();
+            }
+
+            calculateTotal();
+        }
+
+        // Função para atualizar o valor do Total M² automaticamente
+        function atualizarTotal(input, event) {
+            const group = input.closest('.bg-white');
+            const largura = parseFloat(group.querySelector('.largura-input').value) || 0;
+            const altura = parseFloat(group.querySelector('.altura-input').value) || 0;
+            const quantidade = parseInt(group.querySelector('.quantidade-input').value) || 1;
+            const totalM2 = largura * altura * quantidade;
+            group.querySelector('input[placeholder="M²"]').value = totalM2.toFixed(2);
+
+            // Verifica se há 3 números e muda o foco para o próximo input
+            const numericValue = event.target.value.replace(/\D/g, ''); // Remove caracteres não numéricos
+            if (numericValue.length === 3) {
+                const nextInput = input.nextElementSibling;
+                if (nextInput && nextInput.tagName === 'INPUT') {
+                    nextInput.focus();
+                } else if (nextInput && nextInput.tagName === 'SELECT') {
+                    nextInput.focus();
+                }
+            }
+
+            calculateTotal();
+        }
+
+        // Função para duplicar um grupo de medida
+        function duplicarGrupo(button) {
+            const group = button.closest('.bg-white');
             const largura = group.querySelector('.largura-input').value || '';
             const altura = group.querySelector('.altura-input').value || '';
             const quantidade = group.querySelector('.quantidade-input').value || '';
@@ -397,366 +380,380 @@
             const peliculaSelecionada = group.querySelector('.pelicula-select').value || '';
 
             addMedidaGroup(false, largura, altura, quantidade, true, ambiente, tipoAplicacao, peliculaSelecionada);
-        });
-        calculateTotal();
-    }
-
-    // Função para excluir um grupo de medida
-    function deleteMedidaGroup(button) {
-        if (confirm('Tem certeza que deseja excluir este grupo de medidas?')) {
-            button.closest('.bg-white').remove();
             calculateTotal();
+        }
+
+        // Função para duplicar todas as medidas
+        function duplicarMedidas() {
+            const medidaGroups = document.querySelectorAll('#medidasContainer > div');
+            medidaGroups.forEach(group => {
+                const largura = group.querySelector('.largura-input').value || '';
+                const altura = group.querySelector('.altura-input').value || '';
+                const quantidade = group.querySelector('.quantidade-input').value || '';
+                const ambiente = group.querySelector('.additional-fields select:nth-of-type(1)').value || '';
+                const tipoAplicacao = group.querySelector('.additional-fields select:nth-of-type(2)').value || '';
+                const peliculaSelecionada = group.querySelector('.pelicula-select').value || '';
+
+                addMedidaGroup(false, largura, altura, quantidade, true, ambiente, tipoAplicacao, peliculaSelecionada);
+            });
+            calculateTotal();
+        }
+
+        // Função para excluir um grupo de medida
+        function deleteMedidaGroup(button) {
+            if (confirm('Tem certeza que deseja excluir este grupo de medidas?')) {
+                button.closest('.bg-white').remove();
+                calculateTotal();
+                saveMedidas();
+            }
+        }
+
+        // Função para calcular o total de M² e preço
+        function calculateTotal() {
+            const medidaGroups = document.querySelectorAll('#medidasContainer > div');
+            let totalM2 = 0;
+            let precoTotal = 0;
+
+            medidaGroups.forEach(group => {
+                const isChecked = group.querySelector('input[type="checkbox"]').checked;
+                const largura = parseFloat(group.querySelector('.largura-input').value) || 0;
+                const altura = parseFloat(group.querySelector('.altura-input').value) || 0;
+                const quantidade = parseInt(group.querySelector('.quantidade-input').value) || 0;
+                const peliculaNome = group.querySelector('.pelicula-select').value;
+                const pelicula = peliculas.find(p => p.nome === peliculaNome);
+
+                const area = largura * altura * quantidade;
+                const preco = pelicula ? area * pelicula.preco : 0;
+
+                if (isChecked) {
+                    totalM2 += area;
+                    precoTotal += preco;
+                    group.querySelector('input[placeholder="M²"]').value = area.toFixed(2);
+                } else {
+                    group.querySelector('input[placeholder="M²"]').value = '0.00';
+                }
+            });
+
+            document.getElementById('resultado').innerText = `Total M²: ${totalM2.toFixed(2)} | Preço Total: R$ ${precoTotal.toFixed(2)}`;
             saveMedidas();
         }
-    }
 
-    // Função para calcular o total de M² e preço
-    function calculateTotal() {
-        const medidaGroups = document.querySelectorAll('#medidasContainer > div');
-        let totalM2 = 0;
-        let precoTotal = 0;
-
-        medidaGroups.forEach(group => {
-            const isChecked = group.querySelector('input[type="checkbox"]').checked;
-            const largura = parseFloat(group.querySelector('.largura-input').value) || 0;
-            const altura = parseFloat(group.querySelector('.altura-input').value) || 0;
-            const quantidade = parseInt(group.querySelector('.quantidade-input').value) || 0;
-            const peliculaNome = group.querySelector('.pelicula-select').value;
-            const pelicula = peliculas.find(p => p.nome === peliculaNome);
-
-            const area = largura * altura * quantidade;
-            const preco = pelicula ? area * pelicula.preco : 0;
-
-            if (isChecked) {
-                totalM2 += area;
-                precoTotal += preco;
-                group.querySelector('input[placeholder="M²"]').value = area.toFixed(2);
+        // Função para alternar os campos adicionais
+        function toggleAdditionalFields(button) {
+            const fields = button.closest('.bg-white').querySelector('.additional-fields');
+            if (fields.classList.contains('hidden')) {
+                fields.classList.remove('hidden');
+                button.innerHTML = '<i class="fas fa-eye-slash"></i>';
             } else {
-                group.querySelector('input[placeholder="M²"]').value = '0.00';
+                fields.classList.add('hidden');
+                button.innerHTML = '<i class="fas fa-eye"></i>';
             }
-        });
-
-        document.getElementById('resultado').innerText = `Total M²: ${totalM2.toFixed(2)} | Preço Total: R$ ${precoTotal.toFixed(2)}`;
-        saveMedidas();
-    }
-
-    // Função para alternar os campos adicionais
-    function toggleAdditionalFields(button) {
-        const fields = button.closest('.bg-white').querySelector('.additional-fields');
-        if (fields.classList.contains('hidden')) {
-            fields.classList.remove('hidden');
-            button.innerHTML = '<i class="fas fa-eye-slash"></i>';
-        } else {
-            fields.classList.add('hidden');
-            button.innerHTML = '<i class="fas fa-eye"></i>';
-        }
-    }
-
-    // Função para alternar a ativação/desativação dos inputs
-    function toggleInputs(checkbox) {
-        const inputs = checkbox.closest('.bg-white').querySelectorAll('input, select');
-        inputs.forEach(input => {
-            if (input !== checkbox) {
-                input.disabled = !checkbox.checked;
-            }
-        });
-        calculateTotal();
-    }
-
-    // Função para copiar a URL de compartilhamento
-    function copyShareURL() {
-        const cliente = clienteSelect.value;
-        if (!cliente) {
-            alert('Selecione um cliente.');
-            return;
         }
 
-        const url = new URL(window.location.href);
-        url.searchParams.set('cliente', cliente);
-        const shareURL = url.toString();
+        // Função para alternar a ativação/desativação dos inputs
+        function toggleInputs(checkbox) {
+            const inputs = checkbox.closest('.bg-white').querySelectorAll('input, select');
+            inputs.forEach(input => {
+                if (input !== checkbox) {
+                    input.disabled = !checkbox.checked;
+                }
+            });
+            calculateTotal();
+        }
 
-        navigator.clipboard.writeText(shareURL).then(() => {
-            alert('URL copiada para a área de transferência!');
-        }, (err) => {
-            console.error('Erro ao copiar a URL: ', err);
-        });
-    }
-
-    // Função que carrega as informações ao iniciar
-    document.addEventListener('DOMContentLoaded', () => {
-        carregarClientes();
-        document.getElementById('generatePdfButton').addEventListener('click', generatePDF_v3_0);
-    });
-
-    // Funções de armazenamento no LocalStorage
-    function salvarClientesNoStorage() {
-        localStorage.setItem('clientes', JSON.stringify(clientes));
-    }
-
-    function salvarClienteSelecionadoNoStorage(cliente) {
-        localStorage.setItem('clienteSelecionado', cliente);
-    }
-
-    function carregarClienteSelecionadoDoStorage() {
-        return localStorage.getItem('clienteSelecionado');
-    }
-
-    // Função para gerar o PDF (versão 3.0 com novo design e correções)
-    function generatePDF_v3_0() {
-        try {
-            const clienteNome = clienteSelect.value;
-            if (!clienteNome) {
+        // Função para copiar a URL de compartilhamento
+        function copyShareURL() {
+            const cliente = clienteSelect.value;
+            if (!cliente) {
                 alert('Selecione um cliente.');
                 return;
             }
 
-            const cliente = clientes.find(c => c.nome === clienteNome);
-            if (!cliente) {
-                alert('Informações do cliente não encontradas.');
-                return;
-            }
+            const url = new URL(window.location.href);
+            url.searchParams.set('cliente', cliente);
+            const shareURL = url.toString();
 
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF({
-                orientation: 'portrait',
-                unit: 'mm',
-                format: 'a4'
+            navigator.clipboard.writeText(shareURL).then(() => {
+                alert('URL copiada para a área de transferência!');
+            }, (err) => {
+                console.error('Erro ao copiar a URL: ', err);
             });
+        }
 
-            const pageWidth = doc.internal.pageSize.width;
-            const pageHeight = doc.internal.pageSize.height;
-            const margin = 15;
+        // Função que carrega as informações ao iniciar
+        document.addEventListener('DOMContentLoaded', () => {
+            carregarClientes();
+            document.getElementById('generatePdfButton').addEventListener('click', generatePDF_v3_0);
+        });
 
+        // Funções de armazenamento no LocalStorage
+        function salvarClientesNoStorage() {
+            localStorage.setItem('clientes', JSON.stringify(clientes));
+        }
 
-            const colors = {
-    primary: [28, 4, 56],                         // Novo azul (você pode ajustar esses valores RGB)
-    secondary: [242, 182, 3],                       // Novo verde (você pode ajustar esses valores RGB)
-    text: [44, 62, 80],                             // Mantenha esta cor para o texto, ou ajuste se necessário
-    lightGray: [236, 240, 241],                     // Para linhas alternadas da tabela
-    header: [0, 51, 102]                         // Novo vermelho (você pode ajustar esses valores RGB)
-};
+        function salvarClienteSelecionadoNoStorage(cliente) {
+            localStorage.setItem('clienteSelecionado', cliente);
+        }
 
-function addCover() {
-    const pageWidth = doc.internal.pageSize.width;
-    const pageHeight = doc.internal.pageSize.height;
-    const margin = 30;
+        function carregarClienteSelecionadoDoStorage() {
+            return localStorage.getItem('clienteSelecionado');
+        }
 
-    // Fundo da página
-    doc.setFillColor(245, 245, 245);  // Cinza muito claro
-    doc.rect(0, 0, pageWidth, pageHeight, 'F');
-
-    // Barras graduais no topo
-    const barColors = ['#000000', '#1a1a1a', '#333333', '#4d4d4d', '#666666', '#808080', '#999999', '#b3b3b3', '#cccccc', '#e6e6e6'];
-    const barWidth = pageWidth / barColors.length;
-    barColors.forEach((color, index) => {
-        doc.setFillColor(color);
-        doc.rect(index * barWidth, 0, barWidth, 40, 'F');
-    });
-
-    // Informações do cliente
-    doc.setTextColor(44, 62, 80);  // Azul escuro para o texto
-    doc.setFont("helvetica", 'bold');
-    doc.setFontSize(18);
-    doc.text(`Cliente: ${cliente.nome}`, margin, 70);
-
-    doc.setFont("helvetica", 'normal');
-    doc.setFontSize(12);
-    doc.text(`Telefone: ${cliente.telefone}`, margin, 90);
-    doc.text(`Endereço: ${cliente.endereco}`, margin, 105);
-    doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')}`, margin, 120);
-    
-    // Adicionar "VÁLIDO POR 90 DIAS"
-    doc.text("VÁLIDO POR 90 DIAS", margin, 135);
-
-    // Rodapé
-    doc.setDrawColor(41, 128, 185);  // Azul para a linha
-    doc.setLineWidth(1);
-    doc.line(margin, pageHeight - 40, pageWidth - margin, pageHeight - 40);
-
-    doc.setTextColor(41, 128, 185);  // Azul para o texto do rodapé
-    doc.setFontSize(12);
-    doc.setFont("helvetica", 'italic');
-    doc.text("Soluções em Películas de Alta Qualidade", pageWidth / 2, pageHeight - 25, { align: 'center' });
-}
-
-            function addFooter() {
-                const footerHeight = 20;
-                const footerY = pageHeight - footerHeight;
-
-                doc.setFillColor(...colors.primary);
-                doc.rect(0, footerY, pageWidth, footerHeight, 'F');
-
-                doc.setTextColor(255, 255, 255);
-                doc.setFontSize(8);
-                doc.setFont("helvetica", 'normal');
-                doc.text("FUME JP | (83) 99301-5765 | www.fumejp.com.br", margin, footerY + 8);
-
-                doc.text(`Página ${doc.internal.getNumberOfPages()}`, pageWidth - margin, footerY + 8, { align: 'right' });
-            }
-
-            function addPage() {
-                doc.addPage();
-                addFooter();
-                return margin + 20;
-            }
-
-            function addContent() {
-                let y = addPage();
-
-                function addSectionTitle(title) {
-                    if (y > pageHeight - 40) y = addPage();
-                    doc.setFillColor(...colors.header);
-                    doc.rect(0, y, pageWidth, 30, 'F');
-                    doc.setTextColor(255, 255, 255);
-                    doc.setFontSize(12);
-                    doc.setFont("helvetica", 'bold');
-                    doc.text(title, margin, y + 12);
-                    y += 15;
+        // Função para gerar o PDF (versão 3.0 com novo design e correções)
+        function generatePDF_v3_0() {
+            try {
+                const clienteNome = clienteSelect.value;
+                if (!clienteNome) {
+                    alert('Selecione um cliente.');
+                    return;
                 }
 
-                function addTableHeader() {
-                    const headers = ["Item", "Dimensões", "Película", "Ambiente", "Tipo", "Área", "Preço"];
-                    const colWidths = [15, 30, 35, 30, 30, 20, 25];
-                    
-                    doc.setFillColor(...colors.primary);
-                    doc.rect(margin, y, pageWidth - 2 * margin, 10, 'F');
-                    doc.setTextColor(255, 255, 255);
-                    doc.setFontSize(9);
-                    doc.setFont("helvetica", 'bold');
+                const cliente = clientes.find(c => c.nome === clienteNome);
+                if (!cliente) {
+                    alert('Informações do cliente não encontradas.');
+                    return;
+                }
 
-                    let xOffset = margin;
-                    headers.forEach((header, index) => {
-                        doc.text(header, xOffset + 2, y + 6.5);
-                        xOffset += colWidths[index];
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: 'a4'
+                });
+
+                const pageWidth = doc.internal.pageSize.width;
+                const pageHeight = doc.internal.pageSize.height;
+                const margin = 15;
+
+                const colors = {
+                    primary: [28, 4, 56],                         // Novo azul (você pode ajustar esses valores RGB)
+                    secondary: [242, 182, 3],                       // Novo verde (você pode ajustar esses valores RGB)
+                    text: [44, 62, 80],                             // Mantenha esta cor para o texto, ou ajuste se necessário
+                    lightGray: [236, 240, 241],                     // Para linhas alternadas da tabela
+                    header: [0, 51, 102]                         // Novo vermelho (você pode ajustar esses valores RGB)
+                };
+
+                function addCover() {
+                    const pageWidth = doc.internal.pageSize.width;
+                    const pageHeight = doc.internal.pageSize.height;
+                    const margin = 30;
+
+                    // Fundo da página
+                    doc.setFillColor(245, 245, 245);  // Cinza muito claro
+                    doc.rect(0, 0, pageWidth, pageHeight, 'F');
+
+                    // Barras graduais no topo
+                    const barColors = ['#000000', '#1a1a1a', '#333333', '#4d4d4d', '#666666', '#808080', '#999999', '#b3b3b3', '#cccccc', '#e6e6e6'];
+                    const barWidth = pageWidth / barColors.length;
+                    barColors.forEach((color, index) => {
+                        doc.setFillColor(color);
+                        doc.rect(index * barWidth, 0, barWidth, 40, 'F');
                     });
 
-                    y += 12;
+                    // Informações do cliente
+                    doc.setTextColor(44, 62, 80);  // Azul escuro para o texto
+                    doc.setFont("helvetica", 'bold');
+                    doc.setFontSize(18);
+                    doc.text(`Cliente: ${cliente.nome}`, margin, 70);
+
+                    doc.setFont("helvetica", 'normal');
+                    doc.setFontSize(12);
+                    doc.text(`Telefone: ${cliente.telefone}`, margin, 90);
+                    doc.text(`Endereço: ${cliente.endereco}`, margin, 105);
+                    doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')}`, margin, 120);
+
+                    // Adicionar "VÁLIDO POR 90 DIAS"
+                    doc.text("VÁLIDO POR 90 DIAS", margin, 135);
+
+                    // Rodapé
+                    doc.setDrawColor(41, 128, 185);  // Azul para a linha
+                    doc.setLineWidth(1);
+                    doc.line(margin, pageHeight - 40, pageWidth - margin, pageHeight - 40);
+
+                    doc.setTextColor(41, 128, 185);  // Azul para o texto do rodapé
+                    doc.setFontSize(12);
+                    doc.setFont("helvetica", 'italic');
+                    doc.text("Soluções em Películas de Alta Qualidade", pageWidth / 2, pageHeight - 25, { align: 'center' });
                 }
 
-                function addMedidaItem(medida, index) {
-                    if (y > pageHeight - 40) {
-                        y = addPage();
-                        addTableHeader();
-                    }
+                function addFooter() {
+                    const footerHeight = 20;
+                    const footerY = pageHeight - footerHeight;
 
-                    const largura = medida.querySelector('.largura-input').value || '0';
-                    const altura = medida.querySelector('.altura-input').value || '0';
-                    const quantidade = medida.querySelector('.quantidade-input').value || '0';
-                    const totalM2 = medida.querySelector('input[placeholder="M²"]').value || '0';
-                    const ambiente = medida.querySelector('.additional-fields select:first-child').value || '';
-                    const tipoAplicacao = medida.querySelector('.additional-fields select:last-child').value || '';
-                    const peliculaNome = medida.querySelector('.pelicula-select').value || '';
-                    const pelicula = peliculas.find(p => p.nome === peliculaNome);
+                    doc.setFillColor(...colors.primary);
+                    doc.rect(0, footerY, pageWidth, footerHeight, 'F');
 
-                    const colWidths = [15, 30, 35, 30, 30, 20, 25];
-                    let xOffset = margin;
-
-                    if (index % 2 === 0) {
-                        doc.setFillColor(...colors.lightGray);
-                    } else {
-                        doc.setFillColor(255, 255, 255);
-                    }
-                    doc.rect(margin, y - 2, pageWidth - 2 * margin, 10, 'F');
-
-                    doc.setTextColor(...colors.text);
+                    doc.setTextColor(255, 255, 255);
                     doc.setFontSize(8);
                     doc.setFont("helvetica", 'normal');
+                    doc.text("FUME JP | (83) 99301-5765 | www.fumejp.com.br", margin, footerY + 8);
 
-                    doc.text(`${index + 1}`, xOffset + 2, y + 4);
-                    xOffset += colWidths[0];
-                    doc.text(`${largura}x${altura} (${quantidade})`, xOffset + 2, y + 4);
-                    xOffset += colWidths[1];
-                    doc.text(peliculaNome, xOffset + 2, y + 4);
-                    xOffset += colWidths[2];
-                    doc.text(ambiente, xOffset + 2, y + 4);
-                    xOffset += colWidths[3];
-                    doc.text(tipoAplicacao, xOffset + 2, y + 4);
-                    xOffset += colWidths[4];
-                    doc.text(`${totalM2} m²`, xOffset + 2, y + 4);
-                    xOffset += colWidths[5];
-                    
-                    if (pelicula) {
-                        const preco = (pelicula.preco * parseFloat(totalM2)).toFixed(2);
-                        doc.text(`R$ ${preco}`, xOffset + 2, y + 4);
-                    }
-
-                    y += 12;
+                    doc.text(`Página ${doc.internal.getNumberOfPages()}`, pageWidth - margin, footerY + 8, { align: 'right' });
                 }
 
-                function addTotalSection(peliculaNome, total) {
-                    if (y > pageHeight - 30) y = addPage();
-
-                    doc.setFillColor(...colors.secondary);
-                    doc.rect(margin, y, pageWidth - 2 * margin, 20, 'F');
-
-                    doc.setTextColor(255, 255, 255);
-                    doc.setFontSize(11);
-                    doc.setFont("helvetica", 'bold');
-                    doc.text(`Total para ${peliculaNome}:`, margin + 5, y + 8);
-                    doc.text(`Área Total: ${total.totalM2.toFixed(2)} m²`, margin + 5, y + 15);
-                    doc.text(`Preço Total: R$ ${total.precoTotal.toFixed(2)}`, pageWidth - margin - 5, y + 15, { align: 'right' });
-
-                    y += 25;
+                function addPage() {
+                    doc.addPage();
+                    addFooter();
+                    return margin + 20;
                 }
-                
-                const medidaGroups = document.querySelectorAll('#medidasContainer > div');
-                const medidasPorPelicula = {};
-                const totaisGerais = { totalM2: 0, precoTotal: 0 };
 
-                medidaGroups.forEach(group => {
-                    const peliculaNome = group.querySelector('.pelicula-select').value || 'Sem Película';
-                    if (!medidasPorPelicula[peliculaNome]) {
-                        medidasPorPelicula[peliculaNome] = [];
+                function addContent() {
+                    let y = addPage();
+
+                    function addSectionTitle(title) {
+                        if (y > pageHeight - 40) y = addPage();
+                        doc.setFillColor(...colors.header);
+                        doc.rect(0, y, pageWidth, 30, 'F');
+                        doc.setTextColor(255, 255, 255);
+                        doc.setFontSize(12);
+                        doc.setFont("helvetica", 'bold');
+                        doc.text(title, margin, y + 12);
+                        y += 15;
                     }
-                    medidasPorPelicula[peliculaNome].push(group);
 
-                    const largura = parseFloat(group.querySelector('.largura-input').value) || 0;
-                    const altura = parseFloat(group.querySelector('.altura-input').value) || 0;
-                    const quantidade = parseInt(group.querySelector('.quantidade-input').value) || 0;
-                    const pelicula = peliculas.find(p => p.nome === peliculaNome);
-                    const area = largura * altura * quantidade;
-                    const preco = pelicula ? area * pelicula.preco : 0;
+                    function addTableHeader() {
+                        const headers = ["Item", "Dimensões", "Película", "Ambiente", "Tipo", "Área", "Preço"];
+                        const colWidths = [15, 30, 35, 30, 30, 20, 25];
 
-                    totaisGerais.totalM2 += area;
-                    totaisGerais.precoTotal += preco;
-                });
+                        doc.setFillColor(...colors.primary);
+                        doc.rect(margin, y, pageWidth - 2 * margin, 10, 'F');
+                        doc.setTextColor(255, 255, 255);
+                        doc.setFontSize(9);
+                        doc.setFont("helvetica", 'bold');
 
-                Object.entries(medidasPorPelicula).forEach(([peliculaNome, medidas], index) => {
-                    if (index > 0) y = addPage();
-                    addSectionTitle(`Orçamento para: ${peliculaNome}`);
-                    addTableHeader();
-                    medidas.forEach((group, idx) => {
-                        addMedidaItem(group, idx + 1);
+                        let xOffset = margin;
+                        headers.forEach((header, index) => {
+                            doc.text(header, xOffset + 2, y + 6.5);
+                            xOffset += colWidths[index];
+                        });
+
+                        y += 12;
+                    }
+
+                    function addMedidaItem(medida, index) {
+                        if (y > pageHeight - 40) {
+                            y = addPage();
+                            addTableHeader();
+                        }
+
+                        const largura = medida.querySelector('.largura-input').value || '0';
+                        const altura = medida.querySelector('.altura-input').value || '0';
+                        const quantidade = medida.querySelector('.quantidade-input').value || '0';
+                        const totalM2 = medida.querySelector('input[placeholder="M²"]').value || '0';
+                        const ambiente = medida.querySelector('.additional-fields select:first-child').value || '';
+                        const tipoAplicacao = medida.querySelector('.additional-fields select:last-child').value || '';
+                        const peliculaNome = medida.querySelector('.pelicula-select').value || '';
+                        const pelicula = peliculas.find(p => p.nome === peliculaNome);
+
+                        const colWidths = [15, 30, 35, 30, 30, 20, 25];
+                        let xOffset = margin;
+
+                        if (index % 2 === 0) {
+                            doc.setFillColor(...colors.lightGray);
+                        } else {
+                            doc.setFillColor(255, 255, 255);
+                        }
+                        doc.rect(margin, y - 2, pageWidth - 2 * margin, 10, 'F');
+
+                        doc.setTextColor(...colors.text);
+                        doc.setFontSize(8);
+                        doc.setFont("helvetica", 'normal');
+
+                        doc.text(`${index + 1}`, xOffset + 2, y + 4);
+                        xOffset += colWidths[0];
+                        doc.text(`${largura}x${altura} (${quantidade})`, xOffset + 2, y + 4);
+                        xOffset += colWidths[1];
+                        doc.text(peliculaNome, xOffset + 2, y + 4);
+                        xOffset += colWidths[2];
+                        doc.text(ambiente, xOffset + 2, y + 4);
+                        xOffset += colWidths[3];
+                        doc.text(tipoAplicacao, xOffset + 2, y + 4);
+                        xOffset += colWidths[4];
+                        doc.text(`${totalM2} m²`, xOffset + 2, y + 4);
+                        xOffset += colWidths[5];
+
+                        if (pelicula) {
+                            const preco = (pelicula.preco * parseFloat(totalM2)).toFixed(2);
+                            doc.text(`R$ ${preco}`, xOffset + 2, y + 4);
+                        }
+
+                        y += 12;
+                    }
+
+                    function addTotalSection(peliculaNome, total) {
+                        if (y > pageHeight - 30) y = addPage();
+
+                        doc.setFillColor(...colors.secondary);
+                        doc.rect(margin, y, pageWidth - 2 * margin, 20, 'F');
+
+                        doc.setTextColor(255, 255, 255);
+                        doc.setFontSize(11);
+                        doc.setFont("helvetica", 'bold');
+                        doc.text(`Total para ${peliculaNome}:`, margin + 5, y + 8);
+                        doc.text(`Área Total: ${total.totalM2.toFixed(2)} m²`, margin + 5, y + 15);
+                        doc.text(`Preço Total: R$ ${total.precoTotal.toFixed(2)}`, pageWidth - margin - 5, y + 15, { align: 'right' });
+
+                        y += 25;
+                    }
+
+                    const medidaGroups = document.querySelectorAll('#medidasContainer > div');
+                    const medidasPorPelicula = {};
+                    const totaisGerais = { totalM2: 0, precoTotal: 0 };
+
+                    medidaGroups.forEach(group => {
+                        const peliculaNome = group.querySelector('.pelicula-select').value || 'Sem Película';
+                        if (!medidasPorPelicula[peliculaNome]) {
+                            medidasPorPelicula[peliculaNome] = [];
+                        }
+                        medidasPorPelicula[peliculaNome].push(group);
+
+                        const largura = parseFloat(group.querySelector('.largura-input').value) || 0;
+                        const altura = parseFloat(group.querySelector('.altura-input').value) || 0;
+                        const quantidade = parseInt(group.querySelector('.quantidade-input').value) || 0;
+                        const pelicula = peliculas.find(p => p.nome === peliculaNome);
+                        const area = largura * altura * quantidade;
+                        const preco = pelicula ? area * pelicula.preco : 0;
+
+                        totaisGerais.totalM2 += area;
+                        totaisGerais.precoTotal += preco;
                     });
 
-                    const totalPelicula = {
-                        totalM2: medidas.reduce((sum, group) => sum + (parseFloat(group.querySelector('input[placeholder="M²"]').value) || 0), 0),
-                        precoTotal: medidas.reduce((sum, group) => {
-                            const area = parseFloat(group.querySelector('input[placeholder="M²"]').value) || 0;
-                            const pelicula = peliculas.find(p => p.nome === peliculaNome);
-                            return sum + (pelicula ? area * pelicula.preco : 0);
-                        }, 0)
-                    };
+                    Object.entries(medidasPorPelicula).forEach(([peliculaNome, medidas], index) => {
+                        if (index > 0) y = addPage();
+                        addSectionTitle(`Orçamento para: ${peliculaNome}`);
+                        addTableHeader();
+                        medidas.forEach((group, idx) => {
+                            addMedidaItem(group, idx + 1);
+                        });
 
-                    addTotalSection(peliculaNome, totalPelicula);
-                });
+                        const totalPelicula = {
+                            totalM2: medidas.reduce((sum, group) => sum + (parseFloat(group.querySelector('input[placeholder="M²"]').value) || 0), 0),
+                            precoTotal: medidas.reduce((sum, group) => {
+                                const area = parseFloat(group.querySelector('input[placeholder="M²"]').value) || 0;
+                                const pelicula = peliculas.find(p => p.nome === peliculaNome);
+                                return sum + (pelicula ? area * pelicula.preco : 0);
+                            }, 0)
+                        };
 
-                y = addPage();
-                addSectionTitle("Total Geral do Orçamento");
-                addTotalSection("Todas as Películas", totaisGerais);
+                        addTotalSection(peliculaNome, totalPelicula);
+                    });
+
+                    y = addPage();
+                    addSectionTitle("Total Geral do Orçamento");
+                    addTotalSection("Todas as Películas", totaisGerais);
+                }
+
+                addCover();
+                addContent();
+
+                doc.save(`orcamento_${cliente.nome.replace(/\s+/g, '_').toLowerCase()}.pdf`);
+            } catch (error) {
+                console.error("Erro ao gerar PDF:", error);
+                alert("Ocorreu um erro ao gerar o PDF. Por favor, verifique o console para mais detalhes.");
             }
-
-            addCover();
-            addContent();
-
-            doc.save(`orcamento_${cliente.nome.replace(/\s+/g, '_').toLowerCase()}.pdf`);
-        } catch (error) {
-            console.error("Erro ao gerar PDF:", error);
-            alert("Ocorreu um erro ao gerar o PDF. Por favor, verifique o console para mais detalhes.");
         }
-    }
 
-</script>
+    </script>
 </body>
 
 </html>
