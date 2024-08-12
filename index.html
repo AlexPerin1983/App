@@ -138,29 +138,36 @@
 
         // Função para salvar o cliente (adicionar ou editar)
         function salvarCliente() {
-            const nome = document.getElementById('popupClienteNome').value.trim();
-            const telefone = document.getElementById('popupClienteTelefone').value.trim();
-            const endereco = document.getElementById('popupClienteEndereco').value.trim();
-            const cpf = document.getElementById('popupClienteCPF').value.trim();
-            const cnpj = document.getElementById('popupClienteCNPJ').value.trim();
+    const nome = document.getElementById('popupClienteNome').value.trim();
+    const telefone = document.getElementById('popupClienteTelefone').value.trim();
+    const endereco = document.getElementById('popupClienteEndereco').value.trim();
+    const cpf = document.getElementById('popupClienteCPF').value.trim();
+    const cnpj = document.getElementById('popupClienteCNPJ').value.trim();
 
-            if (nome && (clienteSelecionado === '' || nome === clienteSelecionado || !clientes.some(cliente => cliente.nome === nome))) {
-                const novoCliente = { nome, telefone, endereco, cpf, cnpj };
+    if (nome && (clienteSelecionado === '' || nome === clienteSelecionado || !clientes.some(cliente => cliente.nome === nome))) {
+        const novoCliente = { nome, telefone, endereco, cpf, cnpj };
 
-                if (clienteSelecionado) {
-                    const index = clientes.findIndex(c => c.nome === clienteSelecionado);
-                    clientes[index] = novoCliente;
-                } else {
-                    clientes.push(novoCliente);
-                }
-
-                salvarClientesNoStorage();
-                carregarClientes(novoCliente.nome);
-                fecharPopup();
-            } else {
-                alert("O nome do cliente já existe ou não foi informado.");
+        if (clienteSelecionado) {
+            const index = clientes.findIndex(c => c.nome === clienteSelecionado);
+            // Mantém as medidas existentes antes de atualizar o cliente
+            const medidasExistentes = localStorage.getItem(`medidas_${clienteSelecionado}`);
+            clientes[index] = novoCliente;
+            if (medidasExistentes) {
+                localStorage.setItem(`medidas_${nome}`, medidasExistentes);  // Relaciona as medidas ao novo nome
+                localStorage.removeItem(`medidas_${clienteSelecionado}`);    // Remove as medidas associadas ao nome antigo
             }
+        } else {
+            clientes.push(novoCliente);
         }
+
+        salvarClientesNoStorage();
+        carregarClientes(novoCliente.nome);
+        fecharPopup();
+    } else {
+        alert("O nome do cliente já existe ou não foi informado.");
+    }
+}
+
 
         // Função para limpar os campos do popup
         function limparCamposPopup() {
