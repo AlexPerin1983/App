@@ -24,7 +24,7 @@
         <div class="space-y-4">
             <!-- Seletor de Cliente e Botão de Adição -->
             <div class="flex items-center space-x-2">
-                <select id="clienteSelect" class="flex-grow p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 transition" onchange="onClienteChange()">
+                <select id="clienteSelect" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 transition" onchange="onClienteChange()">
                     <option value="">Selecione um cliente</option>
                 </select>
                 <button id="addNewClienteBtn" class="p-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-md shadow-md hover:opacity-90 transition" onclick="abrirPopup('adicionar')">
@@ -71,6 +71,7 @@
         <div class="bg-white p-6 rounded-lg shadow-lg relative max-w-lg w-full">
             <span class="close text-2xl font-bold cursor-pointer absolute top-2 right-2" onclick="fecharPopup()">&times;</span>
             <h2 id="popupTitulo" class="text-xl font-semibold mb-4 text-gray-800">Adicionar Novo Cliente</h2>
+            <!-- Campos do cliente -->
             <input type="text" id="popupClienteNome" class="w-full p-2 border border-gray-300 rounded-md mb-4 focus:ring-2 focus:ring-purple-500 shadow-sm" placeholder="Nome do Cliente">
             <input type="text" id="popupClienteTelefone" class="w-full p-2 border border-gray-300 rounded-md mb-4 focus:ring-2 focus:ring-purple-500 shadow-sm" placeholder="Telefone">
             <input type="text" id="popupClienteEndereco" class="w-full p-2 border border-gray-300 rounded-md mb-4 focus:ring-2 focus:ring-purple-500 shadow-sm" placeholder="Endereço">
@@ -81,6 +82,7 @@
             </button>
         </div>
     </div>
+    
 
     <script>
         // Inicializa máscaras nos campos
@@ -91,38 +93,57 @@
         });
 
         // Lista de películas e clientes
-        const peliculas = [
-            { nome: "Window Blue Performance", preco: 240 },
-            { nome: "Window BLUE 70", preco: 200 },
-            { nome: "Carbono Window Usa", preco: 100 },
-            { nome: "Silver 10 Externa", preco: 280 },
-            { nome: "Prata Reflecta", preco: 120 },
-            { nome: "Prata Reflecta 15", preco: 120 },
-            { nome: "Origin Carbon", preco: 150 },
-            { nome: "Vinil Blackout", preco: 130 },
-            { nome: "Vinil Jateado", preco: 120 },
-            { nome: "Vinil Perfurado", preco: 85 },
-            { nome: "Window Premium", preco: 160 }
-        ];
+ // Lista de películas e clientes
+const peliculas = [
+    { nome: "Window Blue Performance", preco: 240 },
+    { nome: "Window BLUE 70", preco: 200 },
+    { nome: "Carbono Window Usa", preco: 100 },
+    { nome: "Silver 10 Externa", preco: 280 },
+    { nome: "Prata Reflecta", preco: 120 },
+    { nome: "Prata Reflecta 15", preco: 120 },
+    { nome: "Origin Carbon", preco: 150 },
+    { nome: "Vinil Blackout", preco: 130 },
+    { nome: "Vinil Jateado", preco: 120 },
+    { nome: "Vinil Perfurado", preco: 85 },
+    { nome: "Window Premium", preco: 160 }
+];
 
-        let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
-        let clienteSelecionado = '';
-        const clienteSelect = document.getElementById('clienteSelect');
+let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
 
-        // Função para abrir o popup de adicionar ou editar cliente
-        function abrirPopup(acao) {
-            const popupTitulo = document.getElementById('popupTitulo');
-            if (acao === 'adicionar') {
-                popupTitulo.innerText = 'Adicionar Novo Cliente';
-                limparCamposPopup();
-                clienteSelecionado = '';
-            } else if (acao === 'editar') {
-                popupTitulo.innerText = 'Editar Cliente';
-                carregarDadosCliente();
-                clienteSelecionado = clienteSelect.value;
-            }
-            document.getElementById('popupCliente').classList.remove('hidden');
-        }
+// Novo código para remover clientes vazios
+clientes = clientes.filter(cliente => cliente.nome && cliente.nome.trim() !== "");
+localStorage.setItem('clientes', JSON.stringify(clientes));
+
+let clienteSelecionado = '';
+const clienteSelect = document.getElementById('clienteSelect');
+
+// Função para abrir o popup de adicionar ou editar cliente
+function abrirPopup(acao) {
+    const popupTitulo = document.getElementById('popupTitulo');
+    if (acao === 'adicionar') {
+        popupTitulo.innerText = 'Adicionar Novo Cliente';
+        limparCamposPopup();  // Verifique se esta função está definida
+        clienteSelecionado = '';
+    } else if (acao === 'editar') {
+        popupTitulo.innerText = 'Editar Cliente';
+        carregarDadosCliente();
+        clienteSelecionado = clienteSelect.value;
+    }
+    document.getElementById('popupCliente').classList.remove('hidden');
+}
+
+// Função para limpar os campos do popup
+function limparCamposPopup() {
+    document.getElementById('popupClienteNome').value = '';
+    document.getElementById('popupClienteTelefone').value = '';
+    document.getElementById('popupClienteEndereco').value = '';
+    document.getElementById('popupClienteCPF').value = '';
+    document.getElementById('popupClienteCNPJ').value = '';
+}
+
+
+// O restante do código permanece o mesmo...
+
 
         // Função para carregar dados do cliente no popup de edição
         function carregarDadosCliente() {
@@ -137,29 +158,35 @@
         }
 
         // Função para salvar o cliente (adicionar ou editar)
-        function salvarCliente() {
+// Função para salvar o cliente (adicionar ou editar)
+function salvarCliente() {
     const nome = document.getElementById('popupClienteNome').value.trim();
     const telefone = document.getElementById('popupClienteTelefone').value.trim();
     const endereco = document.getElementById('popupClienteEndereco').value.trim();
     const cpf = document.getElementById('popupClienteCPF').value.trim();
     const cnpj = document.getElementById('popupClienteCNPJ').value.trim();
 
+    // Verifica se o nome do cliente já existe e se não é o mesmo que está sendo editado
     if (nome && (clienteSelecionado === '' || nome === clienteSelecionado || !clientes.some(cliente => cliente.nome === nome))) {
         const novoCliente = { nome, telefone, endereco, cpf, cnpj };
 
         if (clienteSelecionado) {
             const index = clientes.findIndex(c => c.nome === clienteSelecionado);
-            // Mantém as medidas existentes antes de atualizar o cliente
+            
+            // Relaciona as medidas existentes ao novo nome do cliente, se o nome foi alterado
             const medidasExistentes = localStorage.getItem(`medidas_${clienteSelecionado}`);
             clientes[index] = novoCliente;
             if (medidasExistentes) {
-                localStorage.setItem(`medidas_${nome}`, medidasExistentes);  // Relaciona as medidas ao novo nome
-                localStorage.removeItem(`medidas_${clienteSelecionado}`);    // Remove as medidas associadas ao nome antigo
+                localStorage.setItem(`medidas_${nome}`, medidasExistentes);
+                if (nome !== clienteSelecionado) {
+                    localStorage.removeItem(`medidas_${clienteSelecionado}`);
+                }
             }
         } else {
             clientes.push(novoCliente);
         }
 
+        // Atualiza a lista de clientes no localStorage e dropdown
         salvarClientesNoStorage();
         carregarClientes(novoCliente.nome);
         fecharPopup();
@@ -168,46 +195,37 @@
     }
 }
 
+// Função para carregar a lista de clientes no select
+function carregarClientes(clienteSelecionado = '') {
+    clienteSelect.innerHTML = '<option value="">Selecione um cliente</option>';
+    if (clientes.length > 0) {
+        clienteSelect.classList.remove('hidden');
+        clientes.forEach(cliente => {
+            const option = document.createElement('option');
+            option.value = cliente.nome;
+            option.textContent = cliente.nome;
+            clienteSelect.appendChild(option);
+        });
 
-        // Função para limpar os campos do popup
-        function limparCamposPopup() {
-            document.getElementById('popupClienteNome').value = '';
-            document.getElementById('popupClienteTelefone').value = '';
-            document.getElementById('popupClienteEndereco').value = '';
-            document.getElementById('popupClienteCPF').value = '';
-            document.getElementById('popupClienteCNPJ').value = '';
-        }
-
-        // Função para carregar a lista de clientes no select
-        function carregarClientes(clienteSelecionado = '') {
-            clienteSelect.innerHTML = '<option value="">Selecione um cliente</option>';
-            if (clientes.length > 0) {
-                clienteSelect.classList.remove('hidden');
-                clientes.forEach(cliente => {
-                    const option = document.createElement('option');
-                    option.value = cliente.nome;
-                    option.textContent = cliente.nome;
-                    clienteSelect.appendChild(option);
-                });
-
-                if (clienteSelecionado) {
-                    clienteSelect.value = clienteSelecionado;
-                    loadMedidas();
-                    mostrarEditIconContainer(true);
-                } else {
-                    const ultimoClienteSelecionado = carregarClienteSelecionadoDoStorage();
-                    if (ultimoClienteSelecionado && clientes.some(cliente => cliente.nome === ultimoClienteSelecionado)) {
-                        clienteSelect.value = ultimoClienteSelecionado;
-                    } else if (clientes.length > 0) {
-                        clienteSelect.value = clientes[clientes.length - 1].nome;
-                    }
-                    loadMedidas();
-                }
-            } else {
-                clienteSelect.classList.add('hidden');
-                mostrarEditIconContainer(false);
+        if (clienteSelecionado) {
+            clienteSelect.value = clienteSelecionado;
+            loadMedidas();
+            mostrarEditIconContainer(true);
+        } else {
+            const ultimoClienteSelecionado = carregarClienteSelecionadoDoStorage();
+            if (ultimoClienteSelecionado && clientes.some(cliente => cliente.nome === ultimoClienteSelecionado)) {
+                clienteSelect.value = ultimoClienteSelecionado;
+            } else if (clientes.length > 0) {
+                clienteSelect.value = clientes[clientes.length - 1].nome;
             }
+            loadMedidas();
         }
+    } else {
+        clienteSelect.classList.add('hidden');
+        mostrarEditIconContainer(false);
+    }
+}
+
 
         // Função que executa ao mudar o cliente selecionado
         function onClienteChange() {
