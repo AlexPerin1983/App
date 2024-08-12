@@ -98,11 +98,10 @@ const peliculas = [
     { nome: "Window Blue Performance", preco: 240 },
     { nome: "Window BLUE 70", preco: 200 },
     { nome: "Carbono Window Usa", preco: 100 },
-     { nome: "Profissional", preco: 90 },
     { nome: "Silver 10 Externa", preco: 280 },
     { nome: "Prata Reflecta", preco: 120 },
     { nome: "Prata Reflecta 15", preco: 120 },
-    { nome: "Origin Carbon", preco: 120 },
+    { nome: "Origin Carbon", preco: 150 },
     { nome: "Vinil Blackout", preco: 130 },
     { nome: "Vinil Jateado", preco: 120 },
     { nome: "Vinil Perfurado", preco: 85 },
@@ -198,7 +197,7 @@ function salvarCliente() {
 
 // Função para carregar a lista de clientes no select
 function carregarClientes(clienteSelecionado = '') {
-    clienteSelect.innerHTML = ''; // Removemos a opção inicial
+    clienteSelect.innerHTML = '<option value="">Selecione um cliente</option>';
     if (clientes.length > 0) {
         clienteSelect.classList.remove('hidden');
         clientes.forEach(cliente => {
@@ -208,22 +207,24 @@ function carregarClientes(clienteSelecionado = '') {
             clienteSelect.appendChild(option);
         });
 
-        // Seleciona o primeiro cliente da lista, se nenhum cliente for selecionado
         if (clienteSelecionado) {
             clienteSelect.value = clienteSelecionado;
+            loadMedidas();
+            mostrarEditIconContainer(true);
         } else {
-            clienteSelect.value = clientes[0].nome; // Seleciona o primeiro cliente da lista
+            const ultimoClienteSelecionado = carregarClienteSelecionadoDoStorage();
+            if (ultimoClienteSelecionado && clientes.some(cliente => cliente.nome === ultimoClienteSelecionado)) {
+                clienteSelect.value = ultimoClienteSelecionado;
+            } else if (clientes.length > 0) {
+                clienteSelect.value = clientes[clientes.length - 1].nome;
+            }
+            loadMedidas();
         }
-
-        loadMedidas();
-        mostrarEditIconContainer(true); // Mostra os ícones de edição
-
     } else {
         clienteSelect.classList.add('hidden');
-        mostrarEditIconContainer(false); // Esconde os ícones de edição se não houver clientes
+        mostrarEditIconContainer(false);
     }
 }
-
 
 
         // Função que executa ao mudar o cliente selecionado
@@ -241,14 +242,13 @@ function carregarClientes(clienteSelecionado = '') {
 
         // Função para exibir ou esconder o container de edição
         function mostrarEditIconContainer(exibir) {
-    const editIconContainer = document.getElementById('editIconContainer');
-    if (exibir && clienteSelect.value) {
-        editIconContainer.classList.remove('hidden');
-    } else {
-        editIconContainer.classList.add('hidden');
-    }
-}
-
+            const editIconContainer = document.getElementById('editIconContainer');
+            if (exibir && clientes.length > 0) {
+                editIconContainer.classList.remove('hidden');
+            } else {
+                editIconContainer.classList.add('hidden');
+            }
+        }
 
         // Função para fechar o popup de cliente
         function fecharPopup() {
@@ -321,111 +321,78 @@ function carregarClientes(clienteSelecionado = '') {
 
         // Função para adicionar um grupo de medida
         function addMedidaGroup(isFirst, largura = '', altura = '', quantidade = 1, isChecked = true, ambiente = '', tipoAplicacao = '', peliculaSelecionada = '') {
-    const container = document.getElementById('medidasContainer');
-    const medidaGroup = document.createElement('div');
-    medidaGroup.classList.add('bg-white', 'shadow-md', 'rounded-lg', 'p-4', 'space-y-2');
+            const container = document.getElementById('medidasContainer');
+            const medidaGroup = document.createElement('div');
+            medidaGroup.classList.add('bg-white', 'shadow-md', 'rounded-lg', 'p-4', 'space-y-2');
 
-    medidaGroup.innerHTML = `
-        <div class="flex items-center space-x-2">
-            <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleInputs(this)" class="form-checkbox h-4 w-4 text-blue-600 rounded focus:ring-0">
-            <input type="number" placeholder="L" value="${largura}" class="w-1/4 p-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 largura-input" oninput="atualizarTotal(this, event)" maxlength="3">
-            <input type="number" placeholder="A" value="${altura}" class="w-1/4 p-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 altura-input" oninput="atualizarTotal(this, event)" maxlength="3">
-            <input type="number" placeholder="Q" value="${quantidade}" class="w-1/4 p-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 quantidade-input" oninput="atualizarTotal(this, event)" maxlength="3">
-            <input type="text" placeholder="M²" disabled class="w-1/4 p-1 border border-gray-300 rounded-md bg-gray-100 text-gray-600">
-        </div>
-        <div class="flex items-center space-x-1">
-            <select class="flex-grow min-w-0 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 pelicula-select" onchange="calculateTotal()">
-                ${peliculas.map(p => `<option value="${p.nome}" ${p.nome === peliculaSelecionada ? 'selected' : ''}>${p.nome}</option>`).join('')}
-            </select>
-            <button class="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition shadow-md flex-shrink-0 w-8 h-8 flex items-center justify-center" onclick="duplicarGrupo(this)">
-                <i class="fas fa-copy"></i>
-            </button>
-            <button class="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition shadow-md flex-shrink-0 w-8 h-8 flex items-center justify-center" onclick="toggleAdditionalFields(this)">
-                <i class="fas fa-eye"></i>
-            </button>
-            <button class="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition shadow-md flex-shrink-0 w-8 h-8 flex items-center justify-center" onclick="deleteMedidaGroup(this)">
-                <i class="fas fa-trash-alt"></i>
-            </button>
-        </div>
-        <div class="additional-fields hidden mt-2">
-            <select onchange="calculateTotal()" class="w-full p-2 mb-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500">
-                <option value="">Ambiente</option>
-                 <option value="Sala de estar" ${ambiente === "Sala de estar" ? 'selected' : ''}>Sala de estar</option>
+            medidaGroup.innerHTML = `
+                <div class="flex items-center space-x-2">
+                    <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleInputs(this)" class="form-checkbox h-4 w-4 text-blue-600 rounded focus:ring-0">
+                    <input type="number" placeholder="L" value="${largura}" class="w-1/4 p-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 largura-input" oninput="atualizarTotal(this, event)" maxlength="3">
+                    <input type="number" placeholder="A" value="${altura}" class="w-1/4 p-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 altura-input" oninput="atualizarTotal(this, event)" maxlength="3">
+                    <input type="number" placeholder="Q" value="${quantidade}" class="w-1/4 p-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 quantidade-input" oninput="atualizarTotal(this, event)" maxlength="3">
+                    <input type="text" placeholder="M²" disabled class="w-1/4 p-1 border border-gray-300 rounded-md bg-gray-100 text-gray-600">
+                </div>
+                <div class="flex items-center space-x-1">
+                    <select class="flex-grow min-w-0 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 pelicula-select" onchange="calculateTotal()">
+                        <option value="">Película</option>
+                        ${peliculas.map(p => `<option value="${p.nome}" ${p.nome === peliculaSelecionada ? 'selected' : ''}>${p.nome}</option>`).join('')}
+                    </select>
+                    <button class="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition shadow-md flex-shrink-0 w-8 h-8 flex items-center justify-center" onclick="duplicarGrupo(this)">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                    <button class="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition shadow-md flex-shrink-0 w-8 h-8 flex items-center justify-center" onclick="toggleAdditionalFields(this)">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition shadow-md flex-shrink-0 w-8 h-8 flex items-center justify-center" onclick="deleteMedidaGroup(this)">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+                <div class="additional-fields hidden mt-2">
+                    <select onchange="calculateTotal()" class="w-full p-2 mb-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500">
+                        <option value="">Ambiente</option>
+                        <option value="Sala de estar" ${ambiente === "Sala de estar" ? 'selected' : ''}>Sala de estar</option>
                         <option value="Sala de jantar" ${ambiente === "Sala de jantar" ? 'selected' : ''}>Sala de jantar</option>
-                        <option value="Cozinha" ${ambiente === "Cozinha" ? 'selected' : ''}>Cozinha</option>
-                        <option value="Copa" ${ambiente === "Copa" ? 'selected' : ''}>Copa</option>
-                        <option value="Suite 1" ${ambiente === "Suite 1" ? 'selected' : ''}>Suite 1</option>
-                        <option value="Suite 2" ${ambiente === "Suite 2" ? 'selected' : ''}>Suite 2</option>
-                        <option value="Escritorio 1" ${ambiente === "Escritorio 1" ? 'selected' : ''}>Escritorio 1</option>
-                        <option value="Escritorio 2" ${ambiente === "Escritorio 2" ? 'selected' : ''}>Escritorio 2</option>
-                        <option value="Escritorio 3" ${ambiente === "Escritorio 3" ? 'selected' : ''}>Escritorio 3</option>
-                        <option value="Sala de Espera" ${ambiente === "Sala de Espera" ? 'selected' : ''}>Sala de Espera</option>
-                        <option value="Loja" ${ambiente === "Loja" ? 'selected' : ''}>Loja</option>
-                        <option value="Recepção" ${ambiente === "Recepção" ? 'selected' : ''}>Recepção</option>
-                        <option value="Garita" ${ambiente === "Garita" ? 'selected' : ''}>Garita</option>
-                        <option value="Garita fundo" ${ambiente === "Garita fundo" ? 'selected' : ''}>Garita fundo</option>
-                        <option value="Portaria" ${ambiente === "Portaria" ? 'selected' : ''}>Portaria</option>
-                        <option value="Portaria fundo" ${ambiente === "Portaria fundo" ? 'selected' : ''}>Portaria fundo</option>
-                        <option value="Refeitorio" ${ambiente === "Refeitorio" ? 'selected' : ''}>Refeitorio</option>
-                        <option value="Quarto 1" ${ambiente === "Quarto 1" ? 'selected' : ''}>Quarto 1</option>
-                        <option value="Quarto 2" ${ambiente === "Quarto 2" ? 'selected' : ''}>Quarto 2</option>
-                        <option value="Quarto 3" ${ambiente === "Quarto 3" ? 'selected' : ''}>Quarto 3</option>
-                        <option value="Quarto 4" ${ambiente === "Quarto 4" ? 'selected' : ''}>Quarto 4</option>
-                        <option value="Quarto empregada" ${ambiente === "Quarto empregada" ? 'selected' : ''}>Quarto empregada</option>
-                        <option value="Quarto principal" ${ambiente === "Quarto principal" ? 'selected' : ''}>Quarto principal</option>
-                        <option value="Quarto de hóspedes" ${ambiente === "Quarto de hóspedes" ? 'selected' : ''}>Quarto de hóspedes</option>
-                        <option value="Banheiro 1" ${ambiente === "Banheiro 1" ? 'selected' : ''}>Banheiro 1</option>
-                        <option value="Banheiro 2" ${ambiente === "Banheiro 2" ? 'selected' : ''}>Banheiro 2</option>
-                        <option value="Banheiro 3" ${ambiente === "Banheiro 3" ? 'selected' : ''}>Banheiro 3</option>
-                        <option value="Banheiro de hóspedes" ${ambiente === "Banheiro de hóspedes" ? 'selected' : ''}>Banheiro de hóspedes</option>
-                        <option value="Corredor" ${ambiente === "Corredor" ? 'selected' : ''}>Corredor</option>
-                        <option value="Escada" ${ambiente === "Escada" ? 'selected' : ''}>Escada</option>
-                        <option value="Escritório" ${ambiente === "Escritório" ? 'selected' : ''}>Escritório</option>
-                        <option value="Lavanderia" ${ambiente === "Lavanderia" ? 'selected' : ''}>Lavanderia</option>
-                        <option value="Garagem" ${ambiente === "Garagem" ? 'selected' : ''}>Garagem</option>
-                        <option value="Varanda" ${ambiente === "Varanda" ? 'selected' : ''}>Varanda</option>
-                        <option value="Jardim" ${ambiente === "Jardim" ? 'selected' : ''}>Jardim</option>
-                        <option value="Sotão" ${ambiente === "Sotão" ? 'selected' : ''}>Sotão</option>
-                        <option value="Porão" ${ambiente === "Porão" ? 'selected' : ''}>Porão</option>
-                        <option value="Elevador" ${ambiente === "Elevador" ? 'selected' : ''}>Elevador</option>
-                        <option value="Outros" ${ambiente === "Outros" ? 'selected' : ''}>Outros</option>
-            </select>
-            <select onchange="calculateTotal()" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500">
-                <option value="">Tipo de Aplicação</option>
-                <option value="Vidro Fixo" ${tipoAplicacao === "Vidro Fixo" ? 'selected' : ''}>Vidro Fixo</option>
+                    </select>
+                    <select onchange="calculateTotal()" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500">
+                        <option value="">Tipo de Aplicação</option>
+                        <option value="Vidro Fixo" ${tipoAplicacao === "Vidro Fixo" ? 'selected' : ''}>Vidro Fixo</option>
                         <option value="Janela Padrão" ${tipoAplicacao === "Janela Padrão" ? 'selected' : ''}>Janela Padrão</option>
-                        <option value="Janelão" ${tipoAplicacao === "Janelão" ? 'selected' : ''}>Janelão</option>
-                        <option value="Janela de correr" ${tipoAplicacao === "Janela de correr" ? 'selected' : ''}>Janela de correr</option>
-                        <option value="Janela pivotante" ${tipoAplicacao === "Janela pivotante" ? 'selected' : ''}>Janela pivotante</option>
-                        <option value="Basculante" ${tipoAplicacao === "Basculante" ? 'selected' : ''}>Basculante</option>
-                        <option value="Porta" ${tipoAplicacao === "Porta" ? 'selected' : ''}>Porta</option>
-<option value="Porta Dupla" ${tipoAplicacao === "Porta Dupla" ? 'selected' : ''}>Porta Dupla</option>
-<option value="Porta Dupla C/P e F" ${tipoAplicacao === "Porta Dupla C/P e F" ? 'selected' : ''}>Porta Dupla C/P e F</option>
-                        <option value="Porta Balcão" ${tipoAplicacao === "Porta Balcão" ? 'selected' : ''}>Porta Balcão</option>
-                        <option value="Vitrine" ${tipoAplicacao === "Vitrine" ? 'selected' : ''}>Vitrine</option>
-                        <option value="Tampo de mesa" ${tipoAplicacao === "Tampo de mesa" ? 'selected' : ''}>Tampo de mesa</option>
-                        <option value="Box de banheiro" ${tipoAplicacao === "Box de banheiro" ? 'selected' : ''}>Box de banheiro</option>
-                        <option value="Guarda-corpo" ${tipoAplicacao === "Guarda-corpo" ? 'selected' : ''}>Guarda-corpo</option>
-                        <option value="Dispensa" ${tipoAplicacao === "Dispensa" ? 'selected' : ''}>Dispensa</option>
-                        <option value="Armário" ${tipoAplicacao === "Armário" ? 'selected' : ''}>Armário</option>
-                        <option value="Teto" ${tipoAplicacao === "Teto" ? 'selected' : ''}>Teto</option>
-                        <option value="Parede divisória" ${tipoAplicacao === "Parede divisória" ? 'selected' : ''}>Parede divisória</option>
-                        <option value="Fachada" ${tipoAplicacao === "Fachada" ? 'selected' : ''}>Fachada</option>
-                        <option value="Claraboia" ${tipoAplicacao === "Claraboia" ? 'selected' : ''}>Claraboia</option>
-                        <option value="Balcão" ${tipoAplicacao === "Balcão" ? 'selected' : ''}>Balcão</option>
-                        <option value="Outras" ${tipoAplicacao === "Outras" ? 'selected' : ''}>Outras</option>
-            </select>
-        </div>
-    `;
+                    </select>
+                </div>
+            `;
 
-    container.appendChild(medidaGroup);
+            container.appendChild(medidaGroup);
 
-    if (isFirst) {
-        medidaGroup.querySelector('.largura-input').focus();
-    }
+            if (isFirst) {
+                medidaGroup.querySelector('.largura-input').focus();
+            }
 
-    calculateTotal();
-}
+            calculateTotal();
+        }
+
+        // Função para atualizar o valor do Total M² automaticamente
+        function atualizarTotal(input, event) {
+            const group = input.closest('.bg-white');
+            const largura = parseFloat(group.querySelector('.largura-input').value) || 0;
+            const altura = parseFloat(group.querySelector('.altura-input').value) || 0;
+            const quantidade = parseInt(group.querySelector('.quantidade-input').value) || 1;
+            const totalM2 = largura * altura * quantidade;
+            group.querySelector('input[placeholder="M²"]').value = totalM2.toFixed(2);
+
+            // Verifica se há 3 números e muda o foco para o próximo input
+            const numericValue = event.target.value.replace(/\D/g, ''); // Remove caracteres não numéricos
+            if (numericValue.length === 3) {
+                const nextInput = input.nextElementSibling;
+                if (nextInput && nextInput.tagName === 'INPUT') {
+                    nextInput.focus();
+                } else if (nextInput && nextInput.tagName === 'SELECT') {
+                    nextInput.focus();
+                }
+            }
+
+            calculateTotal();
+        }
 
         // Função para duplicar um grupo de medida
         function duplicarGrupo(button) {
