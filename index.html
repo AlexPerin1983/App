@@ -1,65 +1,100 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+<!-- 1. Esta é a declaração do tipo de documento (DOCTYPE) que informa ao navegador que este é um documento HTML5. -->
 
 <head>
     <meta charset="UTF-8">
+    <!-- 2. Define o conjunto de caracteres utilizado no documento como UTF-8, que suporta a maioria dos caracteres e símbolos. -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 3. Configura o viewport para garantir que a página seja exibida corretamente em dispositivos móveis. -->
     <title>Calculadora de M² e Orçamento de Películas</title>
+    <!-- 4. Define o título da página, que aparece na aba do navegador. -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <!-- 5. Inclui fontes personalizadas "Roboto" e "Montserrat" do Google Fonts para serem usadas na página. -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- 6. Inclui a biblioteca Tailwind CSS para estilização da página. -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <!-- 7. Inclui a biblioteca Font Awesome para adicionar ícones à página. -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <!-- 8. Inclui a biblioteca jsPDF para permitir a geração de PDFs diretamente no navegador. -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- 9. Inclui a biblioteca jQuery para facilitar a manipulação do DOM e outras operações JavaScript. -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <!-- 10. Inclui o plugin jQuery Mask para aplicar máscaras em campos de entrada de texto. -->
 </head>
 
 <body class="bg-gradient-to-r from-blue-50 via-white to-blue-50 text-gray-700 min-h-screen flex items-center justify-center font-roboto">
-    <div class="w-full max-w-lg md:max-w-3xl lg:max-w-4xl p-2 bg-white rounded-xl shadow-lg relative"> <!-- Ajustado aqui -->
+    <!-- 11. Define o corpo da página com classes do Tailwind para aplicar um gradiente de fundo e centralizar o conteúdo. -->
+    <div class="w-full max-w-lg md:max-w-3xl lg:max-w-4xl p-2 bg-white rounded-xl shadow-lg relative">
+        <!-- 12. Define um container principal para o conteúdo, com classes do Tailwind para estilização e responsividade. -->
         <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-t-xl"></div>
+        <!-- 13. Cria uma barra de gradiente no topo do container, para fins estéticos. -->
         <div class="text-center mb-6">
+            <!-- 14. Define um bloco de texto centralizado para o título e descrição da página. -->
             <h1 class="text-3xl font-montserrat text-gray-900 font-bold">Calculadora de M² e Orçamento</h1>
+            <!-- 15. Exibe o título principal da página. -->
             <p class="text-sm text-gray-500">Calcule rapidamente o custo de películas de forma intuitiva</p>
+            <!-- 16. Exibe uma descrição curta abaixo do título. -->
         </div>
 
         <div class="space-y-4">
+            <!-- 17. Define um container para os elementos abaixo, com espaçamento vertical entre eles. -->
+
             <!-- Seletor de Cliente e Botão de Adição -->
             <div class="flex items-center space-x-2">
+                <!-- 18. Cria um layout flexível para o seletor de cliente e o botão de adicionar. -->
                 <select id="clienteSelect" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 transition" onchange="onClienteChange()">
+                    <!-- 19. Cria um dropdown (select) para selecionar um cliente. A função 'onClienteChange()' será chamada ao mudar a seleção. -->
                     <option value="">Selecione um cliente</option>
+                    <!-- 20. Opção inicial do dropdown, orientando o usuário a selecionar um cliente. -->
                 </select>
                 <button id="addNewClienteBtn" class="p-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-md shadow-md hover:opacity-90 transition" onclick="abrirPopup('adicionar')">
+                    <!-- 21. Botão para adicionar um novo cliente, com um gradiente de fundo e ícone de usuário. Ao clicar, abre o popup para adicionar um cliente. -->
                     <i class="fas fa-user-plus"></i>
+                    <!-- 22. Ícone Font Awesome de "adicionar usuário". -->
                 </button>
             </div>
 
             <!-- Ícones de Edição e Exclusão -->
             <div id="editIconContainer" class="hidden flex justify-end space-x-2">
+                <!-- 23. Container para os ícones de edição e exclusão, inicialmente oculto, que aparece ao selecionar um cliente. -->
                 <button onclick="abrirPopup('editar')" class="p-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition shadow-sm">
+                    <!-- 24. Botão para editar as informações do cliente selecionado, que abre o popup de edição. -->
                     <i class="fas fa-edit"></i>
+                    <!-- 25. Ícone Font Awesome de "editar". -->
                 </button>
                 <button onclick="confirmClearMedidas()" class="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition shadow-sm">
+                    <!-- 26. Botão para excluir o cliente selecionado, que chama a função de confirmação antes de apagar os dados. -->
                     <i class="fas fa-trash-alt"></i>
+                    <!-- 27. Ícone Font Awesome de "excluir". -->
                 </button>
             </div>
 
             <!-- Container de Medidas -->
             <div id="medidasContainer" class="space-y-4"></div>
+            <!-- 28. Container onde os grupos de medidas (altura, largura, quantidade, etc.) serão adicionados dinamicamente. -->
 
             <!-- Resultado -->
             <div id="resultado" class="text-right text-2xl font-bold text-green-500">Total M²: 0,00 | Preço Total: R$ 0,00</div>
+            <!-- 29. Exibe o resultado calculado, mostrando o total de metros quadrados e o preço total das películas. -->
 
             <!-- Botões de Ação -->
             <div class="grid grid-cols-2 gap-4">
+                <!-- 30. Cria uma grade (grid) com dois botões por linha, para ações como adicionar medidas, duplicar, gerar PDF, etc. -->
                 <button class="p-4 bg-gradient-to-r from-green-400 to-green-600 text-white rounded-lg shadow-md hover:opacity-90 transition" onclick="addMedidaGroup(true)">
+                    <!-- 31. Botão para adicionar um novo grupo de medidas. -->
                     Adicionar Medida
                 </button>
                 <button class="p-4 bg-gradient-to-r from-yellow-400 to-yellow-600 text-white rounded-lg shadow-md hover:opacity-90 transition" onclick="duplicarMedidas()">
+                    <!-- 32. Botão para duplicar todos os grupos de medidas atuais. -->
                     Duplicar Medidas
                 </button>
                 <button class="p-4 bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-lg shadow-md hover:opacity-90 transition" id="generatePdfButton">
+                    <!-- 33. Botão para gerar um PDF com as medidas e valores calculados. -->
                     Gerar PDF
                 </button>
                 <button class="p-4 bg-gradient-to-r from-indigo-400 to-indigo-600 text-white rounded-lg shadow-md hover:opacity-90 transition" onclick="copyShareURL()">
+                    <!-- 34. Botão para copiar a URL da página para compartilhamento. -->
                     Compartilhar URL
                 </button>
             </div>
@@ -68,38 +103,91 @@
 
     <!-- Modal para Adicionar/Editar Cliente -->
     <div id="popupCliente" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <!-- 35. Define um modal (popup) para adicionar ou editar as informações do cliente. -->
         <div class="bg-white p-6 rounded-lg shadow-lg relative max-w-lg w-full">
+            <!-- 36. Container principal do modal, com fundo branco e arredondamento das bordas. -->
             <span class="close text-2xl font-bold cursor-pointer absolute top-2 right-2" onclick="fecharPopup()">&times;</span>
+            <!-- 37. Botão para fechar o modal, representado por um "x". -->
             <h2 id="popupTitulo" class="text-xl font-semibold mb-4 text-gray-800">Adicionar Novo Cliente</h2>
+            <!-- 38. Título do modal, que muda dinamicamente para "Adicionar" ou "Editar" cliente. -->
             <!-- Campos do cliente -->
             <input type="text" id="popupClienteNome" class="w-full p-2 border border-gray-300 rounded-md mb-4 focus:ring-2 focus:ring-purple-500 shadow-sm" placeholder="Nome do Cliente">
+            <!-- 39. Campo de entrada para o nome do cliente. -->
             <input type="text" id="popupClienteTelefone" class="w-full p-2 border border-gray-300 rounded-md mb-4 focus:ring-2 focus:ring-purple-500 shadow-sm" placeholder="Telefone">
+            <!-- 40. Campo de entrada para o telefone do cliente. -->
             <input type="text" id="popupClienteEndereco" class="w-full p-2 border border-gray-300 rounded-md mb-4 focus:ring-2 focus:ring-purple-500 shadow-sm" placeholder="Endereço">
+            <!-- 41. Campo de entrada para o endereço do cliente. -->
             <input type="text" id="popupClienteCPF" class="w-full p-2 border border-gray-300 rounded-md mb-4 focus:ring-2 focus:ring-purple-500 shadow-sm" placeholder="CPF">
+            <!-- 42. Campo de entrada para o CPF do cliente. -->
             <input type="text" id="popupClienteCNPJ" class="w-full p-2 border border-gray-300 rounded-md mb-6 focus:ring-2 focus:ring-purple-500 shadow-sm" placeholder="CNPJ">
+            <!-- 43. Campo de entrada para o CNPJ do cliente. -->
             <button id="popupClienteBtnSalvar" class="w-full p-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-md shadow-md hover:opacity-90 transition" onclick="salvarCliente()">
+                <!-- 44. Botão para salvar as informações do cliente após preenchimento dos campos. -->
                 Salvar Cliente
             </button>
         </div>
     </div>
     
+
     <script>
+
+
+
         // Inicializa máscaras nos campos
         $(document).ready(function () {
+            // 45. Função que será executada quando o documento estiver totalmente carregado.
             $('#popupClienteTelefone, #telefoneClienteInput').mask('(00) 00000-0000');
+            // 46. Aplica uma máscara ao campo de telefone para aceitar números no formato (XX) XXXXX-XXXX.
             $('#popupClienteCPF, #cpfClienteInput').mask('000.000.000-00');
+            // 47. Aplica uma máscara ao campo de CPF para aceitar números no formato XXX.XXX.XXX-XX.
             $('#popupClienteCNPJ, #cnpjClienteInput').mask('00.000.000/0000-00');
+            // 48. Aplica uma máscara ao campo de CNPJ para aceitar números no formato XX.XXX.XXX/XXXX-XX.
         });
+
+// Novo código para auto-avançar para o próximo input
+document.addEventListener('DOMContentLoaded', function() {
+    // Seleciona todos os inputs que estão dentro de cada grupo de medidas
+    const groups = document.querySelectorAll('#medidasContainer > div');
+
+    groups.forEach(group => {
+        const larguraInput = group.querySelector('.largura-input');
+        const alturaInput = group.querySelector('.altura-input');
+        const quantidadeInput = group.querySelector('.quantidade-input');
+
+        larguraInput.addEventListener('input', function() {
+            if (larguraInput.value.length >= 4) {
+                alturaInput.focus();
+            }
+        });
+
+        alturaInput.addEventListener('input', function() {
+            if (alturaInput.value.length >= 4) {
+                quantidadeInput.focus();
+            }
+        });
+
+        quantidadeInput.addEventListener('input', function() {
+            if (quantidadeInput.value.length >= 3) {
+                // Aqui, você pode definir para onde o foco deve ir após o último campo
+                // Caso não queira mover o foco para outro campo, pode deixar em branco
+            }
+        });
+    });
+});
+
+
 
         // Lista de películas e clientes
         const peliculas = [
+            // 49. Define um array de objetos para armazenar as películas disponíveis e seus preços.
             { nome: "Window Blue Performance", preco: 240 },
             { nome: "Window BLUE 70", preco: 200 },
             { nome: "Carbono Window Usa", preco: 100 },
+            { nome: "Profissional", preco: 90 },
             { nome: "Silver 10 Externa", preco: 280 },
             { nome: "Prata Reflecta", preco: 120 },
             { nome: "Prata Reflecta 15", preco: 120 },
-            { nome: "Origin Carbon", preco: 150 },
+            { nome: "Origin Carbon", preco: 120 },
             { nome: "Vinil Blackout", preco: 130 },
             { nome: "Vinil Jateado", preco: 120 },
             { nome: "Vinil Perfurado", preco: 85 },
@@ -107,176 +195,275 @@
         ];
 
         let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
+        // 50. Recupera a lista de clientes armazenada no localStorage, ou inicia uma lista vazia se não houver dados.
 
         // Novo código para remover clientes vazios
         clientes = clientes.filter(cliente => cliente.nome && cliente.nome.trim() !== "");
+        // 51. Filtra a lista de clientes para remover entradas onde o nome está vazio ou apenas com espaços.
         localStorage.setItem('clientes', JSON.stringify(clientes));
+        // 52. Armazena a lista de clientes atualizada no localStorage.
 
         let clienteSelecionado = '';
+        // 53. Variável que armazena o nome do cliente atualmente selecionado.
         const clienteSelect = document.getElementById('clienteSelect');
+        // 54. Seleciona o elemento de dropdown de clientes na página.
 
         // Função para abrir o popup de adicionar ou editar cliente
         function abrirPopup(acao) {
+            // 55. Função que abre o modal (popup) para adicionar ou editar as informações de um cliente.
             const popupTitulo = document.getElementById('popupTitulo');
+            // 56. Seleciona o elemento do título do popup para atualização dinâmica.
             if (acao === 'adicionar') {
+                // 57. Verifica se a ação é para adicionar um novo cliente.
                 popupTitulo.innerText = 'Adicionar Novo Cliente';
-                limparCamposPopup();
+                // 58. Atualiza o título do popup para "Adicionar Novo Cliente".
+                limparCamposPopup();  // Verifique se esta função está definida
+                // 59. Limpa os campos do popup para garantir que não haja dados pré-preenchidos.
                 clienteSelecionado = '';
+                // 60. Reseta a variável que indica o cliente selecionado.
             } else if (acao === 'editar') {
+                // 61. Verifica se a ação é para editar um cliente existente.
                 popupTitulo.innerText = 'Editar Cliente';
+                // 62. Atualiza o título do popup para "Editar Cliente".
                 carregarDadosCliente();
+                // 63. Carrega os dados do cliente selecionado nos campos do popup.
                 clienteSelecionado = clienteSelect.value;
+                // 64. Armazena o nome do cliente que está sendo editado.
             }
             document.getElementById('popupCliente').classList.remove('hidden');
+            // 65. Exibe o popup de cliente, removendo a classe "hidden".
         }
 
         // Função para limpar os campos do popup
         function limparCamposPopup() {
+            // 66. Função que limpa os campos de entrada no popup de cliente.
             document.getElementById('popupClienteNome').value = '';
+            // 67. Limpa o campo de nome do cliente.
             document.getElementById('popupClienteTelefone').value = '';
+            // 68. Limpa o campo de telefone do cliente.
             document.getElementById('popupClienteEndereco').value = '';
+            // 69. Limpa o campo de endereço do cliente.
             document.getElementById('popupClienteCPF').value = '';
+            // 70. Limpa o campo de CPF do cliente.
             document.getElementById('popupClienteCNPJ').value = '';
+            // 71. Limpa o campo de CNPJ do cliente.
         }
 
         // Função para carregar dados do cliente no popup de edição
         function carregarDadosCliente() {
+            // 72. Função que carrega os dados do cliente selecionado nos campos do popup.
             const cliente = clientes.find(c => c.nome === clienteSelect.value);
+            // 73. Encontra o cliente na lista de clientes com base no nome selecionado no dropdown.
             if (cliente) {
+                // 74. Se o cliente for encontrado, preenche os campos com os dados dele.
                 document.getElementById('popupClienteNome').value = cliente.nome;
+                // 75. Preenche o campo de nome do cliente.
                 document.getElementById('popupClienteTelefone').value = cliente.telefone;
+                // 76. Preenche o campo de telefone do cliente.
                 document.getElementById('popupClienteEndereco').value = cliente.endereco;
+                // 77. Preenche o campo de endereço do cliente.
                 document.getElementById('popupClienteCPF').value = cliente.cpf;
+                // 78. Preenche o campo de CPF do cliente.
                 document.getElementById('popupClienteCNPJ').value = cliente.cnpj;
+                // 79. Preenche o campo de CNPJ do cliente.
             }
         }
 
         // Função para salvar o cliente (adicionar ou editar)
         function salvarCliente() {
+            // 80. Função que salva as informações do cliente, seja ao adicionar um novo cliente ou editar um existente.
             const nome = document.getElementById('popupClienteNome').value.trim();
+            // 81. Recupera e remove espaços em branco do nome do cliente.
             const telefone = document.getElementById('popupClienteTelefone').value.trim();
+            // 82. Recupera e remove espaços em branco do telefone do cliente.
             const endereco = document.getElementById('popupClienteEndereco').value.trim();
+            // 83. Recupera e remove espaços em branco do endereço do cliente.
             const cpf = document.getElementById('popupClienteCPF').value.trim();
+            // 84. Recupera e remove espaços em branco do CPF do cliente.
             const cnpj = document.getElementById('popupClienteCNPJ').value.trim();
+            // 85. Recupera e remove espaços em branco do CNPJ do cliente.
 
             // Verifica se o nome do cliente já existe e se não é o mesmo que está sendo editado
             if (nome && (clienteSelecionado === '' || nome === clienteSelecionado || !clientes.some(cliente => cliente.nome === nome))) {
+                // 86. Verifica se o nome foi informado, se é uma edição do mesmo cliente ou se não existe outro cliente com o mesmo nome.
                 const novoCliente = { nome, telefone, endereco, cpf, cnpj };
+                // 87. Cria um objeto com as informações do cliente.
 
                 if (clienteSelecionado) {
+                    // 88. Verifica se um cliente está sendo editado.
                     const index = clientes.findIndex(c => c.nome === clienteSelecionado);
-                    
+                    // 89. Encontra o índice do cliente na lista de clientes.
+
                     // Relaciona as medidas existentes ao novo nome do cliente, se o nome foi alterado
                     const medidasExistentes = localStorage.getItem(`medidas_${clienteSelecionado}`);
+                    // 90. Recupera as medidas associadas ao cliente antes da edição.
                     clientes[index] = novoCliente;
+                    // 91. Atualiza as informações do cliente na lista.
                     if (medidasExistentes) {
                         localStorage.setItem(`medidas_${nome}`, medidasExistentes);
+                        // 92. Se houver medidas, associa-as ao novo nome do cliente.
                         if (nome !== clienteSelecionado) {
                             localStorage.removeItem(`medidas_${clienteSelecionado}`);
+                            // 93. Se o nome foi alterado, remove as medidas do nome antigo.
                         }
                     }
                 } else {
                     clientes.push(novoCliente);
+                    // 94. Se for um novo cliente, adiciona-o à lista de clientes.
                 }
 
                 // Atualiza a lista de clientes no localStorage e dropdown
                 salvarClientesNoStorage();
+                // 95. Salva a lista de clientes no localStorage.
                 carregarClientes(novoCliente.nome);
+                // 96. Atualiza o dropdown de clientes e seleciona o cliente recém-adicionado.
                 fecharPopup();
+                // 97. Fecha o popup após salvar o cliente.
             } else {
                 alert("O nome do cliente já existe ou não foi informado.");
+                // 98. Exibe uma mensagem de alerta se o nome do cliente já existir ou não tiver sido informado.
             }
         }
 
         // Função para carregar a lista de clientes no select
         function carregarClientes(clienteSelecionado = '') {
+            // 99. Função que carrega a lista de clientes no dropdown de seleção.
             clienteSelect.innerHTML = ''; // Removemos a opção inicial
+            // 100. Limpa as opções existentes no dropdown.
             if (clientes.length > 0) {
+                // 101. Verifica se há clientes na lista.
                 clienteSelect.classList.remove('hidden');
+                // 102. Exibe o dropdown se houver clientes na lista.
                 clientes.forEach(cliente => {
                     const option = document.createElement('option');
+                    // 103. Cria uma nova opção para cada cliente na lista.
                     option.value = cliente.nome;
+                    // 104. Define o valor da opção como o nome do cliente.
                     option.textContent = cliente.nome;
+                    // 105. Define o texto da opção como o nome do cliente.
                     clienteSelect.appendChild(option);
+                    // 106. Adiciona a opção ao dropdown.
                 });
 
                 // Seleciona o primeiro cliente da lista, se nenhum cliente for selecionado
                 if (clienteSelecionado) {
                     clienteSelect.value = clienteSelecionado;
+                    // 107. Seleciona o cliente recém-adicionado ou editado no dropdown.
                 } else {
                     clienteSelect.value = clientes[0].nome;
+                    // 108. Seleciona o primeiro cliente da lista, se nenhum cliente for especificado.
                 }
 
                 loadMedidas();
+                // 109. Carrega as medidas associadas ao cliente selecionado.
                 mostrarEditIconContainer(true);
+                // 110. Exibe os ícones de edição e exclusão.
+
             } else {
                 clienteSelect.classList.add('hidden');
+                // 111. Esconde o dropdown se não houver clientes na lista.
                 mostrarEditIconContainer(false);
+                // 112. Esconde os ícones de edição e exclusão.
             }
         }
 
         // Função que executa ao mudar o cliente selecionado
         function onClienteChange() {
+            // 113. Função que é executada quando o cliente selecionado no dropdown é alterado.
             clienteSelecionado = clienteSelect.value;
+            // 114. Armazena o nome do cliente selecionado.
             salvarClienteSelecionadoNoStorage(clienteSelecionado);
+            // 115. Salva o cliente selecionado no localStorage.
             loadMedidas();
+            // 116. Carrega as medidas associadas ao cliente selecionado.
 
             if (clienteSelecionado) {
                 mostrarEditIconContainer(true);
+                // 117. Exibe os ícones de edição e exclusão se um cliente for selecionado.
             } else {
                 mostrarEditIconContainer(false);
+                // 118. Esconde os ícones de edição e exclusão se nenhum cliente for selecionado.
             }
         }
 
         // Função para exibir ou esconder o container de edição
         function mostrarEditIconContainer(exibir) {
+            // 119. Função para exibir ou esconder o container com os ícones de edição e exclusão.
             const editIconContainer = document.getElementById('editIconContainer');
+            // 120. Seleciona o container dos ícones de edição e exclusão.
             if (exibir && clienteSelect.value) {
                 editIconContainer.classList.remove('hidden');
+                // 121. Exibe o container se a variável 'exibir' for verdadeira e um cliente estiver selecionado.
             } else {
                 editIconContainer.classList.add('hidden');
+                // 122. Esconde o container se a variável 'exibir' for falsa ou nenhum cliente estiver selecionado.
             }
         }
 
         // Função para fechar o popup de cliente
         function fecharPopup() {
+            // 123. Função que fecha o popup de adicionar/editar cliente.
             document.getElementById('popupCliente').classList.add('hidden');
+            // 124. Adiciona a classe "hidden" ao popup, escondendo-o.
         }
 
         // Função para confirmar a exclusão das medidas do cliente
         function confirmClearMedidas() {
+            // 125. Função que exibe um alerta de confirmação antes de excluir as medidas de um cliente.
             if (confirm("Tem certeza que deseja apagar este cliente e suas medidas?")) {
+                // 126. Se o usuário confirmar, chama a função para limpar as medidas.
                 clearMedidas();
+                // 127. Limpa as medidas associadas ao cliente selecionado.
             }
         }
 
         // Função para apagar medidas do cliente
         function clearMedidas() {
-            const cliente = clienteSelect.value;
-            if (!cliente) {
-                alert('Selecione um cliente.');
-                return;
-            }
+    const cliente = clienteSelect.value;
+    if (!cliente) {
+        alert('Selecione um cliente.');
+        return;
+    }
 
-            localStorage.removeItem(`medidas_${cliente}`);
-            const index = clientes.findIndex(c => c.nome === cliente);
-            if (index > -1) {
-                clientes.splice(index, 1);
-                localStorage.setItem('clientes', JSON.stringify(clientes));
-            }
+    // Remove apenas as medidas associadas ao cliente selecionado
+    localStorage.removeItem(`medidas_${cliente}`);
 
-            carregarClientes();
-            document.getElementById('medidasContainer').innerHTML = '';
-            addMedidaGroup(true);
-            calculateTotal();
-        }
+    // Remove o cliente da lista de clientes
+    const index = clientes.findIndex(c => c.nome === cliente);
+    if (index > -1) {
+        clientes.splice(index, 1); // Remove o cliente da lista
+        salvarClientesNoStorage(); // Atualiza o localStorage com a nova lista de clientes
+    }
+
+    // Atualiza a interface após a exclusão
+    carregarClientes();
+    document.getElementById('medidasContainer').innerHTML = '';
+
+    // Adiciona um grupo de medida vazio para o próximo cliente (se houver)
+    if (clientes.length > 0) {
+        clienteSelect.value = clientes[0].nome; // Seleciona o próximo cliente
+        loadMedidas(); // Carrega as medidas do próximo cliente
+    } else {
+        clienteSelect.value = '';
+    }
+
+    // Recalcula o total de metros quadrados e preço
+    calculateTotal();
+}
+
+
+
 
         // Função para salvar medidas no local storage
         function saveMedidas() {
+            // 139. Função que salva as medidas do cliente no localStorage.
             const cliente = clienteSelect.value;
+            // 140. Armazena o nome do cliente selecionado.
             if (!cliente) return;
+            // 141. Se nenhum cliente estiver selecionado, interrompe a função.
 
             const medidaGroups = document.querySelectorAll('#medidasContainer > div');
+            // 142. Seleciona todos os grupos de medidas no container de medidas.
             const medidas = Array.from(medidaGroups).map(group => ({
                 largura: group.querySelector('.largura-input').value,
                 altura: group.querySelector('.altura-input').value,
@@ -285,56 +472,69 @@
                 tipoAplicacao: group.querySelector('.additional-fields select:nth-of-type(2)').value,
                 pelicula: group.querySelector('.pelicula-select').value
             }));
+            // 143. Mapeia os grupos de medidas para um array de objetos com as propriedades 'largura', 'altura', 'quantidade', 'ambiente', 'tipoAplicacao' e 'pelicula'.
 
             localStorage.setItem(`medidas_${cliente}`, JSON.stringify(medidas));
+            // 144. Armazena as medidas do cliente no localStorage.
         }
 
         // Função para carregar medidas do local storage
         function loadMedidas() {
+            // 145. Função que carrega as medidas do cliente selecionado a partir do localStorage.
             const cliente = clienteSelect.value;
+            // 146. Armazena o nome do cliente selecionado.
             const savedMedidas = localStorage.getItem(`medidas_${cliente}`);
+            // 147. Recupera as medidas do cliente armazenadas no localStorage.
             const medidasContainer = document.getElementById('medidasContainer');
+            // 148. Seleciona o container de medidas na página.
             medidasContainer.innerHTML = '';
+            // 149. Limpa o conteúdo do container de medidas.
 
             if (savedMedidas) {
+                // 150. Verifica se há medidas salvas para o cliente selecionado.
                 const medidas = JSON.parse(savedMedidas);
+                // 151. Converte as medidas do formato JSON para um array de objetos.
                 medidas.forEach(medida => {
                     addMedidaGroup(false, medida.largura, medida.altura, medida.quantidade, true, medida.ambiente, medida.tipoAplicacao, medida.pelicula);
+                    // 152. Adiciona cada medida como um grupo de medida na página.
                 });
             } else {
                 addMedidaGroup(true);
+                // 153. Se não houver medidas salvas, adiciona um grupo de medida vazio.
             }
             calculateTotal();
+            // 154. Recalcula o total de metros quadrados e preço.
         }
 
         // Função para adicionar um grupo de medida
         function addMedidaGroup(isFirst, largura = '', altura = '', quantidade = 1, isChecked = true, ambiente = '', tipoAplicacao = '', peliculaSelecionada = '') {
-            const container = document.getElementById('medidasContainer');
-            const medidaGroup = document.createElement('div');
-            medidaGroup.classList.add('bg-white', 'shadow-md', 'rounded-lg', 'p-4', 'space-y-2');
+    const container = document.getElementById('medidasContainer');
+    const medidaGroup = document.createElement('div');
+    medidaGroup.classList.add('bg-white', 'shadow-md', 'rounded-lg', 'p-4', 'space-y-2');
 
-            medidaGroup.innerHTML = `
-                <div class="flex items-center space-x-2">
-                    <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleInputs(this)" class="form-checkbox h-4 w-4 text-blue-600 rounded focus:ring-0">
-                    <input type="number" placeholder="L" value="${largura}" class="w-1/4 p-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 largura-input" oninput="atualizarTotal(this, event)" maxlength="3">
-                    <input type="number" placeholder="A" value="${altura}" class="w-1/4 p-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 altura-input" oninput="atualizarTotal(this, event)" maxlength="3">
-                    <input type="number" placeholder="Q" value="${quantidade}" class="w-1/4 p-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 quantidade-input" oninput="atualizarTotal(this, event)" maxlength="3">
-                    <input type="text" placeholder="M²" disabled class="w-1/4 p-1 border border-gray-300 rounded-md bg-gray-100 text-gray-600">
-                </div>
-                <div class="flex items-center space-x-1">
-                    <select class="flex-grow min-w-0 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 pelicula-select" onchange="calculateTotal()">
-                        ${peliculas.map(p => `<option value="${p.nome}" ${p.nome === peliculaSelecionada ? 'selected' : ''}>${p.nome}</option>`).join('')}
-                    </select>
-                    <button class="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition shadow-md flex-shrink-0 w-8 h-8 flex items-center justify-center" onclick="duplicarGrupo(this)">
-                        <i class="fas fa-copy"></i>
-                    </button>
-                    <button class="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition shadow-md flex-shrink-0 w-8 h-8 flex items-center justify-center" onclick="toggleAdditionalFields(this)">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                    <button class="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition shadow-md flex-shrink-0 w-8 h-8 flex items-center justify-center" onclick="deleteMedidaGroup(this)">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-                </div>
+    medidaGroup.innerHTML = `
+        <div class="flex items-center space-x-2">
+            <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleInputs(this)" class="form-checkbox h-4 w-4 text-blue-600 rounded focus:ring-0">
+           <input type="number" placeholder="L" value="${largura}" class="w-1/4 p-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 largura-input" oninput="atualizarTotal(this, event)" maxlength="3">
+<input type="number" placeholder="A" value="${altura}" class="w-1/4 p-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 altura-input" oninput="atualizarTotal(this, event)" maxlength="3">
+<input type="number" placeholder="Q" value="${quantidade}" class="w-1/4 p-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 quantidade-input" oninput="atualizarTotal(this, event)" maxlength="3">
+<input type="text" placeholder="M²" disabled class="w-1/4 p-1 border border-gray-300 rounded-md bg-gray-100 text-gray-600">
+
+        </div>
+        <div class="flex items-center space-x-1">
+            <select class="flex-grow min-w-0 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 pelicula-select" onchange="calculateTotal()">
+                ${peliculas.map(p => `<option value="${p.nome}" ${p.nome === peliculaSelecionada ? 'selected' : ''}>${p.nome}</option>`).join('')}
+            </select>
+            <button class="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition shadow-md flex-shrink-0 w-8 h-8 flex items-center justify-center" onclick="duplicarGrupo(this)">
+                <i class="fas fa-copy"></i>
+            </button>
+            <button class="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition shadow-md flex-shrink-0 w-8 h-8 flex items-center justify-center" onclick="toggleAdditionalFields(this)">
+                <i class="fas fa-eye"></i>
+            </button>
+            <button class="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition shadow-md flex-shrink-0 w-8 h-8 flex items-center justify-center" onclick="deleteMedidaGroup(this)">
+                <i class="fas fa-trash-alt"></i>
+            </button>
+        </div>
                 <div class="additional-fields hidden mt-2">
                     <select onchange="calculateTotal()" class="w-full p-2 mb-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500">
                         <option value="">Ambiente</option>
@@ -387,6 +587,8 @@
                         <option value="Janela pivotante" ${tipoAplicacao === "Janela pivotante" ? 'selected' : ''}>Janela pivotante</option>
                         <option value="Basculante" ${tipoAplicacao === "Basculante" ? 'selected' : ''}>Basculante</option>
                         <option value="Porta" ${tipoAplicacao === "Porta" ? 'selected' : ''}>Porta</option>
+                        <option value="Porta Dupla" ${tipoAplicacao === "Porta Dupla" ? 'selected' : ''}>Porta Dupla</option>
+                        <option value="Porta Dupla C/P e F" ${tipoAplicacao === "Porta Dupla C/P e F" ? 'selected' : ''}>Porta Dupla C/P e F</option>
                         <option value="Porta Balcão" ${tipoAplicacao === "Porta Balcão" ? 'selected' : ''}>Porta Balcão</option>
                         <option value="Vitrine" ${tipoAplicacao === "Vitrine" ? 'selected' : ''}>Vitrine</option>
                         <option value="Tampo de mesa" ${tipoAplicacao === "Tampo de mesa" ? 'selected' : ''}>Tampo de mesa</option>
@@ -403,33 +605,82 @@
                     </select>
                 </div>
             `;
-
             container.appendChild(medidaGroup);
 
-            if (isFirst) {
-                medidaGroup.querySelector('.largura-input').focus();
-            }
+// Adicionar listeners para auto-avançar
+const larguraInput = medidaGroup.querySelector('.largura-input');
+const alturaInput = medidaGroup.querySelector('.altura-input');
+const quantidadeInput = medidaGroup.querySelector('.quantidade-input');
 
-            calculateTotal();
-        }
+larguraInput.addEventListener('input', function() {
+    if (larguraInput.value.length >= 4) {
+        alturaInput.focus();
+    }
+});
+
+alturaInput.addEventListener('input', function() {
+    if (alturaInput.value.length >= 4) {
+        quantidadeInput.focus();
+    }
+});
+
+quantidadeInput.addEventListener('input', function() {
+    if (quantidadeInput.value.length >= 3) {
+        // Defina o próximo foco, ou pode deixar em branco
+    }
+});
+
+if (isFirst) {
+    larguraInput.focus();
+}
+
+calculateTotal();
+}
+
+// Função para atualizar o total de M²
+function atualizarTotal(input, event) {
+    const group = input.closest('.bg-white');
+    const largura = parseFloat(group.querySelector('.largura-input').value) || 0;
+    const altura = parseFloat(group.querySelector('.altura-input').value) || 0;
+    const quantidade = parseInt(group.querySelector('.quantidade-input').value) || 0;
+    const totalM2 = largura * altura * quantidade;
+    
+    group.querySelector('input[placeholder="M²"]').value = totalM2.toFixed(2);
+    calculateTotal(); // Recalcula o total geral
+}
+
+// Linha 376: Implementa a função para atualizar o campo M² automaticamente.
+
 
         // Função para duplicar um grupo de medida
         function duplicarGrupo(button) {
+            // 162. Função que duplica o grupo de medida ao qual o botão pertence.
             const group = button.closest('.bg-white');
+            // 163. Seleciona o grupo de medida atual.
             const largura = group.querySelector('.largura-input').value || '';
+            // 164. Armazena o valor da largura.
             const altura = group.querySelector('.altura-input').value || '';
+            // 165. Armazena o valor da altura.
             const quantidade = group.querySelector('.quantidade-input').value || '';
+            // 166. Armazena o valor da quantidade.
             const ambiente = group.querySelector('.additional-fields select:nth-of-type(1)').value || '';
+            // 167. Armazena o valor do ambiente.
             const tipoAplicacao = group.querySelector('.additional-fields select:nth-of-type(2)').value || '';
+            // 168. Armazena o valor do tipo de aplicação.
             const peliculaSelecionada = group.querySelector('.pelicula-select').value || '';
+            // 169. Armazena o valor da película selecionada.
 
             addMedidaGroup(false, largura, altura, quantidade, true, ambiente, tipoAplicacao, peliculaSelecionada);
+            // 170. Adiciona um novo grupo de medida com os mesmos valores do grupo atual.
             calculateTotal();
+            // 171. Recalcula o total de metros quadrados e preço após duplicar o grupo.
         }
 
         // Função para duplicar todas as medidas
         function duplicarMedidas() {
+            // 172. Função que duplica todos os grupos de medidas existentes.
             const medidaGroups = document.querySelectorAll('#medidasContainer > div');
+            // 173. Seleciona todos os grupos de medidas.
             medidaGroups.forEach(group => {
                 const largura = group.querySelector('.largura-input').value || '';
                 const altura = group.querySelector('.altura-input').value || '';
@@ -439,134 +690,180 @@
                 const peliculaSelecionada = group.querySelector('.pelicula-select').value || '';
 
                 addMedidaGroup(false, largura, altura, quantidade, true, ambiente, tipoAplicacao, peliculaSelecionada);
+                // 174. Adiciona um novo grupo de medida com os mesmos valores de cada grupo existente.
             });
             calculateTotal();
+            // 175. Recalcula o total de metros quadrados e preço após duplicar todos os grupos.
         }
 
         // Função para excluir um grupo de medida
         function deleteMedidaGroup(button) {
+            // 176. Função que exclui o grupo de medida ao qual o botão pertence.
             if (confirm('Tem certeza que deseja excluir este grupo de medidas?')) {
+                // 177. Exibe um alerta de confirmação antes de excluir o grupo.
                 button.closest('.bg-white').remove();
+                // 178. Remove o grupo de medida da página.
                 calculateTotal();
+                // 179. Recalcula o total de metros quadrados e preço após a exclusão.
                 saveMedidas();
+                // 180. Salva as mudanças no localStorage após a exclusão.
             }
         }
 
         // Função para calcular o total de M² e preço
         function calculateTotal() {
+            // 181. Função que calcula o total de metros quadrados e preço com base nos grupos de medidas.
             const medidaGroups = document.querySelectorAll('#medidasContainer > div');
+            // 182. Seleciona todos os grupos de medidas.
             let totalM2 = 0;
+            // 183. Inicializa a variável que armazenará o total de metros quadrados.
             let precoTotal = 0;
+            // 184. Inicializa a variável que armazenará o preço total.
 
             medidaGroups.forEach(group => {
                 const isChecked = group.querySelector('input[type="checkbox"]').checked;
+                // 185. Verifica se o grupo de medida está marcado (ativo).
                 const largura = parseFloat(group.querySelector('.largura-input').value) || 0;
+                // 186. Converte o valor da largura para um número decimal.
                 const altura = parseFloat(group.querySelector('.altura-input').value) || 0;
+                // 187. Converte o valor da altura para um número decimal.
                 const quantidade = parseInt(group.querySelector('.quantidade-input').value) || 0;
+                // 188. Converte o valor da quantidade para um número inteiro.
                 const peliculaNome = group.querySelector('.pelicula-select').value;
+                // 189. Armazena o nome da película selecionada.
                 const pelicula = peliculas.find(p => p.nome === peliculaNome);
+                // 190. Encontra a película correspondente na lista de películas.
 
                 const area = largura * altura * quantidade;
+                // 191. Calcula a área total (metros quadrados) multiplicando a largura pela altura e pela quantidade.
                 const preco = pelicula ? area * pelicula.preco : 0;
+                // 192. Calcula o preço total multiplicando a área pelo preço da película, se a película existir.
 
                 if (isChecked) {
                     totalM2 += area;
+                    // 193. Soma a área ao total de metros quadrados se o grupo estiver marcado.
                     precoTotal += preco;
+                    // 194. Soma o preço ao preço total.
                     group.querySelector('input[placeholder="M²"]').value = area.toFixed(2);
+                    // 195. Atualiza o campo de M² no grupo de medida com o valor calculado.
                 } else {
                     group.querySelector('input[placeholder="M²"]').value = '0.00';
+                    // 196. Define o campo de M² como "0.00" se o grupo não estiver marcado.
                 }
             });
 
             document.getElementById('resultado').innerText = `Total M²: ${totalM2.toFixed(2)} | Preço Total: R$ ${precoTotal.toFixed(2)}`;
+            // 197. Atualiza o texto de resultado com o total de metros quadrados e o preço total.
             saveMedidas();
-        }
-
-        // Função para atualizar o total de M² e preço ao modificar largura, altura ou quantidade
-        function atualizarTotal(input, event) {
-            const group = input.closest('.bg-white');
-            const largura = parseFloat(group.querySelector('.largura-input').value) || 0;
-            const altura = parseFloat(group.querySelector('.altura-input').value) || 0;
-            const quantidade = parseInt(group.querySelector('.quantidade-input').value) || 0;
-
-            const area = largura * altura * quantidade;
-            group.querySelector('input[placeholder="M²"]').value = area.toFixed(2);
-            calculateTotal();
+            // 198. Salva as medidas no localStorage após o cálculo.
         }
 
         // Função para alternar os campos adicionais
         function toggleAdditionalFields(button) {
+            // 199. Função que exibe ou esconde os campos adicionais de ambiente e tipo de aplicação.
             const fields = button.closest('.bg-white').querySelector('.additional-fields');
+            // 200. Seleciona o container de campos adicionais.
             if (fields.classList.contains('hidden')) {
                 fields.classList.remove('hidden');
+                // 201. Exibe os campos adicionais se estiverem escondidos.
                 button.innerHTML = '<i class="fas fa-eye-slash"></i>';
+                // 202. Atualiza o ícone do botão para "eye-slash".
             } else {
                 fields.classList.add('hidden');
+                // 203. Esconde os campos adicionais se estiverem visíveis.
                 button.innerHTML = '<i class="fas fa-eye"></i>';
+                // 204. Atualiza o ícone do botão para "eye".
             }
         }
 
         // Função para alternar a ativação/desativação dos inputs
         function toggleInputs(checkbox) {
+            // 205. Função que ativa ou desativa os campos de entrada de um grupo de medida.
             const inputs = checkbox.closest('.bg-white').querySelectorAll('input, select');
+            // 206. Seleciona todos os campos de entrada e selects do grupo de medida.
             inputs.forEach(input => {
                 if (input !== checkbox) {
                     input.disabled = !checkbox.checked;
+                    // 207. Desativa ou ativa os campos com base no estado do checkbox.
                 }
             });
             calculateTotal();
+            // 208. Recalcula o total de metros quadrados e preço após a mudança.
         }
 
         // Função para copiar a URL de compartilhamento
         function copyShareURL() {
+            // 209. Função que copia a URL da página com o cliente selecionado para a área de transferência.
             const cliente = clienteSelect.value;
+            // 210. Armazena o nome do cliente selecionado.
             if (!cliente) {
                 alert('Selecione um cliente.');
+                // 211. Exibe um alerta se nenhum cliente estiver selecionado.
                 return;
             }
 
             const url = new URL(window.location.href);
+            // 212. Cria um novo objeto URL com a URL atual da página.
             url.searchParams.set('cliente', cliente);
+            // 213. Adiciona o nome do cliente como parâmetro na URL.
             const shareURL = url.toString();
+            // 214. Converte a URL com o parâmetro em uma string.
 
             navigator.clipboard.writeText(shareURL).then(() => {
+                // 215. Copia a URL para a área de transferência.
                 alert('URL copiada para a área de transferência!');
+                // 216. Exibe um alerta indicando que a URL foi copiada.
             }, (err) => {
                 console.error('Erro ao copiar a URL: ', err);
+                // 217. Exibe um erro no console se a cópia da URL falhar.
             });
         }
 
         // Função que carrega as informações ao iniciar
         document.addEventListener('DOMContentLoaded', () => {
+            // 218. Função que é executada quando o documento HTML foi completamente carregado.
             carregarClientes();
+            // 219. Carrega a lista de clientes no dropdown de seleção.
             document.getElementById('generatePdfButton').addEventListener('click', generatePDF_v3_0);
+            // 220. Adiciona um listener de evento ao botão de gerar PDF, que chama a função 'generatePDF_v3_0'.
         });
 
         // Funções de armazenamento no LocalStorage
         function salvarClientesNoStorage() {
+            // 221. Função que salva a lista de clientes no localStorage.
             localStorage.setItem('clientes', JSON.stringify(clientes));
+            // 222. Converte a lista de clientes em uma string JSON e a armazena no localStorage.
         }
 
         function salvarClienteSelecionadoNoStorage(cliente) {
+            // 223. Função que salva o cliente selecionado no localStorage.
             localStorage.setItem('clienteSelecionado', cliente);
+            // 224. Armazena o nome do cliente selecionado no localStorage.
         }
 
         function carregarClienteSelecionadoDoStorage() {
+            // 225. Função que carrega o cliente selecionado do localStorage.
             return localStorage.getItem('clienteSelecionado');
+            // 226. Retorna o nome do cliente selecionado armazenado no localStorage.
         }
 
         // Função para gerar o PDF (versão 3.0 com novo design e correções)
         function generatePDF_v3_0() {
+            // 227. Função que gera um PDF com as medidas e valores calculados, utilizando a biblioteca jsPDF.
             try {
                 const clienteNome = clienteSelect.value;
+                // 228. Armazena o nome do cliente selecionado.
                 if (!clienteNome) {
                     alert('Selecione um cliente.');
+                    // 229. Exibe um alerta se nenhum cliente estiver selecionado.
                     return;
                 }
 
                 const cliente = clientes.find(c => c.nome === clienteNome);
+                // 230. Encontra o cliente na lista de clientes com base no nome selecionado.
                 if (!cliente) {
                     alert('Informações do cliente não encontradas.');
+                    // 231. Exibe um alerta se as informações do cliente não forem encontradas.
                     return;
                 }
 
@@ -576,55 +873,72 @@
                     unit: 'mm',
                     format: 'a4'
                 });
+                // 232. Cria um novo documento PDF com orientação retrato, unidades em milímetros e formato A4.
 
                 const pageWidth = doc.internal.pageSize.width;
+                // 233. Armazena a largura da página do PDF.
                 const pageHeight = doc.internal.pageSize.height;
+                // 234. Armazena a altura da página do PDF.
                 const margin = 15;
+                // 235. Define a margem padrão para o conteúdo do PDF.
 
                 const colors = {
-                    primary: [28, 4, 56],                         
-                    secondary: [242, 182, 3],                      
-                    text: [44, 62, 80],                             
-                    lightGray: [236, 240, 241],                    
-                    header: [0, 51, 102]                         
+                    primary: [28, 4, 56],
+                    secondary: [242, 182, 3],
+                    text: [44, 62, 80],
+                    lightGray: [236, 240, 241],
+                    header: [0, 51, 102]
                 };
+                // 236. Define as cores que serão usadas no PDF, como cor primária, secundária, texto, etc.
 
                 function addCover() {
                     const pageWidth = doc.internal.pageSize.width;
                     const pageHeight = doc.internal.pageSize.height;
                     const margin = 30;
 
-                    doc.setFillColor(245, 245, 245);  
+                    // Fundo da página
+                    doc.setFillColor(245, 245, 245);
                     doc.rect(0, 0, pageWidth, pageHeight, 'F');
+                    // 237. Adiciona um fundo cinza claro à página de capa.
 
+                    // Barras graduais no topo
                     const barColors = ['#000000', '#1a1a1a', '#333333', '#4d4d4d', '#666666', '#808080', '#999999', '#b3b3b3', '#cccccc', '#e6e6e6'];
                     const barWidth = pageWidth / barColors.length;
                     barColors.forEach((color, index) => {
                         doc.setFillColor(color);
                         doc.rect(index * barWidth, 0, barWidth, 40, 'F');
                     });
+                    // 238. Adiciona barras graduais no topo da página de capa, com uma paleta de cores do preto ao cinza claro.
 
-                    doc.setTextColor(44, 62, 80);  
+                    // Informações do cliente
+                    doc.setTextColor(44, 62, 80);
                     doc.setFont("helvetica", 'bold');
                     doc.setFontSize(18);
                     doc.text(`Cliente: ${cliente.nome}`, margin, 70);
+                    // 239. Adiciona o nome do cliente na página de capa, com fonte em negrito e tamanho 18.
 
                     doc.setFont("helvetica", 'normal');
                     doc.setFontSize(12);
                     doc.text(`Telefone: ${cliente.telefone}`, margin, 90);
                     doc.text(`Endereço: ${cliente.endereco}`, margin, 105);
                     doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')}`, margin, 120);
+                    // 240. Adiciona informações como telefone, endereço e data na página de capa.
 
+                    // Adicionar "VÁLIDO POR 90 DIAS"
                     doc.text("VÁLIDO POR 90 DIAS", margin, 135);
+                    // 241. Adiciona a informação de validade do orçamento na página de capa.
 
-                    doc.setDrawColor(41, 128, 185);  
+                    // Rodapé
+                    doc.setDrawColor(41, 128, 185);
                     doc.setLineWidth(1);
                     doc.line(margin, pageHeight - 40, pageWidth - margin, pageHeight - 40);
+                    // 242. Adiciona uma linha azul no rodapé da página de capa.
 
-                    doc.setTextColor(41, 128, 185);  
+                    doc.setTextColor(41, 128, 185);
                     doc.setFontSize(12);
                     doc.setFont("helvetica", 'italic');
                     doc.text("Soluções em Películas de Alta Qualidade", pageWidth / 2, pageHeight - 25, { align: 'center' });
+                    // 243. Adiciona um texto centralizado no rodapé da página de capa.
                 }
 
                 function addFooter() {
@@ -633,18 +947,23 @@
 
                     doc.setFillColor(...colors.primary);
                     doc.rect(0, footerY, pageWidth, footerHeight, 'F');
+                    // 244. Adiciona um rodapé com a cor primária na página.
 
                     doc.setTextColor(255, 255, 255);
                     doc.setFontSize(8);
                     doc.setFont("helvetica", 'normal');
                     doc.text("FUME JP | (83) 99301-5765 | www.fumejp.com.br", margin, footerY + 8);
+                    // 245. Adiciona informações de contato no rodapé com fonte branca.
 
                     doc.text(`Página ${doc.internal.getNumberOfPages()}`, pageWidth - margin, footerY + 8, { align: 'right' });
+                    // 246. Adiciona o número da página no canto direito do rodapé.
                 }
 
                 function addPage() {
                     doc.addPage();
+                    // 247. Adiciona uma nova página ao PDF.
                     addFooter();
+                    // 248. Adiciona o rodapé à nova página.
                     return margin + 20;
                 }
 
@@ -660,6 +979,7 @@
                         doc.setFont("helvetica", 'bold');
                         doc.text(title, margin, y + 12);
                         y += 15;
+                        // 249. Função que adiciona um título de seção no PDF, com uma barra de fundo colorida.
                     }
 
                     function addTableHeader() {
@@ -679,6 +999,7 @@
                         });
 
                         y += 12;
+                        // 250. Função que adiciona o cabeçalho da tabela de medidas, com colunas para Item, Dimensões, Película, etc.
                     }
 
                     function addMedidaItem(medida, index) {
@@ -729,6 +1050,7 @@
                         }
 
                         y += 12;
+                        // 251. Função que adiciona cada item de medida à tabela no PDF, com as colunas Item, Dimensões, Película, etc.
                     }
 
                     function addTotalSection(peliculaNome, total) {
@@ -745,6 +1067,7 @@
                         doc.text(`Preço Total: R$ ${total.precoTotal.toFixed(2)}`, pageWidth - margin - 5, y + 15, { align: 'right' });
 
                         y += 25;
+                        // 252. Função que adiciona a seção de total no PDF, com área total e preço total para cada película.
                     }
 
                     const medidaGroups = document.querySelectorAll('#medidasContainer > div');
@@ -767,6 +1090,7 @@
 
                         totaisGerais.totalM2 += area;
                         totaisGerais.precoTotal += preco;
+                        // 253. Função que calcula os totais de área e preço para cada película e para o orçamento geral.
                     });
 
                     Object.entries(medidasPorPelicula).forEach(([peliculaNome, medidas], index) => {
@@ -787,23 +1111,28 @@
                         };
 
                         addTotalSection(peliculaNome, totalPelicula);
+                        // 254. Função que adiciona os totais de cada película à tabela no PDF.
                     });
 
                     y = addPage();
                     addSectionTitle("Total Geral do Orçamento");
                     addTotalSection("Todas as Películas", totaisGerais);
+                    // 255. Função que adiciona a seção de total geral do orçamento no PDF.
                 }
 
                 addCover();
+                // 256. Chama a função para adicionar a capa ao PDF.
                 addContent();
+                // 257. Chama a função para adicionar o conteúdo (medidas, totais, etc.) ao PDF.
 
                 doc.save(`orcamento_${cliente.nome.replace(/\s+/g, '_').toLowerCase()}.pdf`);
+                // 258. Salva o PDF gerado no formato "orcamento_cliente.pdf", onde "cliente" é o nome do cliente em minúsculas e com espaços substituídos por underscores.
             } catch (error) {
                 console.error("Erro ao gerar PDF:", error);
                 alert("Ocorreu um erro ao gerar o PDF. Por favor, verifique o console para mais detalhes.");
+                // 259. Captura e exibe erros na geração do PDF.
             }
         }
-
     </script>
 </body>
 
