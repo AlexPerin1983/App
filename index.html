@@ -83,7 +83,6 @@
         </div>
     </div>
     
-
     <script>
         // Inicializa máscaras nos campos
         $(document).ready(function () {
@@ -93,57 +92,52 @@
         });
 
         // Lista de películas e clientes
- // Lista de películas e clientes
-const peliculas = [
-    { nome: "Window Blue Performance", preco: 240 },
-    { nome: "Window BLUE 70", preco: 200 },
-    { nome: "Carbono Window Usa", preco: 100 },
-    { nome: "Silver 10 Externa", preco: 280 },
-    { nome: "Prata Reflecta", preco: 120 },
-    { nome: "Prata Reflecta 15", preco: 120 },
-    { nome: "Origin Carbon", preco: 150 },
-    { nome: "Vinil Blackout", preco: 130 },
-    { nome: "Vinil Jateado", preco: 120 },
-    { nome: "Vinil Perfurado", preco: 85 },
-    { nome: "Window Premium", preco: 160 }
-];
+        const peliculas = [
+            { nome: "Window Blue Performance", preco: 240 },
+            { nome: "Window BLUE 70", preco: 200 },
+            { nome: "Carbono Window Usa", preco: 100 },
+            { nome: "Silver 10 Externa", preco: 280 },
+            { nome: "Prata Reflecta", preco: 120 },
+            { nome: "Prata Reflecta 15", preco: 120 },
+            { nome: "Origin Carbon", preco: 150 },
+            { nome: "Vinil Blackout", preco: 130 },
+            { nome: "Vinil Jateado", preco: 120 },
+            { nome: "Vinil Perfurado", preco: 85 },
+            { nome: "Window Premium", preco: 160 }
+        ];
 
-let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
+        let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
 
-// Novo código para remover clientes vazios
-clientes = clientes.filter(cliente => cliente.nome && cliente.nome.trim() !== "");
-localStorage.setItem('clientes', JSON.stringify(clientes));
+        // Novo código para remover clientes vazios
+        clientes = clientes.filter(cliente => cliente.nome && cliente.nome.trim() !== "");
+        localStorage.setItem('clientes', JSON.stringify(clientes));
 
-let clienteSelecionado = '';
-const clienteSelect = document.getElementById('clienteSelect');
+        let clienteSelecionado = '';
+        const clienteSelect = document.getElementById('clienteSelect');
 
-// Função para abrir o popup de adicionar ou editar cliente
-function abrirPopup(acao) {
-    const popupTitulo = document.getElementById('popupTitulo');
-    if (acao === 'adicionar') {
-        popupTitulo.innerText = 'Adicionar Novo Cliente';
-        limparCamposPopup();  // Verifique se esta função está definida
-        clienteSelecionado = '';
-    } else if (acao === 'editar') {
-        popupTitulo.innerText = 'Editar Cliente';
-        carregarDadosCliente();
-        clienteSelecionado = clienteSelect.value;
-    }
-    document.getElementById('popupCliente').classList.remove('hidden');
-}
+        // Função para abrir o popup de adicionar ou editar cliente
+        function abrirPopup(acao) {
+            const popupTitulo = document.getElementById('popupTitulo');
+            if (acao === 'adicionar') {
+                popupTitulo.innerText = 'Adicionar Novo Cliente';
+                limparCamposPopup();
+                clienteSelecionado = '';
+            } else if (acao === 'editar') {
+                popupTitulo.innerText = 'Editar Cliente';
+                carregarDadosCliente();
+                clienteSelecionado = clienteSelect.value;
+            }
+            document.getElementById('popupCliente').classList.remove('hidden');
+        }
 
-// Função para limpar os campos do popup
-function limparCamposPopup() {
-    document.getElementById('popupClienteNome').value = '';
-    document.getElementById('popupClienteTelefone').value = '';
-    document.getElementById('popupClienteEndereco').value = '';
-    document.getElementById('popupClienteCPF').value = '';
-    document.getElementById('popupClienteCNPJ').value = '';
-}
-
-
-// O restante do código permanece o mesmo...
-
+        // Função para limpar os campos do popup
+        function limparCamposPopup() {
+            document.getElementById('popupClienteNome').value = '';
+            document.getElementById('popupClienteTelefone').value = '';
+            document.getElementById('popupClienteEndereco').value = '';
+            document.getElementById('popupClienteCPF').value = '';
+            document.getElementById('popupClienteCNPJ').value = '';
+        }
 
         // Função para carregar dados do cliente no popup de edição
         function carregarDadosCliente() {
@@ -158,74 +152,68 @@ function limparCamposPopup() {
         }
 
         // Função para salvar o cliente (adicionar ou editar)
-// Função para salvar o cliente (adicionar ou editar)
-function salvarCliente() {
-    const nome = document.getElementById('popupClienteNome').value.trim();
-    const telefone = document.getElementById('popupClienteTelefone').value.trim();
-    const endereco = document.getElementById('popupClienteEndereco').value.trim();
-    const cpf = document.getElementById('popupClienteCPF').value.trim();
-    const cnpj = document.getElementById('popupClienteCNPJ').value.trim();
+        function salvarCliente() {
+            const nome = document.getElementById('popupClienteNome').value.trim();
+            const telefone = document.getElementById('popupClienteTelefone').value.trim();
+            const endereco = document.getElementById('popupClienteEndereco').value.trim();
+            const cpf = document.getElementById('popupClienteCPF').value.trim();
+            const cnpj = document.getElementById('popupClienteCNPJ').value.trim();
 
-    // Verifica se o nome do cliente já existe e se não é o mesmo que está sendo editado
-    if (nome && (clienteSelecionado === '' || nome === clienteSelecionado || !clientes.some(cliente => cliente.nome === nome))) {
-        const novoCliente = { nome, telefone, endereco, cpf, cnpj };
+            // Verifica se o nome do cliente já existe e se não é o mesmo que está sendo editado
+            if (nome && (clienteSelecionado === '' || nome === clienteSelecionado || !clientes.some(cliente => cliente.nome === nome))) {
+                const novoCliente = { nome, telefone, endereco, cpf, cnpj };
 
-        if (clienteSelecionado) {
-            const index = clientes.findIndex(c => c.nome === clienteSelecionado);
-            
-            // Relaciona as medidas existentes ao novo nome do cliente, se o nome foi alterado
-            const medidasExistentes = localStorage.getItem(`medidas_${clienteSelecionado}`);
-            clientes[index] = novoCliente;
-            if (medidasExistentes) {
-                localStorage.setItem(`medidas_${nome}`, medidasExistentes);
-                if (nome !== clienteSelecionado) {
-                    localStorage.removeItem(`medidas_${clienteSelecionado}`);
+                if (clienteSelecionado) {
+                    const index = clientes.findIndex(c => c.nome === clienteSelecionado);
+                    
+                    // Relaciona as medidas existentes ao novo nome do cliente, se o nome foi alterado
+                    const medidasExistentes = localStorage.getItem(`medidas_${clienteSelecionado}`);
+                    clientes[index] = novoCliente;
+                    if (medidasExistentes) {
+                        localStorage.setItem(`medidas_${nome}`, medidasExistentes);
+                        if (nome !== clienteSelecionado) {
+                            localStorage.removeItem(`medidas_${clienteSelecionado}`);
+                        }
+                    }
+                } else {
+                    clientes.push(novoCliente);
                 }
+
+                // Atualiza a lista de clientes no localStorage e dropdown
+                salvarClientesNoStorage();
+                carregarClientes(novoCliente.nome);
+                fecharPopup();
+            } else {
+                alert("O nome do cliente já existe ou não foi informado.");
             }
-        } else {
-            clientes.push(novoCliente);
         }
 
-        // Atualiza a lista de clientes no localStorage e dropdown
-        salvarClientesNoStorage();
-        carregarClientes(novoCliente.nome);
-        fecharPopup();
-    } else {
-        alert("O nome do cliente já existe ou não foi informado.");
-    }
-}
+        // Função para carregar a lista de clientes no select
+        function carregarClientes(clienteSelecionado = '') {
+            clienteSelect.innerHTML = ''; // Removemos a opção inicial
+            if (clientes.length > 0) {
+                clienteSelect.classList.remove('hidden');
+                clientes.forEach(cliente => {
+                    const option = document.createElement('option');
+                    option.value = cliente.nome;
+                    option.textContent = cliente.nome;
+                    clienteSelect.appendChild(option);
+                });
 
-// Função para carregar a lista de clientes no select
-function carregarClientes(clienteSelecionado = '') {
-    clienteSelect.innerHTML = '<option value="">Selecione um cliente</option>';
-    if (clientes.length > 0) {
-        clienteSelect.classList.remove('hidden');
-        clientes.forEach(cliente => {
-            const option = document.createElement('option');
-            option.value = cliente.nome;
-            option.textContent = cliente.nome;
-            clienteSelect.appendChild(option);
-        });
+                // Seleciona o primeiro cliente da lista, se nenhum cliente for selecionado
+                if (clienteSelecionado) {
+                    clienteSelect.value = clienteSelecionado;
+                } else {
+                    clienteSelect.value = clientes[0].nome;
+                }
 
-        if (clienteSelecionado) {
-            clienteSelect.value = clienteSelecionado;
-            loadMedidas();
-            mostrarEditIconContainer(true);
-        } else {
-            const ultimoClienteSelecionado = carregarClienteSelecionadoDoStorage();
-            if (ultimoClienteSelecionado && clientes.some(cliente => cliente.nome === ultimoClienteSelecionado)) {
-                clienteSelect.value = ultimoClienteSelecionado;
-            } else if (clientes.length > 0) {
-                clienteSelect.value = clientes[clientes.length - 1].nome;
+                loadMedidas();
+                mostrarEditIconContainer(true);
+            } else {
+                clienteSelect.classList.add('hidden');
+                mostrarEditIconContainer(false);
             }
-            loadMedidas();
         }
-    } else {
-        clienteSelect.classList.add('hidden');
-        mostrarEditIconContainer(false);
-    }
-}
-
 
         // Função que executa ao mudar o cliente selecionado
         function onClienteChange() {
@@ -243,7 +231,7 @@ function carregarClientes(clienteSelecionado = '') {
         // Função para exibir ou esconder o container de edição
         function mostrarEditIconContainer(exibir) {
             const editIconContainer = document.getElementById('editIconContainer');
-            if (exibir && clientes.length > 0) {
+            if (exibir && clienteSelect.value) {
                 editIconContainer.classList.remove('hidden');
             } else {
                 editIconContainer.classList.add('hidden');
@@ -335,7 +323,6 @@ function carregarClientes(clienteSelecionado = '') {
                 </div>
                 <div class="flex items-center space-x-1">
                     <select class="flex-grow min-w-0 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 pelicula-select" onchange="calculateTotal()">
-                        <option value="">Película</option>
                         ${peliculas.map(p => `<option value="${p.nome}" ${p.nome === peliculaSelecionada ? 'selected' : ''}>${p.nome}</option>`).join('')}
                     </select>
                     <button class="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition shadow-md flex-shrink-0 w-8 h-8 flex items-center justify-center" onclick="duplicarGrupo(this)">
@@ -353,11 +340,66 @@ function carregarClientes(clienteSelecionado = '') {
                         <option value="">Ambiente</option>
                         <option value="Sala de estar" ${ambiente === "Sala de estar" ? 'selected' : ''}>Sala de estar</option>
                         <option value="Sala de jantar" ${ambiente === "Sala de jantar" ? 'selected' : ''}>Sala de jantar</option>
+                        <option value="Cozinha" ${ambiente === "Cozinha" ? 'selected' : ''}>Cozinha</option>
+                        <option value="Copa" ${ambiente === "Copa" ? 'selected' : ''}>Copa</option>
+                        <option value="Suite 1" ${ambiente === "Suite 1" ? 'selected' : ''}>Suite 1</option>
+                        <option value="Suite 2" ${ambiente === "Suite 2" ? 'selected' : ''}>Suite 2</option>
+                        <option value="Escritorio 1" ${ambiente === "Escritorio 1" ? 'selected' : ''}>Escritorio 1</option>
+                        <option value="Escritorio 2" ${ambiente === "Escritorio 2" ? 'selected' : ''}>Escritorio 2</option>
+                        <option value="Escritorio 3" ${ambiente === "Escritorio 3" ? 'selected' : ''}>Escritorio 3</option>
+                        <option value="Sala de Espera" ${ambiente === "Sala de Espera" ? 'selected' : ''}>Sala de Espera</option>
+                        <option value="Loja" ${ambiente === "Loja" ? 'selected' : ''}>Loja</option>
+                        <option value="Recepção" ${ambiente === "Recepção" ? 'selected' : ''}>Recepção</option>
+                        <option value="Garita" ${ambiente === "Garita" ? 'selected' : ''}>Garita</option>
+                        <option value="Garita fundo" ${ambiente === "Garita fundo" ? 'selected' : ''}>Garita fundo</option>
+                        <option value="Portaria" ${ambiente === "Portaria" ? 'selected' : ''}>Portaria</option>
+                        <option value="Portaria fundo" ${ambiente === "Portaria fundo" ? 'selected' : ''}>Portaria fundo</option>
+                        <option value="Refeitorio" ${ambiente === "Refeitorio" ? 'selected' : ''}>Refeitorio</option>
+                        <option value="Quarto 1" ${ambiente === "Quarto 1" ? 'selected' : ''}>Quarto 1</option>
+                        <option value="Quarto 2" ${ambiente === "Quarto 2" ? 'selected' : ''}>Quarto 2</option>
+                        <option value="Quarto 3" ${ambiente === "Quarto 3" ? 'selected' : ''}>Quarto 3</option>
+                        <option value="Quarto 4" ${ambiente === "Quarto 4" ? 'selected' : ''}>Quarto 4</option>
+                        <option value="Quarto empregada" ${ambiente === "Quarto empregada" ? 'selected' : ''}>Quarto empregada</option>
+                        <option value="Quarto principal" ${ambiente === "Quarto principal" ? 'selected' : ''}>Quarto principal</option>
+                        <option value="Quarto de hóspedes" ${ambiente === "Quarto de hóspedes" ? 'selected' : ''}>Quarto de hóspedes</option>
+                        <option value="Banheiro 1" ${ambiente === "Banheiro 1" ? 'selected' : ''}>Banheiro 1</option>
+                        <option value="Banheiro 2" ${ambiente === "Banheiro 2" ? 'selected' : ''}>Banheiro 2</option>
+                        <option value="Banheiro 3" ${ambiente === "Banheiro 3" ? 'selected' : ''}>Banheiro 3</option>
+                        <option value="Banheiro de hóspedes" ${ambiente === "Banheiro de hóspedes" ? 'selected' : ''}>Banheiro de hóspedes</option>
+                        <option value="Corredor" ${ambiente === "Corredor" ? 'selected' : ''}>Corredor</option>
+                        <option value="Escada" ${ambiente === "Escada" ? 'selected' : ''}>Escada</option>
+                        <option value="Escritório" ${ambiente === "Escritório" ? 'selected' : ''}>Escritório</option>
+                        <option value="Lavanderia" ${ambiente === "Lavanderia" ? 'selected' : ''}>Lavanderia</option>
+                        <option value="Garagem" ${ambiente === "Garagem" ? 'selected' : ''}>Garagem</option>
+                        <option value="Varanda" ${ambiente === "Varanda" ? 'selected' : ''}>Varanda</option>
+                        <option value="Jardim" ${ambiente === "Jardim" ? 'selected' : ''}>Jardim</option>
+                        <option value="Sotão" ${ambiente === "Sotão" ? 'selected' : ''}>Sotão</option>
+                        <option value="Porão" ${ambiente === "Porão" ? 'selected' : ''}>Porão</option>
+                        <option value="Elevador" ${ambiente === "Elevador" ? 'selected' : ''}>Elevador</option>
+                        <option value="Outros" ${ambiente === "Outros" ? 'selected' : ''}>Outros</option>
                     </select>
                     <select onchange="calculateTotal()" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500">
                         <option value="">Tipo de Aplicação</option>
                         <option value="Vidro Fixo" ${tipoAplicacao === "Vidro Fixo" ? 'selected' : ''}>Vidro Fixo</option>
                         <option value="Janela Padrão" ${tipoAplicacao === "Janela Padrão" ? 'selected' : ''}>Janela Padrão</option>
+                        <option value="Janelão" ${tipoAplicacao === "Janelão" ? 'selected' : ''}>Janelão</option>
+                        <option value="Janela de correr" ${tipoAplicacao === "Janela de correr" ? 'selected' : ''}>Janela de correr</option>
+                        <option value="Janela pivotante" ${tipoAplicacao === "Janela pivotante" ? 'selected' : ''}>Janela pivotante</option>
+                        <option value="Basculante" ${tipoAplicacao === "Basculante" ? 'selected' : ''}>Basculante</option>
+                        <option value="Porta" ${tipoAplicacao === "Porta" ? 'selected' : ''}>Porta</option>
+                        <option value="Porta Balcão" ${tipoAplicacao === "Porta Balcão" ? 'selected' : ''}>Porta Balcão</option>
+                        <option value="Vitrine" ${tipoAplicacao === "Vitrine" ? 'selected' : ''}>Vitrine</option>
+                        <option value="Tampo de mesa" ${tipoAplicacao === "Tampo de mesa" ? 'selected' : ''}>Tampo de mesa</option>
+                        <option value="Box de banheiro" ${tipoAplicacao === "Box de banheiro" ? 'selected' : ''}>Box de banheiro</option>
+                        <option value="Guarda-corpo" ${tipoAplicacao === "Guarda-corpo" ? 'selected' : ''}>Guarda-corpo</option>
+                        <option value="Dispensa" ${tipoAplicacao === "Dispensa" ? 'selected' : ''}>Dispensa</option>
+                        <option value="Armário" ${tipoAplicacao === "Armário" ? 'selected' : ''}>Armário</option>
+                        <option value="Teto" ${tipoAplicacao === "Teto" ? 'selected' : ''}>Teto</option>
+                        <option value="Parede divisória" ${tipoAplicacao === "Parede divisória" ? 'selected' : ''}>Parede divisória</option>
+                        <option value="Fachada" ${tipoAplicacao === "Fachada" ? 'selected' : ''}>Fachada</option>
+                        <option value="Claraboia" ${tipoAplicacao === "Claraboia" ? 'selected' : ''}>Claraboia</option>
+                        <option value="Balcão" ${tipoAplicacao === "Balcão" ? 'selected' : ''}>Balcão</option>
+                        <option value="Outras" ${tipoAplicacao === "Outras" ? 'selected' : ''}>Outras</option>
                     </select>
                 </div>
             `;
@@ -366,29 +408,6 @@ function carregarClientes(clienteSelecionado = '') {
 
             if (isFirst) {
                 medidaGroup.querySelector('.largura-input').focus();
-            }
-
-            calculateTotal();
-        }
-
-        // Função para atualizar o valor do Total M² automaticamente
-        function atualizarTotal(input, event) {
-            const group = input.closest('.bg-white');
-            const largura = parseFloat(group.querySelector('.largura-input').value) || 0;
-            const altura = parseFloat(group.querySelector('.altura-input').value) || 0;
-            const quantidade = parseInt(group.querySelector('.quantidade-input').value) || 1;
-            const totalM2 = largura * altura * quantidade;
-            group.querySelector('input[placeholder="M²"]').value = totalM2.toFixed(2);
-
-            // Verifica se há 3 números e muda o foco para o próximo input
-            const numericValue = event.target.value.replace(/\D/g, ''); // Remove caracteres não numéricos
-            if (numericValue.length === 3) {
-                const nextInput = input.nextElementSibling;
-                if (nextInput && nextInput.tagName === 'INPUT') {
-                    nextInput.focus();
-                } else if (nextInput && nextInput.tagName === 'SELECT') {
-                    nextInput.focus();
-                }
             }
 
             calculateTotal();
@@ -461,6 +480,18 @@ function carregarClientes(clienteSelecionado = '') {
 
             document.getElementById('resultado').innerText = `Total M²: ${totalM2.toFixed(2)} | Preço Total: R$ ${precoTotal.toFixed(2)}`;
             saveMedidas();
+        }
+
+        // Função para atualizar o total de M² e preço ao modificar largura, altura ou quantidade
+        function atualizarTotal(input, event) {
+            const group = input.closest('.bg-white');
+            const largura = parseFloat(group.querySelector('.largura-input').value) || 0;
+            const altura = parseFloat(group.querySelector('.altura-input').value) || 0;
+            const quantidade = parseInt(group.querySelector('.quantidade-input').value) || 0;
+
+            const area = largura * altura * quantidade;
+            group.querySelector('input[placeholder="M²"]').value = area.toFixed(2);
+            calculateTotal();
         }
 
         // Função para alternar os campos adicionais
@@ -551,11 +582,11 @@ function carregarClientes(clienteSelecionado = '') {
                 const margin = 15;
 
                 const colors = {
-                    primary: [28, 4, 56],                         // Novo azul (você pode ajustar esses valores RGB)
-                    secondary: [242, 182, 3],                       // Novo verde (você pode ajustar esses valores RGB)
-                    text: [44, 62, 80],                             // Mantenha esta cor para o texto, ou ajuste se necessário
-                    lightGray: [236, 240, 241],                     // Para linhas alternadas da tabela
-                    header: [0, 51, 102]                         // Novo vermelho (você pode ajustar esses valores RGB)
+                    primary: [28, 4, 56],                         
+                    secondary: [242, 182, 3],                      
+                    text: [44, 62, 80],                             
+                    lightGray: [236, 240, 241],                    
+                    header: [0, 51, 102]                         
                 };
 
                 function addCover() {
@@ -563,11 +594,9 @@ function carregarClientes(clienteSelecionado = '') {
                     const pageHeight = doc.internal.pageSize.height;
                     const margin = 30;
 
-                    // Fundo da página
-                    doc.setFillColor(245, 245, 245);  // Cinza muito claro
+                    doc.setFillColor(245, 245, 245);  
                     doc.rect(0, 0, pageWidth, pageHeight, 'F');
 
-                    // Barras graduais no topo
                     const barColors = ['#000000', '#1a1a1a', '#333333', '#4d4d4d', '#666666', '#808080', '#999999', '#b3b3b3', '#cccccc', '#e6e6e6'];
                     const barWidth = pageWidth / barColors.length;
                     barColors.forEach((color, index) => {
@@ -575,8 +604,7 @@ function carregarClientes(clienteSelecionado = '') {
                         doc.rect(index * barWidth, 0, barWidth, 40, 'F');
                     });
 
-                    // Informações do cliente
-                    doc.setTextColor(44, 62, 80);  // Azul escuro para o texto
+                    doc.setTextColor(44, 62, 80);  
                     doc.setFont("helvetica", 'bold');
                     doc.setFontSize(18);
                     doc.text(`Cliente: ${cliente.nome}`, margin, 70);
@@ -587,15 +615,13 @@ function carregarClientes(clienteSelecionado = '') {
                     doc.text(`Endereço: ${cliente.endereco}`, margin, 105);
                     doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')}`, margin, 120);
 
-                    // Adicionar "VÁLIDO POR 90 DIAS"
                     doc.text("VÁLIDO POR 90 DIAS", margin, 135);
 
-                    // Rodapé
-                    doc.setDrawColor(41, 128, 185);  // Azul para a linha
+                    doc.setDrawColor(41, 128, 185);  
                     doc.setLineWidth(1);
                     doc.line(margin, pageHeight - 40, pageWidth - margin, pageHeight - 40);
 
-                    doc.setTextColor(41, 128, 185);  // Azul para o texto do rodapé
+                    doc.setTextColor(41, 128, 185);  
                     doc.setFontSize(12);
                     doc.setFont("helvetica", 'italic');
                     doc.text("Soluções em Películas de Alta Qualidade", pageWidth / 2, pageHeight - 25, { align: 'center' });
