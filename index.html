@@ -30,8 +30,9 @@
     $(document).ready(function () {
         // Verifica se já existe uma chave salva no localStorage e a valida
         const savedKey = localStorage.getItem('accessKey');
-        const savedDeviceId = localStorage.getItem('deviceId');
-        if (savedKey && validKeys.includes(savedKey) && savedDeviceId === getDeviceId()) {
+        const savedFingerprint = localStorage.getItem('fingerprint');
+        const sessionKey = sessionStorage.getItem('sessionKey');
+        if (savedKey && validKeys.includes(savedKey) && savedFingerprint === getFingerprint() && sessionKey) {
             $('#authContainer').hide();
             $('#appContainer').removeClass('hidden');
         }
@@ -39,25 +40,31 @@
         // Função para verificar a chave de acesso
         $('#verifyAccessKey').click(function () {
             const enteredKey = $('#accessKeyInput').val().trim();
-            if (validKeys.includes(enteredKey)) {
-                // Salva a chave no localStorage para acesso futuro, junto com o identificador do dispositivo
+            if (validKeys.includes(enteredKey) && !isKeyUsed(enteredKey)) {
+                // Marca a chave como usada
+                markKeyAsUsed(enteredKey);
+                // Salva a chave no localStorage para acesso futuro, junto com o fingerprint do navegador
                 localStorage.setItem('accessKey', enteredKey);
-                localStorage.setItem('deviceId', getDeviceId());
+                localStorage.setItem('fingerprint', getFingerprint());
+                sessionStorage.setItem('sessionKey', enteredKey);
                 $('#authContainer').hide();
                 $('#appContainer').removeClass('hidden');
             } else {
-                alert('Chave inválida. Por favor, tente novamente.');
+                alert('Chave inválida ou já utilizada. Por favor, tente novamente.');
             }
         });
 
-        // Função para gerar um identificador único para o dispositivo
-        function getDeviceId() {
-            let deviceId = localStorage.getItem('uniqueDeviceId');
-            if (!deviceId) {
-                deviceId = 'device-' + generateUUID();
-                localStorage.setItem('uniqueDeviceId', deviceId);
+        // Função para gerar um identificador único para o dispositivo/navegador (fingerprint)
+        function getFingerprint() {
+            const userAgent = navigator.userAgent;
+            const screenResolution = `${screen.width}x${screen.height}`;
+            const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            let uniqueId = localStorage.getItem('uniqueId');
+            if (!uniqueId) {
+                uniqueId = generateUUID();
+                localStorage.setItem('uniqueId', uniqueId);
             }
-            return deviceId;
+            return `${userAgent}-${screenResolution}-${timezone}-${uniqueId}`;
         }
 
         // Função para gerar um UUID aleatório
@@ -65,6 +72,16 @@
             return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
                 (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
             );
+        }
+
+        // Função para marcar uma chave como usada
+        function markKeyAsUsed(key) {
+            localStorage.setItem(`usedKey_${key}`, true);
+        }
+
+        // Função para verificar se a chave já foi usada
+        function isKeyUsed(key) {
+            return localStorage.getItem(`usedKey_${key}`) === "true";
         }
     });
 </script>
