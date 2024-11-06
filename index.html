@@ -3,41 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <title>CarFilm-Pro</title>
+
     <!-- Meta tag para responsividade -->
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
     <!-- Bootstrap CSS -->
+    <!-- Framework CSS para facilitar o design responsivo -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
     <!-- Font Awesome para ícones -->
+    <!-- Biblioteca de ícones para utilizar nos botões e menus -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+
     <!-- Seu CSS personalizado -->
     <style>
+        /* Definição de variáveis CSS para facilitar a mudança de cores */
         :root {
-            --primary-color: #0D6EFD; /* Cor padrão */
+            --primary-color: #0D6EFD; /* Cor padrão do tema */
         }
+
+        /* Estilos básicos para o corpo da página */
         body {
             margin: 0;
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: #F8F9FA;
+            background: #F8F9FA; /* Cor de fundo */
             font-size: 14px;
         }
-        /* Cabeçalho */
+
+        /* Estilos para o cabeçalho */
         .header {
-            background-color: var(--primary-color);
+            background-color: var(--primary-color); /* Utiliza a cor primária definida */
             color: white;
             padding: 0 16px;
             display: flex;
             align-items: center;
             height: 56px;
-            position: fixed;
+            position: fixed; /* Fixa o cabeçalho no topo */
             top: 0;
             width: 100%;
-            z-index: 1000;
+            z-index: 1000; /* Garante que o cabeçalho fique acima de outros elementos */
         }
+
+        /* Botão para alternar a barra lateral (visível em dispositivos móveis) */
         .header .toggle-menu {
             font-size: 24px;
             cursor: pointer;
             margin-right: 16px;
         }
+
+        /* Logo da empresa no cabeçalho */
         .header .logo {
             font-weight: bold;
             font-size: 18px;
@@ -50,32 +64,36 @@
             margin-right: 8px;
             object-fit: cover;
         }
-        /* Exibir informações da empresa apenas se cadastrada */
+
+        /* Informações da empresa no cabeçalho (aparecem se houver dados cadastrados) */
         .header .company-info {
             margin-left: auto;
             font-size: 14px;
-            display: none;
+            display: none; /* Oculto por padrão */
             align-items: center;
         }
         .header .company-info.visible {
-            display: flex;
+            display: flex; /* Exibe quando possui a classe 'visible' */
         }
-        /* Barra lateral */
+
+        /* Estilos para a barra lateral (menu) */
         .sidebar {
             background: #fff;
             position: fixed;
-            top: 56px;
-            left: -250px;
-            height: calc(100vh - 56px);
+            top: 56px; /* Abaixo do cabeçalho */
+            left: -250px; /* Oculta a barra lateral inicialmente */
+            height: calc(100vh - 56px); /* Altura total da tela menos a altura do cabeçalho */
             width: 250px;
-            overflow-y: auto;
+            overflow-y: auto; /* Permite rolagem se o conteúdo exceder a altura */
             border-right: 1px solid #dee2e6;
-            transition: all 0.3s;
+            transition: all 0.3s; /* Transição suave ao mostrar/ocultar */
             z-index: 1001;
         }
         .sidebar.active {
-            left: 0;
+            left: 0; /* Exibe a barra lateral quando possui a classe 'active' */
         }
+
+        /* Estilos para os itens do menu */
         .menu-item {
             padding: 12px 16px;
             color: #495057;
@@ -85,13 +103,14 @@
             align-items: center;
         }
         .menu-item:hover, .menu-item.active {
-            background-color: var(--primary-color);
+            background-color: var(--primary-color); /* Muda a cor de fundo ao passar o mouse ou quando ativo */
             color: white;
         }
         .menu-item i {
-            margin-right: 8px;
+            margin-right: 8px; /* Espaço entre o ícone e o texto */
         }
-        /* Informações do usuário no menu lateral */
+
+        /* Informações do usuário no menu lateral (visível em dispositivos móveis) */
         .sidebar .user-info {
             padding: 12px;
             text-align: center;
@@ -106,25 +125,29 @@
             color: #6c757d;
         }
         .sidebar .user-info img {
-            border-radius: 50%;
+            border-radius: 50%; /* Deixa a imagem circular */
             width: 80px;
             height: 80px;
             margin-bottom: 8px;
             object-fit: cover;
         }
-        /* Conteúdo principal */
+
+        /* Estilos para o conteúdo principal */
         .main-content {
-            margin-top: 56px;
+            margin-top: 56px; /* Compensa a altura do cabeçalho */
             padding: 16px;
             transition: all 0.3s;
         }
+        /* Esconde todas as seções por padrão */
         .content-section {
             display: none;
         }
+        /* Exibe a seção ativa */
         .content-section.active {
             display: block;
         }
-        /* Overlay para dispositivos móveis */
+
+        /* Overlay para dispositivos móveis (quando a barra lateral está ativa) */
         .overlay {
             display: none;
             position: fixed;
@@ -132,31 +155,33 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.5); /* Fundo semitransparente */
             z-index: 1000;
         }
         .overlay.active {
             display: block;
         }
-        /* Responsividade */
+
+        /* Estilos para dispositivos com largura mínima de 768px (desktop) */
         @media (min-width: 768px) {
             .sidebar {
-                left: 0;
+                left: 0; /* Exibe a barra lateral permanentemente */
             }
             .header .toggle-menu {
-                display: none;
+                display: none; /* Oculta o botão de menu no cabeçalho */
             }
             .main-content {
-                margin-left: 250px;
+                margin-left: 250px; /* Compensa a largura da barra lateral */
             }
             .overlay {
-                display: none;
+                display: none; /* Oculta o overlay */
             }
             .header .company-info {
                 font-size: 14px;
             }
         }
-        /* Ajustes de fonte e espaçamento para dispositivos móveis */
+
+        /* Ajustes de estilo para dispositivos móveis */
         @media (max-width: 767.98px) {
             .header {
                 padding: 0 12px;
@@ -202,6 +227,7 @@
                 padding: 6px 8px;
             }
         }
+
         /* Estilo para a paleta de cores */
         .color-palette {
             display: flex;
@@ -216,9 +242,10 @@
             border: 2px solid transparent;
         }
         .color-swatch.selected {
-            border-color: #000;
+            border-color: #000; /* Destaque para a cor selecionada */
         }
-        /* Botões personalizados */
+
+        /* Estilos personalizados para botões */
         .btn-primary {
             background-color: var(--primary-color);
             border-color: var(--primary-color);
@@ -230,23 +257,28 @@
     </style>
 </head>
 <body>
+
     <!-- Cabeçalho -->
     <div class="header">
+        <!-- Botão para abrir/fechar a barra lateral em dispositivos móveis -->
         <span class="toggle-menu" onclick="toggleSidebar()"><i class="fas fa-bars"></i></span>
+
+        <!-- Logo e nome da empresa -->
         <span class="logo" id="logoEmpresaHeader">
-            <!-- O logotipo e o nome da empresa serão inseridos aqui -->
+            <!-- O logotipo e o nome da empresa serão inseridos aqui via JavaScript -->
             <img src="https://via.placeholder.com/40" alt="Logo da Empresa">
             <span id="nomeEmpresaHeader">CarFilm-Pro</span>
         </span>
-        <!-- Exibir informações da empresa apenas se cadastrada -->
+
+        <!-- Informações da empresa (CNPJ/CPF) exibidas se cadastradas -->
         <div class="company-info" id="companyInfoHeader">
             <span id="cnpjEmpresaHeader"></span>
         </div>
     </div>
 
-    <!-- Barra lateral -->
+    <!-- Barra lateral (menu) -->
     <div class="sidebar" id="sidebar">
-        <!-- Informações do usuário no menu lateral para mobile -->
+        <!-- Informações do usuário no menu lateral para dispositivos móveis -->
         <div class="user-info d-md-none">
             <img src="https://via.placeholder.com/80" alt="Logo da Empresa" id="logoEmpresaSidebar">
             <div class="user-name" id="nomeEmpresaSidebar">CarFilm-Pro</div>
@@ -254,39 +286,36 @@
         </div>
 
         <!-- Menu de navegação -->
-
-
-       <!-- Menu de navegação -->
-<div class="menu-item" onclick="showSection('inicio')"><i class="fas fa-home"></i> Inicio</div>
-<div class="menu-item" onclick="showSection('empresa')"><i class="fas fa-building"></i> Minha Empresa</div>
-<div class="menu-item" onclick="showSection('clientes')"><i class="fas fa-users"></i> Clientes</div>
-<div class="menu-item" onclick="showSection('peliculas')"><i class="fas fa-film"></i> Películas</div>
-<div class="menu-item" onclick="showSection('veiculo')"><i class="fas fa-car"></i> Veículos</div>
-<div class="menu-item" onclick="showSection('servicos')"><i class="fas fa-tools"></i> Serviços</div>
-<div class="menu-item" onclick="showSection('agendamento')"><i class="fas fa-calendar-alt"></i> Agendamentos</div>
-<div class="menu-item" onclick="showSection('pagamentos')"><i class="fas fa-credit-card"></i> Formas de Pagamentos</div>
-<div class="menu-item" onclick="showSection('orcamento')"><i class="fas fa-file-invoice-dollar"></i> Orçamento</div>
-<div class="menu-item" onclick="showSection('fornecedores')"><i class="fas fa-truck-loading"></i> Fornecedores</div>
-<div class="menu-item" onclick="showSection('estoque')"><i class="fas fa-boxes"></i> Estoque</div>
-
-
-
-
-
-
-
-        <!-- Outras seções -->
-        <!-- ... -->
+        <!-- Cada item chama a função showSection com o ID da seção correspondente -->
+        <div class="menu-item" onclick="showSection('inicio')"><i class="fas fa-home"></i> Inicio</div>
+        <div class="menu-item" onclick="showSection('empresa')"><i class="fas fa-building"></i> Minha Empresa</div>
+        <div class="menu-item" onclick="showSection('clientes')"><i class="fas fa-users"></i> Clientes</div>
+        <div class="menu-item" onclick="showSection('peliculas')"><i class="fas fa-film"></i> Películas</div>
+        <div class="menu-item" onclick="showSection('veiculo')"><i class="fas fa-car"></i> Veículos</div>
+        <div class="menu-item" onclick="showSection('servicos')"><i class="fas fa-tools"></i> Serviços</div>
+        <div class="menu-item" onclick="showSection('agendamento')"><i class="fas fa-calendar-alt"></i> Agendamentos</div>
+        <div class="menu-item" onclick="showSection('pagamentos')"><i class="fas fa-credit-card"></i> Formas de Pagamentos</div>
+        <div class="menu-item" onclick="showSection('orcamento')"><i class="fas fa-file-invoice-dollar"></i> Orçamento</div>
+        <div class="menu-item" onclick="showSection('fornecedores')"><i class="fas fa-truck-loading"></i> Fornecedores</div>
+        <div class="menu-item" onclick="showSection('estoque')"><i class="fas fa-boxes"></i> Estoque</div>
     </div>
 
-    <!-- Overlay para dispositivos móveis -->
+    <!-- Overlay para dispositivos móveis (fica sobre o conteúdo quando o menu está aberto) -->
     <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
 
-    <!-- Conteúdo principal -->
+    <!-- Conteúdo principal carregado inicialmente -->
     <div class="main-content" id="mainContent">
+        <!-- Seção "Inicio" (ativa por padrão) -->
+        <div id="inicio" class="content-section active">
+            <div class="container-fluid">
+                <h2>Inicio</h2>
+                <p>Aqui você pode gerenciar os serviços oferecidos pela sua empresa.</p>
+                <!-- Você pode adicionar mais conteúdo aqui -->
+            </div>
+        </div>
+
         <!-- Seção "Minha Empresa" -->
         <div id="empresa" class="content-section">
-            <!-- Conteúdo da seção "Minha Empresa" -->
             <div class="container-fluid">
                 <h2>Dados da Empresa</h2>
                 <!-- Formulário de Dados da Empresa -->
@@ -355,6 +384,7 @@
                             <!-- Adicione mais cores se desejar -->
                         </div>
                     </div>
+                    <!-- Botão para salvar os dados da empresa -->
                     <button type="button" class="btn btn-primary" onclick="salvarEmpresa()">Salvar</button>
                 </form>
             </div>
@@ -362,101 +392,171 @@
 
         <!-- Seção "Clientes" -->
         <div id="clientes" class="content-section">
+            <div class="container-fluid">
+                <h2>Clientes</h2>
                 <!-- Conteúdo da seção "Clientes" -->
-                <div class="container-fluid">
-                    <h2>Clientes</h2>
+                <!-- Aqui você pode adicionar a tabela de clientes, formulários, etc. -->
+            </div>
+        </div>
+
+   <!-- Seção "Películas" -->
+<div id="peliculas" class="content-section">
+    <div class="container-fluid">
+        <h2>Películas</h2>
+        <p>Aqui você pode gerenciar as películas disponíveis.</p>
+        
+        <!-- Cards das Categorias -->
+        <div class="row" id="categoriasContainer">
+            <!-- Cards serão inseridos aqui via JavaScript -->
+        </div>
+
+        <!-- Modal para Cadastrar Película -->
+<div class="modal fade" id="modalCadastrarFilme" tabindex="-1" aria-labelledby="modalCadastrarFilmeLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="formCadastrarFilme">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalCadastrarFilmeLabel">Cadastrar Película</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <input type="hidden" id="categoriaSelecionada">
+              <div class="form-group">
+                  <label for="nomeFilme">Nome</label>
+                  <input type="text" class="form-control" id="nomeFilme" placeholder="Digite o nome da película" required>
+              </div>
+              <div class="form-group">
+                  <label for="descricaoFilme">Descrição</label>
+                  <textarea class="form-control" id="descricaoFilme" rows="3" placeholder="Digite a descrição da película" required></textarea>
+              </div>
+              <div class="form-group">
+                  <label for="precoFabricante">Preço Fabricante (R$)</label>
+                  <input type="number" step="0.01" class="form-control" id="precoFabricante" placeholder="Digite o preço do fabricante" required>
+              </div>
+              <div class="form-group">
+                  <label for="precoMaoObra">Preço Mão de Obra (R$)</label>
+                  <input type="number" step="0.01" class="form-control" id="precoMaoObra" placeholder="Digite o preço da mão de obra" required>
+              </div>
+              <div class="form-group">
+                  <label for="quantidadeEstoque">Quantidade em Estoque (m)</label>
+                  <input type="number" step="0.01" class="form-control" id="quantidadeEstoque" placeholder="Digite a quantidade em estoque" required>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Salvar Película</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+        
+        <!-- Modal para Exibir Lista de Películas por Categoria -->
+        <div class="modal fade" id="modalListaFilmes" tabindex="-1" aria-labelledby="modalListaFilmesLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modalListaFilmesLabel">Películas da Categoria</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                  <table class="table table-bordered" id="listaFilmesCategoria">
+                      <thead>
+                          <tr>
+                              <th>Nome</th>
+                              <th>Descrição</th>
+                              <th>Preço Fabricante</th>
+                              <th>Preço Mão de Obra</th>
+                              <th>Quantidade em Estoque (m)</th>
+                              <th>Ações</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <!-- Filmes serão inseridos aqui via JavaScript -->
+                      </tbody>
+                  </table>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
 
 
-            <!-- Conteúdo da seção "Clientes" -->
-            <!-- ... (tabela, formulário e funcionalidades da seção "Clientes") ... -->
-                 </div>
-
+        <!-- Seção "Veículos" -->
+        <div id="veiculo" class="content-section">
+            <div class="container-fluid">
+                <h2>Veículos</h2>
+                <p>Aqui você pode gerenciar os veículos.</p>
+                <!-- Conteúdo da seção "Veículos" -->
+            </div>
+        </div>
 
         <!-- Seção "Serviços" -->
-        </div>
         <div id="servicos" class="content-section">
-                <div class="container-fluid">
-                       <h2>Serviços</h2>
-                        <p>Aqui você pode gerenciar os serviços oferecidos pela sua empresa.</p>
-                      <!-- Você pode adicionar tabelas, formulários ou qualquer outro conteúdo necessário -->
-                </div>
-        </div>
-
-                <!-- Seção "Películas" -->
-        <div id="peliculas" class="content-section">
             <div class="container-fluid">
-                   <h2>Películas</h2>
-                    <p>Aqui você pode gerenciar os serviços oferecidos pela sua empresa.</p>
-                  <!-- Você pode adicionar tabelas, formulários ou qualquer outro conteúdo necessário -->
-            </div>
-       </div>
-
-       
-                <!-- Seção "Veiculos" -->
-                <div id="veiculo" class="content-section">
-                    <div class="container-fluid">
-                           <h2>Veiculos</h2>
-                            <p>Aqui você pode gerenciar os serviços oferecidos pela sua empresa.</p>
-                          <!-- Você pode adicionar tabelas, formulários ou qualquer outro conteúdo necessário -->
-                    </div>
-               </div>
-
-        <!-- Seção "Inicio" -->
-        <div id="inicio" class="content-section active">
-            <div class="container-fluid">
-               <h2>Inicio</h2>
+                <h2>Serviços</h2>
                 <p>Aqui você pode gerenciar os serviços oferecidos pela sua empresa.</p>
-              <!-- Você pode adicionar tabelas, formulários ou qualquer outro conteúdo necessário -->
-        </div>
-        </div>
-
-                <!-- Seção "formas de pagamentos" -->
-   <div id="pagamentos" class="content-section">
-    <div class="container-fluid">
-           <h2>Formas de Pagamentos</h2>
-            <p>Aqui você pode gerenciar os serviços oferecidos pela sua empresa.</p>
-          <!-- Você pode adicionar tabelas, formulários ou qualquer outro conteúdo necessário -->
-    </div>
-</div>
-              <!-- Seção "Agendamentos" -->
-<div id="agendamento" class="content-section">
-    <div class="container-fluid">
-           <h2>Agendamentos</h2>
-            <p>Aqui você pode gerenciar os serviços oferecidos pela sua empresa.</p>
-          <!-- Você pode adicionar tabelas, formulários ou qualquer outro conteúdo necessário -->
-    </div>
-</div>
-             <!-- Seção "Orçamento" -->
-<div id="orcamento" class="content-section">
-    <div class="container-fluid">
-           <h2>Orçamento</h2>
-            <p>Aqui você pode gerenciar os serviços oferecidos pela sua empresa.</p>
-          <!-- Você pode adicionar tabelas, formulários ou qualquer outro conteúdo necessário -->
-    </div>
-</div>
-            <!-- Seção "Fornecedor" -->
-<div id="fornecedores" class="content-section">
-    <div class="container-fluid">
-           <h2>Fornecedores</h2>
-            <p>Aqui você pode gerenciar os serviços oferecidos pela sua empresa.</p>
-          <!-- Você pode adicionar tabelas, formulários ou qualquer outro conteúdo necessário -->
-    </div>
-</div>
-
-            <!-- Seção "estoque" -->
-            <div id="estoque" class="content-section">
-                <div class="container-fluid">
-                       <h2>Controle Estoque</h2>
-                        <p>Aqui você pode gerenciar os serviços oferecidos pela sua empresa.</p>
-                      <!-- Você pode adicionar tabelas, formulários ou qualquer outro conteúdo necessário -->
-                </div>
+                <!-- Conteúdo da seção "Serviços" -->
             </div>
-            
+        </div>
 
+        <!-- Seção "Agendamentos" -->
+        <div id="agendamento" class="content-section">
+            <div class="container-fluid">
+                <h2>Agendamentos</h2>
+                <p>Aqui você pode gerenciar os agendamentos.</p>
+                <!-- Conteúdo da seção "Agendamentos" -->
+            </div>
+        </div>
+
+        <!-- Seção "Formas de Pagamentos" -->
+        <div id="pagamentos" class="content-section">
+            <div class="container-fluid">
+                <h2>Formas de Pagamentos</h2>
+                <p>Aqui você pode gerenciar as formas de pagamento.</p>
+                <!-- Conteúdo da seção "Formas de Pagamentos" -->
+            </div>
+        </div>
+
+        <!-- Seção "Orçamento" -->
+        <div id="orcamento" class="content-section">
+            <div class="container-fluid">
+                <h2>Orçamento</h2>
+                <p>Aqui você pode criar e gerenciar orçamentos.</p>
+                <!-- Conteúdo da seção "Orçamento" -->
+            </div>
+        </div>
+
+        <!-- Seção "Fornecedores" -->
+        <div id="fornecedores" class="content-section">
+            <div class="container-fluid">
+                <h2>Fornecedores</h2>
+                <p>Aqui você pode gerenciar os fornecedores.</p>
+                <!-- Conteúdo da seção "Fornecedores" -->
+            </div>
+        </div>
+
+        <!-- Seção "Estoque" -->
+        <div id="estoque" class="content-section">
+            <div class="container-fluid">
+                <h2>Controle de Estoque</h2>
+                <p>Aqui você pode gerenciar o estoque.</p>
+                <!-- Conteúdo da seção "Estoque" -->
+            </div>
+        </div>
+    </div>
 
     <!-- Modais e outros elementos -->
-    <!-- Modal para adicionar/editar cliente -->
-    <!-- ... (conteúdo do modal da seção "Clientes") ... -->
+    <!-- Aqui você pode adicionar modais ou outros elementos necessários -->
 
     <!-- Scripts -->
     <!-- jQuery e Bootstrap JS -->
@@ -468,185 +568,434 @@
     <script src="https://cdn.jsdelivr.net/npm/dexie@3.0.3/dist/dexie.min.js"></script>
     <!-- Máscaras de input -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
     <!-- Seu script JavaScript personalizado -->
-    <script>
-        // Função para mostrar a seção selecionada
-        function showSection(sectionId) {
-            $('.content-section').removeClass('active');
-            $('#' + sectionId).addClass('active');
-            $('.menu-item').removeClass('active');
-            $('.menu-item').each(function() {
-                if ($(this).attr('onclick').includes("'" + sectionId + "'")) {
-                    $(this).addClass('active');
-                }
-            });
-            // Fecha a barra lateral em dispositivos móveis
-            if ($(window).width() < 768) {
-                $('#sidebar').removeClass('active');
-                $('#overlay').removeClass('active');
-            }
-            // Carregar conteúdo específico ao entrar na seção, se necessário
-            if (sectionId === 'clientes') {
-                carregarClientes();
-            }
-        }
+ <!-- Seu script JavaScript personalizado -->
+<script>
+    // Função para mostrar a seção selecionada
+    function showSection(sectionId) {
+        // Remove a classe 'active' de todas as seções
+        $('.content-section').removeClass('active');
+        // Adiciona a classe 'active' à seção selecionada
+        $('#' + sectionId).addClass('active');
 
-        // Função para alternar a visibilidade da barra lateral em dispositivos móveis
-        function toggleSidebar() {
-            $('#sidebar').toggleClass('active');
-            $('#overlay').toggleClass('active');
-        }
-
-        // Configuração do IndexedDB usando Dexie.js
-        var db = new Dexie('CarFilmProDB');
-        db.version(2).stores({
-            empresa: 'id,nome,cnpj,cpf,whatsapp,email,cep,cidade,bairro,rua,numero,corTema,logo',
-            clientes: '++id,nome,cpfCnpj,telefone,email,endereco'
-            // Outros stores podem ser adicionados aqui para as novas seções
+        // Atualiza o estado dos itens do menu
+        $('.menu-item').removeClass('active');
+        $('.menu-item').each(function() {
+            if ($(this).attr('onclick').includes("'" + sectionId + "'")) {
+                $(this).addClass('active');
+            }
         });
 
-        // Variáveis globais e funções para "Minha Empresa"
-        var selectedColor = '#0D6EFD'; // Cor padrão
-        var logoBase64 = '';
+        // Fecha a barra lateral em dispositivos móveis
+        if ($(window).width() < 768) {
+            $('#sidebar').removeClass('active');
+            $('#overlay').removeClass('active');
+        }
 
-        function salvarEmpresa() {
-            var cnpj = $('#cnpjEmpresa').val();
-            var cpf = $('#cpfEmpresa').val();
-            var empresa = {
-                id: 1,
-                nome: $('#nomeEmpresa').val(),
-                cnpj: cnpj,
-                cpf: cpf,
-                whatsapp: $('#whatsappEmpresa').val(),
-                email: $('#emailEmpresa').val(),
-                cep: $('#cepEmpresa').val(),
-                cidade: $('#cidadeEmpresa').val(),
-                bairro: $('#bairroEmpresa').val(),
-                rua: $('#ruaEmpresa').val(),
-                numero: $('#numeroEmpresa').val(),
-                corTema: selectedColor,
-                logo: logoBase64
-            };
-            db.empresa.put(empresa).then(function() {
-                alert('Dados da empresa salvos com sucesso!');
-                aplicarCorTema(empresa.corTema);
+        // Carregar conteúdo específico ao entrar na seção, se necessário
+        if (sectionId === 'clientes') {
+            carregarClientes();
+        }
+        if (sectionId === 'peliculas') {
+            listarCategoriasComContadores(); // Atualiza os contadores das categorias quando a seção é aberta
+        }
+    }
+
+    // Função para alternar a visibilidade da barra lateral em dispositivos móveis
+    function toggleSidebar() {
+        $('#sidebar').toggleClass('active');
+        $('#overlay').toggleClass('active');
+    }
+
+    // Configuração do IndexedDB usando Dexie.js
+    var db = new Dexie('CarFilmProDB');
+    db.version(2).stores({
+        empresa: 'id,nome,cnpj,cpf,whatsapp,email,cep,cidade,bairro,rua,numero,corTema,logo',
+        clientes: '++id,nome,cpfCnpj,telefone,email,endereco',
+        filmes: '++id,nome,descricao,precoFabricante,precoMaoObra,quantidadeEstoque,categoria' // Nova tabela para películas
+    });
+
+    // Variáveis globais e funções para "Minha Empresa"
+    var selectedColor = '#0D6EFD'; // Cor padrão
+    var logoBase64 = ''; // Armazena a imagem do logotipo em base64
+
+    // Função para salvar os dados da empresa no IndexedDB
+    function salvarEmpresa() {
+        var cnpj = $('#cnpjEmpresa').val();
+        var cpf = $('#cpfEmpresa').val();
+        var empresa = {
+            id: 1,
+            nome: $('#nomeEmpresa').val(),
+            cnpj: cnpj,
+            cpf: cpf,
+            whatsapp: $('#whatsappEmpresa').val(),
+            email: $('#emailEmpresa').val(),
+            cep: $('#cepEmpresa').val(),
+            cidade: $('#cidadeEmpresa').val(),
+            bairro: $('#bairroEmpresa').val(),
+            rua: $('#ruaEmpresa').val(),
+            numero: $('#numeroEmpresa').val(),
+            corTema: selectedColor,
+            logo: logoBase64
+        };
+        db.empresa.put(empresa).then(function() {
+            alert('Dados da empresa salvos com sucesso!');
+            aplicarCorTema(empresa.corTema);
+            atualizarInformacoesEmpresa(empresa);
+        });
+    }
+
+    // Função para carregar os dados da empresa do IndexedDB
+    function carregarEmpresa() {
+        db.empresa.get(1).then(function(empresa) {
+            if (empresa) {
+                $('#nomeEmpresa').val(empresa.nome);
+                $('#cnpjEmpresa').val(empresa.cnpj);
+                $('#cpfEmpresa').val(empresa.cpf);
+                $('#whatsappEmpresa').val(empresa.whatsapp);
+                $('#emailEmpresa').val(empresa.email);
+                $('#cepEmpresa').val(empresa.cep);
+                $('#cidadeEmpresa').val(empresa.cidade);
+                $('#bairroEmpresa').val(empresa.bairro);
+                $('#ruaEmpresa').val(empresa.rua);
+                $('#numeroEmpresa').val(empresa.numero);
+
+                // Aplica a cor do tema se estiver definida
+                if (empresa.corTema) {
+                    selectedColor = empresa.corTema;
+                    aplicarCorTema(empresa.corTema);
+                    $('.color-swatch').each(function() {
+                        if ($(this).data('color') === empresa.corTema) {
+                            $(this).addClass('selected');
+                        }
+                    });
+                }
+
+                // Exibe o logotipo se estiver definido
+                if (empresa.logo) {
+                    logoBase64 = empresa.logo;
+                    exibirLogo(empresa.logo);
+                }
+
+                // Atualiza as informações da empresa no cabeçalho e no menu lateral
                 atualizarInformacoesEmpresa(empresa);
-            });
-        }
-
-        function carregarEmpresa() {
-            db.empresa.get(1).then(function(empresa) {
-                if (empresa) {
-                    $('#nomeEmpresa').val(empresa.nome);
-                    $('#cnpjEmpresa').val(empresa.cnpj);
-                    $('#cpfEmpresa').val(empresa.cpf);
-                    $('#whatsappEmpresa').val(empresa.whatsapp);
-                    $('#emailEmpresa').val(empresa.email);
-                    $('#cepEmpresa').val(empresa.cep);
-                    $('#cidadeEmpresa').val(empresa.cidade);
-                    $('#bairroEmpresa').val(empresa.bairro);
-                    $('#ruaEmpresa').val(empresa.rua);
-                    $('#numeroEmpresa').val(empresa.numero);
-                    if (empresa.corTema) {
-                        selectedColor = empresa.corTema;
-                        aplicarCorTema(empresa.corTema);
-                        $('.color-swatch').each(function() {
-                            if ($(this).data('color') === empresa.corTema) {
-                                $(this).addClass('selected');
-                            }
-                        });
-                    }
-                    if (empresa.logo) {
-                        logoBase64 = empresa.logo;
-                        exibirLogo(empresa.logo);
-                    }
-                    atualizarInformacoesEmpresa(empresa);
-                }
-            });
-        }
-
-        function aplicarCorTema(cor) {
-            document.documentElement.style.setProperty('--primary-color', cor);
-        }
-
-        $(document).on('click', '.color-swatch', function() {
-            $('.color-swatch').removeClass('selected');
-            $(this).addClass('selected');
-            selectedColor = $(this).data('color');
-            aplicarCorTema(selectedColor);
-        });
-
-        function atualizarInformacoesEmpresa(empresa) {
-            if (empresa.nome) {
-                $('#nomeEmpresaHeader').text(empresa.nome);
-                $('#nomeEmpresaSidebar').text(empresa.nome);
-            } else {
-                $('#nomeEmpresaHeader').text('CarFilm-Pro');
-                $('#nomeEmpresaSidebar').text('CarFilm-Pro');
-            }
-
-            if (empresa.cnpj || empresa.cpf) {
-                var documento = empresa.cnpj ? 'CNPJ: ' + empresa.cnpj : 'CPF: ' + empresa.cpf;
-                $('#cnpjEmpresaHeader').text(documento);
-                $('#cnpjEmpresaSidebar').text(documento);
-                $('#companyInfoHeader').addClass('visible');
-            } else {
-                $('#cnpjEmpresaHeader').text('');
-                $('#cnpjEmpresaSidebar').text('');
-                $('#companyInfoHeader').removeClass('visible');
-            }
-
-            if (empresa.logo) {
-                $('#logoEmpresaHeader img').attr('src', empresa.logo);
-                $('#logoEmpresaSidebar').attr('src', empresa.logo);
-            } else {
-                $('#logoEmpresaHeader img').attr('src', 'https://via.placeholder.com/40');
-                $('#logoEmpresaSidebar').attr('src', 'https://via.placeholder.com/80');
-            }
-        }
-
-        function exibirLogo(logo) {
-            $('#previewLogo img').attr('src', logo);
-        }
-
-        $('#logoEmpresa').on('change', function(event) {
-            var file = event.target.files[0];
-            if (file && file.type.match('image.*')) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    logoBase64 = e.target.result;
-                    exibirLogo(logoBase64);
-                };
-                reader.readAsDataURL(file);
-            } else {
-                alert('Por favor, selecione um arquivo de imagem válido.');
             }
         });
+    }
 
-        // Variáveis globais e funções para "Clientes"
-        // ... (todo o código JavaScript relacionado à seção "Clientes") ...
+    // Função para aplicar a cor do tema
+    function aplicarCorTema(cor) {
+        document.documentElement.style.setProperty('--primary-color', cor);
+    }
 
-        // Inicialização ao carregar a página
-        $(document).ready(function() {
-            carregarEmpresa();
-            // Máscaras de input
-            $('#cnpjEmpresa').mask('00.000.000/0000-00', {reverse: true});
-            $('#cpfEmpresa').mask('000.000.000-00', {reverse: true});
-            $('#whatsappEmpresa').mask('(00) 00000-0000');
-            $('#cepEmpresa').mask('00000-000');
-            // Ajustar a altura do conteúdo principal
+    // Evento de clique na paleta de cores
+    $(document).on('click', '.color-swatch', function() {
+        $('.color-swatch').removeClass('selected');
+        $(this).addClass('selected');
+        selectedColor = $(this).data('color');
+        aplicarCorTema(selectedColor);
+    });
+
+    // Função para atualizar as informações da empresa no cabeçalho e no menu lateral
+    function atualizarInformacoesEmpresa(empresa) {
+        if (empresa.nome) {
+            $('#nomeEmpresaHeader').text(empresa.nome);
+            $('#nomeEmpresaSidebar').text(empresa.nome);
+        } else {
+            $('#nomeEmpresaHeader').text('CarFilm-Pro');
+            $('#nomeEmpresaSidebar').text('CarFilm-Pro');
+        }
+
+        if (empresa.cnpj || empresa.cpf) {
+            var documento = empresa.cnpj ? 'CNPJ: ' + empresa.cnpj : 'CPF: ' + empresa.cpf;
+            $('#cnpjEmpresaHeader').text(documento);
+            $('#cnpjEmpresaSidebar').text(documento);
+            $('#companyInfoHeader').addClass('visible');
+        } else {
+            $('#cnpjEmpresaHeader').text('');
+            $('#cnpjEmpresaSidebar').text('');
+            $('#companyInfoHeader').removeClass('visible');
+        }
+
+        if (empresa.logo) {
+            $('#logoEmpresaHeader img').attr('src', empresa.logo);
+            $('#logoEmpresaSidebar').attr('src', empresa.logo);
+        } else {
+            $('#logoEmpresaHeader img').attr('src', 'https://via.placeholder.com/40');
+            $('#logoEmpresaSidebar').attr('src', 'https://via.placeholder.com/80');
+        }
+    }
+
+    // Função para exibir o logotipo da empresa na pré-visualização
+    function exibirLogo(logo) {
+        $('#previewLogo img').attr('src', logo);
+    }
+
+    // Evento de mudança no input de upload do logotipo
+    $('#logoEmpresa').on('change', function(event) {
+        var file = event.target.files[0];
+        if (file && file.type.match('image.*')) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                logoBase64 = e.target.result;
+                exibirLogo(logoBase64);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            alert('Por favor, selecione um arquivo de imagem válido.');
+        }
+    });
+
+    // Inicialização ao carregar a página
+    $(document).ready(function() {
+        carregarEmpresa();
+
+        // Aplicação de máscaras nos inputs
+        $('#cnpjEmpresa').mask('00.000.000/0000-00', {reverse: true});
+        $('#cpfEmpresa').mask('000.000.000-00', {reverse: true});
+        $('#whatsappEmpresa').mask('(00) 00000-0000');
+        $('#cepEmpresa').mask('00000-000');
+
+        // Ajustar a altura do conteúdo principal
+        ajustarAlturaConteudo();
+        $(window).resize(function() {
             ajustarAlturaConteudo();
-            $(window).resize(function() {
-                ajustarAlturaConteudo();
-            });
         });
 
-        // Função para ajustar a altura do conteúdo principal
-        function ajustarAlturaConteudo() {
-            var alturaJanela = $(window).height();
-            var alturaHeader = $('.header').outerHeight();
-            $('#mainContent').css('min-height', alturaJanela - alturaHeader);
+        // Exibir as categorias de películas com contadores
+        listarCategoriasComContadores();
+
+        // Configurar o evento de submissão do formulário de cadastro de película
+        $('#formCadastrarFilme').on('submit', salvarFilme);
+    });
+
+    // Função para ajustar a altura do conteúdo principal dinamicamente
+    function ajustarAlturaConteudo() {
+        var alturaJanela = $(window).height();
+        var alturaHeader = $('.header').outerHeight();
+        $('#mainContent').css('min-height', alturaJanela - alturaHeader);
+    }
+
+    // Variáveis globais e funções para "Clientes"
+    // ... (todo o código JavaScript relacionado à seção "Clientes") ...
+
+    /** 
+     * Início das Funcionalidades de "Películas"
+     */
+
+    // Lista de Categorias Predefinidas
+    const categoriasPredefinidas = [
+        "Nanocerâmico",
+        "Nano Carbono",
+        "Fotocromático",
+        "Semi-refletiva",
+        "Refletiva",
+        "Antivandalismo",
+        "Profissional",
+        "Pigmentada",
+        "Sputtering",
+        "Híbrido"
+    ];
+
+    // Função para listar as categorias com contadores
+    function listarCategoriasComContadores() {
+        const container = $('#categoriasContainer');
+        container.empty(); // Limpa o container antes de adicionar os cards
+
+        categoriasPredefinidas.forEach(categoria => {
+            // Conta a quantidade de películas na categoria atual
+            db.filmes.where('categoria').equals(categoria).count().then(contador => {
+                const card = `
+                    <div class="col-md-4 col-sm-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body d-flex flex-column justify-content-between align-items-center">
+                                <div class="text-center">
+                                    <i class="fas fa-film fa-3x mb-3"></i>
+                                    <h5 class="card-title">${categoria}</h5>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center w-100">
+                                    <button class="btn btn-primary" onclick="abrirModalCadastrarFilme('${categoria}')">Adicionar Película</button>
+                                    <button class="btn btn-info" onclick="abrirModalListaFilmes('${categoria}')">
+                                        <i class="fas fa-eye"></i> ${contador}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.append(card);
+            }).catch(err => {
+                console.error(`Erro ao contar películas na categoria ${categoria}:`, err);
+            });
+        });
+    }
+
+    // Função para abrir o modal de cadastro de película
+    function abrirModalCadastrarFilme(categoria) {
+        $('#categoriaSelecionada').val(categoria); // Define a categoria selecionada no campo oculto
+        $('#modalCadastrarFilmeLabel').text(`Cadastrar Película - ${categoria}`); // Atualiza o título do modal
+        $('#formCadastrarFilme')[0].reset(); // Limpa os campos do formulário
+        $('#modalCadastrarFilme').modal('show'); // Exibe o modal
+    }
+
+    // Função para salvar a película no IndexedDB
+    function salvarFilme(event) {
+        event.preventDefault(); // Previne o comportamento padrão do formulário
+
+        // Coleta os dados do formulário
+        const nome = $('#nomeFilme').val();
+        const descricao = $('#descricaoFilme').val();
+        const precoFabricante = parseFloat($('#precoFabricante').val());
+        const precoMaoObra = parseFloat($('#precoMaoObra').val());
+        const quantidadeEstoque = parseFloat($('#quantidadeEstoque').val());
+        const categoria = $('#categoriaSelecionada').val();
+
+        // Validação básica
+        if (!nome || !descricao || isNaN(precoFabricante) || isNaN(precoMaoObra) || isNaN(quantidadeEstoque) || !categoria) {
+            alert('Por favor, preencha todos os campos corretamente.');
+            return;
         }
-    </script>
+
+        // Cria o objeto da película
+        const filme = {
+            nome,
+            descricao,
+            precoFabricante,
+            precoMaoObra,
+            quantidadeEstoque,
+            categoria
+        };
+
+        // Adiciona a película ao banco de dados
+        db.filmes.add(filme).then(() => {
+            $('#modalCadastrarFilme').modal('hide'); // Fecha o modal
+            listarCategoriasComContadores(); // Atualiza os contadores das categorias
+            alert('Película cadastrada com sucesso!');
+        }).catch(err => {
+            console.error(err);
+            alert('Erro ao cadastrar a película.');
+        });
+    }
+
+    // Função para abrir o modal de lista de películas por categoria
+    function abrirModalListaFilmes(categoria) {
+        $('#modalListaFilmesLabel').text(`Películas da Categoria - ${categoria}`); // Atualiza o título do modal
+
+        // Recupera as películas da categoria selecionada
+        db.filmes.where('categoria').equals(categoria).toArray().then(filmes => {
+            const tbody = $('#listaFilmesCategoria tbody');
+            tbody.empty(); // Limpa a tabela antes de adicionar as linhas
+
+            if (filmes.length === 0) {
+                tbody.append('<tr><td colspan="6" class="text-center">Nenhuma película cadastrada nesta categoria.</td></tr>');
+            } else {
+                filmes.forEach(filme => {
+                    const row = `
+                        <tr>
+                            <td>${filme.nome}</td>
+                            <td>${filme.descricao}</td>
+                            <td>R$ ${filme.precoFabricante.toFixed(2)}</td>
+                            <td>R$ ${filme.precoMaoObra.toFixed(2)}</td>
+                            <td>${filme.quantidadeEstoque.toFixed(2)} m</td>
+                            <td>
+                                <button class="btn btn-sm btn-info mr-2" onclick="editarFilme(${filme.id}, '${categoria}')"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-sm btn-danger" onclick="excluirFilme(${filme.id}, '${categoria}')"><i class="fas fa-trash-alt"></i></button>
+                            </td>
+                        </tr>
+                    `;
+                    tbody.append(row);
+                });
+            }
+
+            $('#modalListaFilmes').modal('show'); // Exibe o modal com a lista de películas
+        }).catch(err => {
+            console.error(`Erro ao recuperar películas da categoria ${categoria}:`, err);
+            alert('Erro ao carregar a lista de películas.');
+        });
+    }
+
+    // Função para excluir uma película
+    function excluirFilme(id, categoria) {
+        if(confirm('Tem certeza que deseja excluir esta película?')) {
+            db.filmes.delete(id).then(() => {
+                listarCategoriasComContadores(); // Atualiza os contadores das categorias
+                abrirModalListaFilmes(categoria); // Atualiza a lista no modal
+                alert('Película excluída com sucesso!');
+            }).catch(err => {
+                console.error(err);
+                alert('Erro ao excluir a película.');
+            });
+        }
+    }
+
+    // Função para editar uma película
+    function editarFilme(id, categoria) {
+        db.filmes.get(id).then(filme => {
+            if(filme) {
+                $('#categoriaSelecionada').val(filme.categoria); // Define a categoria no campo oculto
+                $('#modalCadastrarFilmeLabel').text(`Editar Película - ${filme.categoria}`); // Atualiza o título do modal
+                $('#nomeFilme').val(filme.nome);
+                $('#descricaoFilme').val(filme.descricao);
+                $('#precoFabricante').val(filme.precoFabricante);
+                $('#precoMaoObra').val(filme.precoMaoObra);
+                $('#quantidadeEstoque').val(filme.quantidadeEstoque);
+
+                // Alterar o comportamento do formulário para salvar a edição
+                $('#formCadastrarFilme').off('submit').on('submit', function(event) {
+                    event.preventDefault(); // Previne o comportamento padrão do formulário
+
+                    // Coleta os dados atualizados do formulário
+                    const nome = $('#nomeFilme').val();
+                    const descricao = $('#descricaoFilme').val();
+                    const precoFabricante = parseFloat($('#precoFabricante').val());
+                    const precoMaoObra = parseFloat($('#precoMaoObra').val());
+                    const quantidadeEstoque = parseFloat($('#quantidadeEstoque').val());
+                    const categoriaAtualizada = $('#categoriaSelecionada').val();
+
+                    // Validação básica
+                    if (!nome || !descricao || isNaN(precoFabricante) || isNaN(precoMaoObra) || isNaN(quantidadeEstoque) || !categoriaAtualizada) {
+                        alert('Por favor, preencha todos os campos corretamente.');
+                        return;
+                    }
+
+                    // Cria o objeto atualizado da película
+                    const filmeAtualizado = {
+                        nome,
+                        descricao,
+                        precoFabricante,
+                        precoMaoObra,
+                        quantidadeEstoque,
+                        categoria: categoriaAtualizada
+                    };
+
+                    // Atualiza a película no banco de dados
+                    db.filmes.update(id, filmeAtualizado).then(() => {
+                        $('#modalCadastrarFilme').modal('hide'); // Fecha o modal
+                        listarCategoriasComContadores(); // Atualiza os contadores das categorias
+                        abrirModalListaFilmes(categoriaAtualizada); // Atualiza a lista no modal
+                        alert('Película atualizada com sucesso!');
+                        // Reconfigurar o formulário para adicionar novas películas
+                        $('#formCadastrarFilme').off('submit').on('submit', salvarFilme);
+                    }).catch(err => {
+                        console.error(err);
+                        alert('Erro ao atualizar a película.');
+                    });
+                });
+
+                $('#modalCadastrarFilme').modal('show'); // Exibe o modal com os dados para edição
+            }
+        }).catch(err => {
+            console.error(err);
+            alert('Erro ao recuperar os dados da película.');
+        });
+    }
+
+    /** 
+     * Fim das Funcionalidades de "Películas"
+     */
+
+</script>
+
 </body>
 </html>
