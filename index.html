@@ -1,198 +1,651 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Insulfilm com Emendas Visíveis</title>
-    <!-- Importando o Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>CarFilm-Pro</title>
+    <!-- Meta tag para responsividade -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <!-- Seu CSS personalizado -->
     <style>
-        canvas { border: 1px solid #ddd; max-width: 100%; }
-        .piece-list p { margin-bottom: 5px; }
-        .error-message { color: red; }
+        :root {
+            --primary-color: #0D6EFD; /* Cor padrão */
+        }
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #F8F9FA;
+            font-size: 14px;
+        }
+        /* Cabeçalho */
+        .header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            height: 56px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        .header .toggle-menu {
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 16px;
+        }
+        .header .logo {
+            font-weight: bold;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+        }
+        .header .logo img {
+            height: 40px;
+            width: 40px;
+            margin-right: 8px;
+            object-fit: cover;
+        }
+        /* Exibir informações da empresa apenas se cadastrada */
+        .header .company-info {
+            margin-left: auto;
+            font-size: 14px;
+            display: none;
+            align-items: center;
+        }
+        .header .company-info.visible {
+            display: flex;
+        }
+        /* Barra lateral */
+        .sidebar {
+            background: #fff;
+            position: fixed;
+            top: 56px;
+            left: -250px;
+            height: calc(100vh - 56px);
+            width: 250px;
+            overflow-y: auto;
+            border-right: 1px solid #dee2e6;
+            transition: all 0.3s;
+            z-index: 1001;
+        }
+        .sidebar.active {
+            left: 0;
+        }
+        .menu-item {
+            padding: 12px 16px;
+            color: #495057;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        .menu-item:hover, .menu-item.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .menu-item i {
+            margin-right: 8px;
+        }
+        /* Informações do usuário no menu lateral */
+        .sidebar .user-info {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .sidebar .user-info .user-name {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .sidebar .user-info .user-cnpj {
+            font-size: 12px;
+            color: #6c757d;
+        }
+        .sidebar .user-info img {
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            margin-bottom: 8px;
+            object-fit: cover;
+        }
+        /* Conteúdo principal */
+        .main-content {
+            margin-top: 56px;
+            padding: 16px;
+            transition: all 0.3s;
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        /* Overlay para dispositivos móveis */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 56px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        .overlay.active {
+            display: block;
+        }
+        /* Responsividade */
+        @media (min-width: 768px) {
+            .sidebar {
+                left: 0;
+            }
+            .header .toggle-menu {
+                display: none;
+            }
+            .main-content {
+                margin-left: 250px;
+            }
+            .overlay {
+                display: none;
+            }
+            .header .company-info {
+                font-size: 14px;
+            }
+        }
+        /* Ajustes de fonte e espaçamento para dispositivos móveis */
+        @media (max-width: 767.98px) {
+            .header {
+                padding: 0 12px;
+                height: 50px;
+            }
+            .header .logo {
+                font-size: 16px;
+            }
+            .header .logo img {
+                height: 32px;
+                width: 32px;
+                margin-right: 8px;
+            }
+            .menu-item {
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+            .sidebar .user-info {
+                padding: 12px;
+            }
+            .sidebar .user-info .user-name {
+                font-size: 14px;
+            }
+            .sidebar .user-info img {
+                width: 60px;
+                height: 60px;
+            }
+            .main-content {
+                padding: 12px;
+            }
+            h2 {
+                font-size: 20px;
+            }
+            .btn {
+                font-size: 14px;
+                padding: 6px 12px;
+            }
+            label {
+                font-size: 14px;
+            }
+            input, select, textarea {
+                font-size: 14px;
+                padding: 6px 8px;
+            }
+        }
+        /* Estilo para a paleta de cores */
+        .color-palette {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .color-swatch {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        .color-swatch.selected {
+            border-color: #000;
+        }
+        /* Botões personalizados */
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
     </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <h1 class="text-center mb-4">Calculadora de Insulfilm com Emendas Visíveis</h1>
-        <div class="card p-4 mb-4">
-            <div class="form-row">
-                <div class="form-group col-md-3">
-                    <label for="larguraBobina">Largura da Bobina (m)</label>
-                    <input type="number" class="form-control" id="larguraBobina" step="0.01" value="1.52">
-                </div>
-                <div class="form-group col-md-3">
-                    <label for="larguraPeca">Largura da Peça (m)</label>
-                    <input type="number" class="form-control" id="larguraPeca" step="0.01" placeholder="Ex: 1.0">
-                </div>
-                <div class="form-group col-md-3">
-                    <label for="alturaPeca">Altura da Peça (m)</label>
-                    <input type="number" class="form-control" id="alturaPeca" step="0.01" placeholder="Ex: 2.0">
-                </div>
-                <div class="form-group col-md-3">
-                    <label for="quantidadePeca">Quantidade</label>
-                    <input type="number" class="form-control" id="quantidadePeca" value="1" min="1">
-                </div>
-            </div>
-            <button class="btn btn-primary" onclick="adicionarPeca()">Adicionar Peça</button>
-            <span id="error-message" class="error-message ml-3"></span>
-        </div>
-        <button class="btn btn-success mb-4" onclick="calcularOtimizacao()">Calcular Otimização</button>
-        <div id="resultado"></div>
-        <div id="layoutVisual" class="mt-5">
-            <h2>Layout Visual</h2>
-            <canvas id="layoutCanvas"></canvas>
+    <!-- Cabeçalho -->
+    <div class="header">
+        <span class="toggle-menu" onclick="toggleSidebar()"><i class="fas fa-bars"></i></span>
+        <span class="logo" id="logoEmpresaHeader">
+            <!-- O logotipo e o nome da empresa serão inseridos aqui -->
+            <img src="https://via.placeholder.com/40" alt="Logo da Empresa">
+            <span id="nomeEmpresaHeader">CarFilm-Pro</span>
+        </span>
+        <!-- Exibir informações da empresa apenas se cadastrada -->
+        <div class="company-info" id="companyInfoHeader">
+            <span id="cnpjEmpresaHeader"></span>
         </div>
     </div>
 
-    <!-- Importando o Bootstrap JS e dependências -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <!-- Barra lateral -->
+    <div class="sidebar" id="sidebar">
+        <!-- Informações do usuário no menu lateral para mobile -->
+        <div class="user-info d-md-none">
+            <img src="https://via.placeholder.com/80" alt="Logo da Empresa" id="logoEmpresaSidebar">
+            <div class="user-name" id="nomeEmpresaSidebar">CarFilm-Pro</div>
+            <div class="user-cnpj" id="cnpjEmpresaSidebar"></div>
+        </div>
+
+        <!-- Menu de navegação -->
+
+
+       <!-- Menu de navegação -->
+<div class="menu-item" onclick="showSection('inicio')"><i class="fas fa-home"></i> Inicio</div>
+<div class="menu-item" onclick="showSection('empresa')"><i class="fas fa-building"></i> Minha Empresa</div>
+<div class="menu-item" onclick="showSection('clientes')"><i class="fas fa-users"></i> Clientes</div>
+<div class="menu-item" onclick="showSection('peliculas')"><i class="fas fa-film"></i> Películas</div>
+<div class="menu-item" onclick="showSection('veiculos')"><i class="fas fa-car"></i> Veículos</div>
+<div class="menu-item" onclick="showSection('servicos')"><i class="fas fa-tools"></i> Serviços</div>
+<div class="menu-item" onclick="showSection('agendamentos')"><i class="fas fa-calendar-alt"></i> Agendamentos</div>
+<div class="menu-item" onclick="showSection('pagamentos')"><i class="fas fa-credit-card"></i> Formas de Pagamentos</div>
+<div class="menu-item" onclick="showSection('orcamento')"><i class="fas fa-file-invoice-dollar"></i> Orçamento</div>
+<div class="menu-item" onclick="showSection('fornecedores')"><i class="fas fa-truck-loading"></i> Fornecedores</div>
+<div class="menu-item" onclick="showSection('estoque')"><i class="fas fa-boxes"></i> Estoque</div>
+
+
+
+
+
+
+        <!-- Outras seções -->
+        <!-- ... -->
+    </div>
+
+    <!-- Overlay para dispositivos móveis -->
+    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+    <!-- Conteúdo principal -->
+    <div class="main-content" id="mainContent">
+        <!-- Seção "Minha Empresa" -->
+        <div id="empresa" class="content-section">
+            <!-- Conteúdo da seção "Minha Empresa" -->
+            <div class="container-fluid">
+                <h2>Dados da Empresa</h2>
+                <!-- Formulário de Dados da Empresa -->
+                <form id="formEmpresa">
+                    <!-- Campo para upload do logotipo -->
+                    <div class="form-group">
+                        <label for="logoEmpresa">Logotipo da Empresa</label>
+                        <input type="file" class="form-control-file" id="logoEmpresa" accept="image/*">
+                        <small class="form-text text-muted">Escolha uma imagem para representar sua empresa.</small>
+                        <!-- Pré-visualização do logotipo -->
+                        <div id="previewLogo" style="margin-top: 10px;">
+                            <img src="" alt="Pré-visualização do Logotipo" style="max-height: 100px;">
+                        </div>
+                    </div>
+                    <!-- Demais campos do formulário -->
+                    <div class="form-group">
+                        <label for="nomeEmpresa">Nome da Empresa</label>
+                        <input type="text" class="form-control" id="nomeEmpresa" placeholder="Digite o nome da empresa" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cnpjEmpresa">CNPJ</label>
+                        <input type="text" class="form-control" id="cnpjEmpresa" placeholder="00.000.000/0000-00">
+                    </div>
+                    <div class="form-group">
+                        <label for="cpfEmpresa">CPF (caso não tenha CNPJ)</label>
+                        <input type="text" class="form-control" id="cpfEmpresa" placeholder="000.000.000-00">
+                    </div>
+                    <div class="form-group">
+                        <label for="whatsappEmpresa">WhatsApp</label>
+                        <input type="text" class="form-control" id="whatsappEmpresa" placeholder="(00) 00000-0000" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="emailEmpresa">E-mail</label>
+                        <input type="email" class="form-control" id="emailEmpresa" placeholder="email@empresa.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cepEmpresa">CEP</label>
+                        <input type="text" class="form-control" id="cepEmpresa" placeholder="00000-000" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cidadeEmpresa">Cidade</label>
+                        <input type="text" class="form-control" id="cidadeEmpresa" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="bairroEmpresa">Bairro</label>
+                        <input type="text" class="form-control" id="bairroEmpresa" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ruaEmpresa">Rua</label>
+                        <input type="text" class="form-control" id="ruaEmpresa" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="numeroEmpresa">Número</label>
+                        <input type="text" class="form-control" id="numeroEmpresa" required>
+                    </div>
+                    <!-- Paleta de Cores -->
+                    <div class="form-group">
+                        <label>Paleta de Cores</label>
+                        <div class="color-palette">
+                            <!-- Cores predefinidas -->
+                            <div class="color-swatch" style="background-color: #0D6EFD;" data-color="#0D6EFD"></div>
+                            <div class="color-swatch" style="background-color: #198754;" data-color="#198754"></div>
+                            <div class="color-swatch" style="background-color: #DC3545;" data-color="#DC3545"></div>
+                            <div class="color-swatch" style="background-color: #FFC107;" data-color="#FFC107"></div>
+                            <div class="color-swatch" style="background-color: #6C757D;" data-color="#6C757D"></div>
+                            <!-- Adicione mais cores se desejar -->
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="salvarEmpresa()">Salvar</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Seção "Clientes" -->
+        <div id="clientes" class="content-section">
+                <!-- Conteúdo da seção "Clientes" -->
+                <div class="container-fluid">
+                    <h2>Clientes</h2>
+
+
+            <!-- Conteúdo da seção "Clientes" -->
+            <!-- ... (tabela, formulário e funcionalidades da seção "Clientes") ... -->
+                 </div>
+
+
+        <!-- Seção "Serviços" -->
+        </div>
+        <div id="servicos" class="content-section">
+                <div class="container-fluid">
+                       <h2>Serviços</h2>
+                        <p>Aqui você pode gerenciar os serviços oferecidos pela sua empresa.</p>
+                      <!-- Você pode adicionar tabelas, formulários ou qualquer outro conteúdo necessário -->
+                </div>
+        </div>
+
+                <!-- Seção "Películas" -->
+        <div id="peliculas" class="content-section">
+            <div class="container-fluid">
+                   <h2>Películas</h2>
+                    <p>Aqui você pode gerenciar os serviços oferecidos pela sua empresa.</p>
+                  <!-- Você pode adicionar tabelas, formulários ou qualquer outro conteúdo necessário -->
+            </div>
+       </div>
+
+       
+                <!-- Seção "Veiculos" -->
+                <div id="veiculo" class="content-section">
+                    <div class="container-fluid">
+                           <h2>Veiculos</h2>
+                            <p>Aqui você pode gerenciar os serviços oferecidos pela sua empresa.</p>
+                          <!-- Você pode adicionar tabelas, formulários ou qualquer outro conteúdo necessário -->
+                    </div>
+               </div>
+
+        <!-- Seção "Inicio" -->
+        <div id="inicio" class="content-section active">
+            <div class="container-fluid">
+               <h2>Inicio</h2>
+                <p>Aqui você pode gerenciar os serviços oferecidos pela sua empresa.</p>
+              <!-- Você pode adicionar tabelas, formulários ou qualquer outro conteúdo necessário -->
+        </div>
+        </div>
+
+                <!-- Seção "formas de pagamentos" -->
+   <div id="pagamentos" class="content-section">
+    <div class="container-fluid">
+           <h2>Formas de Pagamentos</h2>
+            <p>Aqui você pode gerenciar os serviços oferecidos pela sua empresa.</p>
+          <!-- Você pode adicionar tabelas, formulários ou qualquer outro conteúdo necessário -->
+    </div>
+</div>
+              <!-- Seção "Agendamentos" -->
+<div id="agenda" class="content-section">
+    <div class="container-fluid">
+           <h2>Agendamentos</h2>
+            <p>Aqui você pode gerenciar os serviços oferecidos pela sua empresa.</p>
+          <!-- Você pode adicionar tabelas, formulários ou qualquer outro conteúdo necessário -->
+    </div>
+</div>
+             <!-- Seção "Orçamento" -->
+<div id="orcamento" class="content-section">
+    <div class="container-fluid">
+           <h2>Orçamento</h2>
+            <p>Aqui você pode gerenciar os serviços oferecidos pela sua empresa.</p>
+          <!-- Você pode adicionar tabelas, formulários ou qualquer outro conteúdo necessário -->
+    </div>
+</div>
+            <!-- Seção "Fornecedor" -->
+<div id="fornecedor" class="content-section">
+    <div class="container-fluid">
+           <h2>Fornecedores</h2>
+            <p>Aqui você pode gerenciar os serviços oferecidos pela sua empresa.</p>
+          <!-- Você pode adicionar tabelas, formulários ou qualquer outro conteúdo necessário -->
+    </div>
+</div>
+
+            <!-- Seção "estoque" -->
+            <div id="estoque" class="content-section">
+                <div class="container-fluid">
+                       <h2>Controle Estoque</h2>
+                        <p>Aqui você pode gerenciar os serviços oferecidos pela sua empresa.</p>
+                      <!-- Você pode adicionar tabelas, formulários ou qualquer outro conteúdo necessário -->
+                </div>
+            </div>
+            
+
+
+    <!-- Modais e outros elementos -->
+    <!-- Modal para adicionar/editar cliente -->
+    <!-- ... (conteúdo do modal da seção "Clientes") ... -->
+
+    <!-- Scripts -->
+    <!-- jQuery e Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <!-- Inclui Popper.js e Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- IndexedDB Wrapper (Dexie.js) -->
+    <script src="https://cdn.jsdelivr.net/npm/dexie@3.0.3/dist/dexie.min.js"></script>
+    <!-- Máscaras de input -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <!-- Seu script JavaScript personalizado -->
     <script>
-        let pecas = [];
-        let larguraBobina = 1.52;
-
-        // Função para adicionar peça à lista
-        const adicionarPeca = () => {
-            const largura = parseFloat(document.getElementById('larguraPeca').value);
-            const altura = parseFloat(document.getElementById('alturaPeca').value);
-            const quantidade = parseInt(document.getElementById('quantidadePeca').value);
-            larguraBobina = parseFloat(document.getElementById('larguraBobina').value);
-
-            const errorMessage = document.getElementById('error-message');
-            errorMessage.textContent = '';
-
-            if (isValidInput(largura) && isValidInput(altura) && isValidInput(quantidade) && isValidInput(larguraBobina)) {
-                const pecaExistente = pecas.find(p => p.largura === largura && p.altura === altura);
-                if (pecaExistente) {
-                    pecaExistente.quantidade += quantidade;
-                } else {
-                    pecas.push({ largura, altura, quantidade });
+        // Função para mostrar a seção selecionada
+        function showSection(sectionId) {
+            $('.content-section').removeClass('active');
+            $('#' + sectionId).addClass('active');
+            $('.menu-item').removeClass('active');
+            $('.menu-item').each(function() {
+                if ($(this).attr('onclick').includes("'" + sectionId + "'")) {
+                    $(this).addClass('active');
                 }
-                atualizarListaPecas();
-                limparCamposPeca();
+            });
+            // Fecha a barra lateral em dispositivos móveis
+            if ($(window).width() < 768) {
+                $('#sidebar').removeClass('active');
+                $('#overlay').removeClass('active');
+            }
+            // Carregar conteúdo específico ao entrar na seção, se necessário
+            if (sectionId === 'clientes') {
+                carregarClientes();
+            }
+        }
+
+        // Função para alternar a visibilidade da barra lateral em dispositivos móveis
+        function toggleSidebar() {
+            $('#sidebar').toggleClass('active');
+            $('#overlay').toggleClass('active');
+        }
+
+        // Configuração do IndexedDB usando Dexie.js
+        var db = new Dexie('CarFilmProDB');
+        db.version(2).stores({
+            empresa: 'id,nome,cnpj,cpf,whatsapp,email,cep,cidade,bairro,rua,numero,corTema,logo',
+            clientes: '++id,nome,cpfCnpj,telefone,email,endereco'
+            // Outros stores podem ser adicionados aqui para as novas seções
+        });
+
+        // Variáveis globais e funções para "Minha Empresa"
+        var selectedColor = '#0D6EFD'; // Cor padrão
+        var logoBase64 = '';
+
+        function salvarEmpresa() {
+            var cnpj = $('#cnpjEmpresa').val();
+            var cpf = $('#cpfEmpresa').val();
+            var empresa = {
+                id: 1,
+                nome: $('#nomeEmpresa').val(),
+                cnpj: cnpj,
+                cpf: cpf,
+                whatsapp: $('#whatsappEmpresa').val(),
+                email: $('#emailEmpresa').val(),
+                cep: $('#cepEmpresa').val(),
+                cidade: $('#cidadeEmpresa').val(),
+                bairro: $('#bairroEmpresa').val(),
+                rua: $('#ruaEmpresa').val(),
+                numero: $('#numeroEmpresa').val(),
+                corTema: selectedColor,
+                logo: logoBase64
+            };
+            db.empresa.put(empresa).then(function() {
+                alert('Dados da empresa salvos com sucesso!');
+                aplicarCorTema(empresa.corTema);
+                atualizarInformacoesEmpresa(empresa);
+            });
+        }
+
+        function carregarEmpresa() {
+            db.empresa.get(1).then(function(empresa) {
+                if (empresa) {
+                    $('#nomeEmpresa').val(empresa.nome);
+                    $('#cnpjEmpresa').val(empresa.cnpj);
+                    $('#cpfEmpresa').val(empresa.cpf);
+                    $('#whatsappEmpresa').val(empresa.whatsapp);
+                    $('#emailEmpresa').val(empresa.email);
+                    $('#cepEmpresa').val(empresa.cep);
+                    $('#cidadeEmpresa').val(empresa.cidade);
+                    $('#bairroEmpresa').val(empresa.bairro);
+                    $('#ruaEmpresa').val(empresa.rua);
+                    $('#numeroEmpresa').val(empresa.numero);
+                    if (empresa.corTema) {
+                        selectedColor = empresa.corTema;
+                        aplicarCorTema(empresa.corTema);
+                        $('.color-swatch').each(function() {
+                            if ($(this).data('color') === empresa.corTema) {
+                                $(this).addClass('selected');
+                            }
+                        });
+                    }
+                    if (empresa.logo) {
+                        logoBase64 = empresa.logo;
+                        exibirLogo(empresa.logo);
+                    }
+                    atualizarInformacoesEmpresa(empresa);
+                }
+            });
+        }
+
+        function aplicarCorTema(cor) {
+            document.documentElement.style.setProperty('--primary-color', cor);
+        }
+
+        $(document).on('click', '.color-swatch', function() {
+            $('.color-swatch').removeClass('selected');
+            $(this).addClass('selected');
+            selectedColor = $(this).data('color');
+            aplicarCorTema(selectedColor);
+        });
+
+        function atualizarInformacoesEmpresa(empresa) {
+            if (empresa.nome) {
+                $('#nomeEmpresaHeader').text(empresa.nome);
+                $('#nomeEmpresaSidebar').text(empresa.nome);
             } else {
-                errorMessage.textContent = 'Por favor, insira valores válidos para todas as dimensões.';
-            }
-        };
-
-        // Função para validar entradas
-        const isValidInput = (value) => {
-            return !isNaN(value) && value > 0;
-        };
-
-        // Função para calcular a otimização dos cortes
-        const calcularOtimizacao = () => {
-            if (pecas.length === 0) {
-                alert('Por favor, adicione pelo menos uma peça antes de calcular.');
-                return;
+                $('#nomeEmpresaHeader').text('CarFilm-Pro');
+                $('#nomeEmpresaSidebar').text('CarFilm-Pro');
             }
 
-            const { layout, metrosLineares } = otimizarCortes([...pecas]);
-            desenharLayout(layout, metrosLineares);
-        };
+            if (empresa.cnpj || empresa.cpf) {
+                var documento = empresa.cnpj ? 'CNPJ: ' + empresa.cnpj : 'CPF: ' + empresa.cpf;
+                $('#cnpjEmpresaHeader').text(documento);
+                $('#cnpjEmpresaSidebar').text(documento);
+                $('#companyInfoHeader').addClass('visible');
+            } else {
+                $('#cnpjEmpresaHeader').text('');
+                $('#cnpjEmpresaSidebar').text('');
+                $('#companyInfoHeader').removeClass('visible');
+            }
 
-        // Função de otimização dos cortes
-        const otimizarCortes = (pecasRestantes) => {
-            const layout = [];
-            let metrosLineares = 0;
+            if (empresa.logo) {
+                $('#logoEmpresaHeader img').attr('src', empresa.logo);
+                $('#logoEmpresaSidebar').attr('src', empresa.logo);
+            } else {
+                $('#logoEmpresaHeader img').attr('src', 'https://via.placeholder.com/40');
+                $('#logoEmpresaSidebar').attr('src', 'https://via.placeholder.com/80');
+            }
+        }
 
-            pecasRestantes.forEach(peca => {
-                const alturaTotal = peca.altura * peca.quantidade;
-                metrosLineares += alturaTotal;
+        function exibirLogo(logo) {
+            $('#previewLogo img').attr('src', logo);
+        }
 
-                const emenda = peca.largura > larguraBobina ? peca.largura - larguraBobina : 0;
-
-                layout.push({
-                    largura: peca.largura,
-                    altura: peca.altura,
-                    quantidade: peca.quantidade,
-                    emenda
-                });
-            });
-
-            return { layout, metrosLineares };
-        };
-
-        // Função para desenhar o layout no canvas
-        const desenharLayout = (layout, metrosLineares) => {
-            const canvas = document.getElementById('layoutCanvas');
-            const ctx = canvas.getContext('2d');
-            const maxWidth = 600;
-            const scale = Math.min(canvas.width / larguraBobina, maxWidth / larguraBobina);
-
-            canvas.width = Math.min(window.innerWidth - 40, maxWidth);
-            canvas.height = metrosLineares * scale / 2;
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            let yOffset = 0;
-
-            layout.forEach(peca => {
-                const larguraPx = Math.min(peca.largura, larguraBobina) * scale;
-                const alturaPx = peca.altura * scale / 2;
-
-                for (let i = 0; i < peca.quantidade; i++) {
-                    // Desenha a peça principal
-                    ctx.fillStyle = '#add8e6';
-                    ctx.fillRect(0, yOffset, larguraPx, alturaPx);
-
-                    // Desenha a emenda, se necessário
-                    if (peca.emenda > 0) {
-                        ctx.fillStyle = '#ffc0cb';
-                        ctx.fillRect(larguraPx, yOffset, peca.emenda * scale, alturaPx);
-
-                        // Linha divisória da emenda
-                        ctx.strokeStyle = 'red';
-                        ctx.beginPath();
-                        ctx.moveTo(larguraPx, yOffset);
-                        ctx.lineTo(larguraPx, yOffset + alturaPx);
-                        ctx.stroke();
-                    }
-
-                    // Adiciona texto informativo
-                    ctx.fillStyle = 'black';
-                    ctx.font = '12px Arial';
-                    ctx.fillText(`${peca.largura.toFixed(2)}m x ${peca.altura.toFixed(2)}m`, 5, yOffset + 15);
-
-                    if (peca.emenda > 0) {
-                        ctx.fillText(`Emenda: ${peca.emenda.toFixed(2)}m`, larguraPx + 5, yOffset + 15);
-                    }
-
-                    yOffset += alturaPx;
-                }
-            });
-
-            // Exibe o total de metros lineares
-            ctx.fillStyle = 'black';
-            ctx.font = '14px Arial';
-            ctx.fillText(`Total de metros lineares: ${metrosLineares.toFixed(2)}m`, 10, canvas.height - 10);
-        };
-
-        // Função para atualizar a lista de peças adicionadas
-        const atualizarListaPecas = () => {
-            let lista = '<h3>Peças Adicionadas:</h3><div class="piece-list">';
-            pecas.forEach((peca, index) => {
-                lista += `<p><strong>Peça ${index + 1}:</strong> ${peca.largura.toFixed(2)}m x ${peca.altura.toFixed(2)}m - ${peca.quantidade} unidade(s)</p>`;
-            });
-            lista += '</div>';
-            document.getElementById('resultado').innerHTML = lista;
-        };
-
-        // Função para limpar os campos do formulário
-        const limparCamposPeca = () => {
-            document.getElementById('larguraPeca').value = '';
-            document.getElementById('alturaPeca').value = '';
-            document.getElementById('quantidadePeca').value = '1';
-        };
-
-        // Redesenha o layout ao redimensionar a janela
-        window.addEventListener('resize', () => {
-            if (pecas.length > 0) {
-                calcularOtimizacao();
+        $('#logoEmpresa').on('change', function(event) {
+            var file = event.target.files[0];
+            if (file && file.type.match('image.*')) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    logoBase64 = e.target.result;
+                    exibirLogo(logoBase64);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                alert('Por favor, selecione um arquivo de imagem válido.');
             }
         });
+
+        // Variáveis globais e funções para "Clientes"
+        // ... (todo o código JavaScript relacionado à seção "Clientes") ...
+
+        // Inicialização ao carregar a página
+        $(document).ready(function() {
+            carregarEmpresa();
+            // Máscaras de input
+            $('#cnpjEmpresa').mask('00.000.000/0000-00', {reverse: true});
+            $('#cpfEmpresa').mask('000.000.000-00', {reverse: true});
+            $('#whatsappEmpresa').mask('(00) 00000-0000');
+            $('#cepEmpresa').mask('00000-000');
+            // Ajustar a altura do conteúdo principal
+            ajustarAlturaConteudo();
+            $(window).resize(function() {
+                ajustarAlturaConteudo();
+            });
+        });
+
+        // Função para ajustar a altura do conteúdo principal
+        function ajustarAlturaConteudo() {
+            var alturaJanela = $(window).height();
+            var alturaHeader = $('.header').outerHeight();
+            $('#mainContent').css('min-height', alturaJanela - alturaHeader);
+        }
     </script>
 </body>
 </html>
