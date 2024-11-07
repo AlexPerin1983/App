@@ -15,431 +15,9 @@
     <!-- Biblioteca de ícones para utilizar nos botões e menus -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
 
-    <!-- Seu CSS personalizado -->
-    <style>
-        /* Estilos específicos para os cards de serviços */
-#servicos .card {
-    border: none;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
-}
-
-#servicos .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-#servicos .card-header {
-    border-radius: 10px 10px 0 0;
-    padding: 1.5rem;
-}
-
-#servicos .card-header i {
-    margin-bottom: 1rem;
-}
-
-#servicos .btn {
-    width: 100%;
-    margin-bottom: 0.5rem;
-    transition: all 0.3s;
-}
-
-#servicos .btn:hover {
-    transform: translateY(-2px);
-}
-
-/* Cores específicas para cada tipo de serviço */
-#servicos .card-header.bg-primary i {
-    color: rgba(255, 255, 255, 0.9);
-}
-
-#servicos .card-header.bg-success i {
-    color: rgba(255, 255, 255, 0.9);
-}
-
-#servicos .card-header.bg-info i {
-    color: rgba(255, 255, 255, 0.9);
-}
-/* Estilos personalizados para os cards de categorias */
-.card {
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.btn-info {
-    display: flex;
-    align-items: center;
-}
-
-.btn-info i {
-    margin-right: 5px;
-}
-
-/* Estilos para os cards de películas no modal */
-#modalListaFilmes .card {
-    min-height: 100%;
-}
-
-@media (max-width: 576px) {
-    /* Ajustes para dispositivos móveis */
-    #modalListaFilmes .card-body {
-        padding: 10px;
-    }
-
-    #modalListaFilmes .card-title {
-        font-size: 1.1rem;
-    }
-
-    #modalListaFilmes .card-subtitle {
-        font-size: 0.9rem;
-    }
-
-    #modalListaFilmes .btn {
-        font-size: 0.8rem;
-        padding: 5px 10px;
-    }
-}
-
-
-        /* Definição de variáveis CSS para facilitar a mudança de cores */
-        :root {
-            --primary-color: #0D6EFD; /* Cor padrão do tema */
-        }
-
-        /* Estilos básicos para o corpo da página */
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: #F8F9FA; /* Cor de fundo */
-            font-size: 14px;
-        }
-
-        /* Estilos para o cabeçalho */
-        .header {
-            background-color: var(--primary-color); /* Utiliza a cor primária definida */
-            color: white;
-            padding: 0 16px;
-            display: flex;
-            align-items: center;
-            height: 56px;
-            position: fixed; /* Fixa o cabeçalho no topo */
-            top: 0;
-            width: 100%;
-            z-index: 1000; /* Garante que o cabeçalho fique acima de outros elementos */
-        }
-
-        /* Botão para alternar a barra lateral (visível em dispositivos móveis) */
-        .header .toggle-menu {
-            font-size: 24px;
-            cursor: pointer;
-            margin-right: 16px;
-        }
-
-        /* Logo da empresa no cabeçalho */
-        .header .logo {
-            font-weight: bold;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-        }
-        .header .logo img {
-            height: 40px;
-            width: 40px;
-            margin-right: 8px;
-            object-fit: cover;
-        }
-
-        /* Informações da empresa no cabeçalho (aparecem se houver dados cadastrados) */
-        .header .company-info {
-            margin-left: auto;
-            font-size: 14px;
-            display: none; /* Oculto por padrão */
-            align-items: center;
-        }
-        .header .company-info.visible {
-            display: flex; /* Exibe quando possui a classe 'visible' */
-        }
-
-        /* Estilos para a barra lateral (menu) */
-        .sidebar {
-            background: #fff;
-            position: fixed;
-            top: 56px; /* Abaixo do cabeçalho */
-            left: -250px; /* Oculta a barra lateral inicialmente */
-            height: calc(100vh - 56px); /* Altura total da tela menos a altura do cabeçalho */
-            width: 250px;
-            overflow-y: auto; /* Permite rolagem se o conteúdo exceder a altura */
-            border-right: 1px solid #dee2e6;
-            transition: all 0.3s; /* Transição suave ao mostrar/ocultar */
-            z-index: 1001;
-        }
-        .sidebar.active {
-            left: 0; /* Exibe a barra lateral quando possui a classe 'active' */
-        }
-
-        /* Estilos para os itens do menu */
-        .menu-item {
-            padding: 12px 16px;
-            color: #495057;
-            font-size: 14px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-        .menu-item:hover, .menu-item.active {
-            background-color: var(--primary-color); /* Muda a cor de fundo ao passar o mouse ou quando ativo */
-            color: white;
-        }
-        .menu-item i {
-            margin-right: 8px; /* Espaço entre o ícone e o texto */
-        }
-
-        /* Informações do usuário no menu lateral (visível em dispositivos móveis) */
-        .sidebar .user-info {
-            padding: 12px;
-            text-align: center;
-            border-bottom: 1px solid #dee2e6;
-        }
-        .sidebar .user-info .user-name {
-            font-size: 16px;
-            font-weight: bold;
-        }
-        .sidebar .user-info .user-cnpj {
-            font-size: 12px;
-            color: #6c757d;
-        }
-        .sidebar .user-info img {
-            border-radius: 50%; /* Deixa a imagem circular */
-            width: 80px;
-            height: 80px;
-            margin-bottom: 8px;
-            object-fit: cover;
-        }
-
-        /* Estilos para o conteúdo principal */
-        .main-content {
-            margin-top: 56px; /* Compensa a altura do cabeçalho */
-            padding: 16px;
-            transition: all 0.3s;
-        }
-        /* Esconde todas as seções por padrão */
-        .content-section {
-            display: none;
-        }
-        /* Exibe a seção ativa */
-        .content-section.active {
-            display: block;
-        }
-
-        /* Overlay para dispositivos móveis (quando a barra lateral está ativa) */
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 56px;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5); /* Fundo semitransparente */
-            z-index: 1000;
-        }
-        .overlay.active {
-            display: block;
-        }
-
-        /* Estilos para dispositivos com largura mínima de 768px (desktop) */
-        @media (min-width: 768px) {
-            .sidebar {
-                left: 0; /* Exibe a barra lateral permanentemente */
-            }
-            .header .toggle-menu {
-                display: none; /* Oculta o botão de menu no cabeçalho */
-            }
-            .main-content {
-                margin-left: 250px; /* Compensa a largura da barra lateral */
-            }
-            .overlay {
-                display: none; /* Oculta o overlay */
-            }
-            .header .company-info {
-                font-size: 14px;
-            }
-        }
-
-        /* Ajustes de estilo para dispositivos móveis */
-        @media (max-width: 767.98px) {
-            .header {
-                padding: 0 12px;
-                height: 50px;
-            }
-            .header .logo {
-                font-size: 16px;
-            }
-            .header .logo img {
-                height: 32px;
-                width: 32px;
-                margin-right: 8px;
-            }
-            .menu-item {
-                padding: 8px 12px;
-                font-size: 14px;
-            }
-            .sidebar .user-info {
-                padding: 12px;
-            }
-            .sidebar .user-info .user-name {
-                font-size: 14px;
-            }
-            .sidebar .user-info img {
-                width: 60px;
-                height: 60px;
-            }
-            .main-content {
-                padding: 12px;
-            }
-            h2 {
-                font-size: 20px;
-            }
-            .btn {
-                font-size: 14px;
-                padding: 6px 12px;
-            }
-            label {
-                font-size: 14px;
-            }
-            input, select, textarea {
-                font-size: 14px;
-                padding: 6px 8px;
-            }
-        }
-
-        /* Estilo para a paleta de cores */
-        .color-palette {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        .color-swatch {
-            width: 32px;
-            height: 32px;
-            border-radius: 4px;
-            cursor: pointer;
-            border: 2px solid transparent;
-        }
-        .color-swatch.selected {
-            border-color: #000; /* Destaque para a cor selecionada */
-        }
-
-        /* Estilos personalizados para botões */
-        .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-        .btn-primary:hover {
-            background-color: #0056b3;
-            border-color: #0056b3;
-        }
-        .card {
-            border: none; /* Remove a borda padrão */
-            border-radius: 10px; /* Bordas arredondadas */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
-            transition: transform 0.3s, box-shadow 0.3s; /* Transição suave para hover */
-            background-color: #ffffff; /* Fundo branco */
-        }
-
-        .card:hover {
-            transform: translateY(-10px); /* Elevação ao passar o mouse */
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); /* Sombra mais intensa */
-        }
-
-        /* Estilos aprimorados para os cards de películas no modal */
-        #modalListaFilmes .card {
-            border: none; /* Remove a borda padrão */
-            border-radius: 10px; /* Bordas arredondadas */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
-            transition: transform 0.3s, box-shadow 0.3s; /* Transição suave para hover */
-            background-color: #f8f9fa; /* Fundo ligeiramente cinza */
-        }
-
-        #modalListaFilmes .card:hover {
-            transform: translateY(-5px); /* Elevação ao passar o mouse */
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Sombra mais intensa */
-        }
-
-        /* Estilos aprimorados para os títulos dos cards */
-        .card-title {
-            font-size: 1.25rem;
-            font-weight: bold;
-            color: #343a40; /* Cor do título */
-        }
-
-        .card-subtitle {
-            font-size: 1rem;
-            color: #6c757d; /* Cor do subtítulo */
-        }
-
-        /* Estilos aprimorados para os textos do card */
-        .card-text {
-            font-size: 0.95rem;
-            color: #495057; /* Cor do texto */
-            margin-bottom: 0.5rem;
-        }
-
-        /* Estilos aprimorados para os botões */
-        .card .btn {
-            width: 48%; /* Largura uniforme para os botões */
-            margin-bottom: 0.5rem; /* Espaçamento inferior */
-            font-size: 0.9rem; /* Tamanho de fonte reduzido */
-            padding: 0.4rem 0.8rem; /* Padding consistente */
-            border-radius: 5px; /* Bordas arredondadas */
-        }
-
-        /* Ajustes para o botão de ação dentro dos cards de películas */
-        #listaFilmesCategoria .card .btn-info,
-        #listaFilmesCategoria .card .btn-danger {
-            margin-top: 0.5rem; /* Espaçamento superior */
-        }
-
-        /* Estilos para organizar os botões em uma linha */
-        .btn-group {
-            width: 100%;
-        }
-
-        .btn-group .btn {
-            flex: 1;
-            margin: 0 2px;
-        }
-
-        /* Ajustes para dispositivos móveis */
-        @media (max-width: 576px) {
-            .card-title {
-                font-size: 1.1rem;
-            }
-
-            .card-subtitle {
-                font-size: 0.9rem;
-            }
-
-            .card-text {
-                font-size: 0.85rem;
-            }
-
-            .card .btn {
-                width: 100%;
-                margin-bottom: 0.3rem;
-            }
-
-            #listaFilmesCategoria .card .btn-info,
-            #listaFilmesCategoria .card .btn-danger {
-                margin-top: 0.3rem;
-            }
-        }
-    </style>
+     <!-- Link para o CSS externo -->
+     <link rel="stylesheet" href="css/styles.css">
+    
 </head>
 <body>
 
@@ -576,242 +154,239 @@
         </div>
 
         <!-- Seção "Clientes" -->
-<div id="clientes" class="content-section">
-    <div class="container-fluid">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>Clientes</h2>
-            <button class="btn btn-primary" onclick="abrirModalCliente()">
-                <i class="fas fa-plus"></i> Novo Cliente
-            </button>
-        </div>
-
-        <!-- Tabela de Clientes -->
-        <div class="table-responsive">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>CPF/CNPJ</th>
-                        <th>Telefone</th>
-                        <th>Email</th>
-                        <th>Endereço</th>
-                        <th>Empresa</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody id="tabelaClientes">
-                    <!-- Os clientes serão inseridos aqui via JavaScript -->
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-     <!-- Modal para Cadastro/Edição de Cliente -->
-     <div class="modal fade" id="modalCliente" tabindex="-1" aria-labelledby="modalClienteLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalClienteLabel">Novo Cliente</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-                        <span aria-hidden="true">&times;</span>
+        <div id="clientes" class="content-section">
+            <div class="container-fluid">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Clientes</h2>
+                    <button class="btn btn-primary" onclick="abrirModalCliente()">
+                        <i class="fas fa-plus"></i> Novo Cliente
                     </button>
                 </div>
-                <div class="modal-body">
-                    <form id="formCliente">
-                        <input type="hidden" id="clienteId">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="nomeCliente">Nome*</label>
-                                    <input type="text" class="form-control" id="nomeCliente" required>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="cpfCnpjCliente">CPF/CNPJ*</label>
-                                    <input type="text" class="form-control" id="cpfCnpjCliente" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="telefoneCliente">Telefone*</label>
-                                    <input type="text" class="form-control" id="telefoneCliente" required>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="emailCliente">Email</label>
-                                    <input type="email" class="form-control" id="emailCliente">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="empresaCliente">Empresa</label>
-                                    <input type="text" class="form-control" id="empresaCliente">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="cepCliente">CEP</label>
-                                    <input type="text" class="form-control" id="cepCliente">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="enderecoCliente">Endereço</label>
-                                    <input type="text" class="form-control" id="enderecoCliente">
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="numeroCliente">Número</label>
-                                    <input type="text" class="form-control" id="numeroCliente">
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="complementoCliente">Complemento</label>
-                                    <input type="text" class="form-control" id="complementoCliente">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="bairroCliente">Bairro</label>
-                                    <input type="text" class="form-control" id="bairroCliente">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="cidadeCliente">Cidade</label>
-                                    <input type="text" class="form-control" id="cidadeCliente">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="estadoCliente">Estado</label>
-                                    <input type="text" class="form-control" id="estadoCliente">
-                                </div>
-                            </div>
-                        </div>
-                    </form>
+
+                <!-- Tabela de Clientes -->
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>CPF/CNPJ</th>
+                                <th>Telefone</th>
+                                <th>Email</th>
+                                <th>Endereço</th>
+                                <th>Empresa</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaClientes">
+                            <!-- Os clientes serão inseridos aqui via JavaScript -->
+                        </tbody>
+                    </table>
                 </div>
-                <!-- Atualização do footer do modal -->
-<div class="modal-footer">
-    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-    <button type="submit" class="btn btn-primary" form="formCliente">Salvar</button>
-</div>
+            </div>
+
+             <!-- Modal para Cadastro/Edição de Cliente -->
+             <div class="modal fade" id="modalCliente" tabindex="-1" aria-labelledby="modalClienteLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalClienteLabel">Novo Cliente</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="formCliente">
+                                <input type="hidden" id="clienteId">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="nomeCliente">Nome*</label>
+                                            <input type="text" class="form-control" id="nomeCliente" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="cpfCnpjCliente">CPF/CNPJ*</label>
+                                            <input type="text" class="form-control" id="cpfCnpjCliente" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="telefoneCliente">Telefone*</label>
+                                            <input type="text" class="form-control" id="telefoneCliente" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="emailCliente">Email</label>
+                                            <input type="email" class="form-control" id="emailCliente">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="empresaCliente">Empresa</label>
+                                            <input type="text" class="form-control" id="empresaCliente">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="cepCliente">CEP</label>
+                                            <input type="text" class="form-control" id="cepCliente">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="enderecoCliente">Endereço</label>
+                                            <input type="text" class="form-control" id="enderecoCliente">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="numeroCliente">Número</label>
+                                            <input type="text" class="form-control" id="numeroCliente">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="complementoCliente">Complemento</label>
+                                            <input type="text" class="form-control" id="complementoCliente">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="bairroCliente">Bairro</label>
+                                            <input type="text" class="form-control" id="bairroCliente">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="cidadeCliente">Cidade</label>
+                                            <input type="text" class="form-control" id="cidadeCliente">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="estadoCliente">Estado</label>
+                                            <input type="text" class="form-control" id="estadoCliente">
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- Atualização do footer do modal -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary" form="formCliente">Salvar</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
 
-   <!-- Seção "Películas" -->
-<div id="peliculas" class="content-section">
-    <div class="container-fluid">
-        <h2>Películas</h2>
-        <p>Aqui você pode gerenciar as películas disponíveis.</p>
-        
-        <!-- Cards das Categorias -->
-        <div class="row" id="categoriasContainer">
-            <!-- Cards serão inseridos aqui via JavaScript -->
-        </div>
-
-<!-- Modal para Cadastrar/Editar Película -->
-<div class="modal fade" id="modalCadastrarFilme" tabindex="-1" aria-labelledby="modalCadastrarFilmeLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <form id="formCadastrarFilme">
-          <div class="modal-header">
-            <h5 class="modal-title" id="modalCadastrarFilmeLabel">Cadastrar Película</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-              <input type="hidden" id="filmeId"> <!-- Campo oculto para o ID da película -->
-              <input type="hidden" id="categoriaSelecionada">
-              <div class="form-group">
-                  <label for="nomeFilme">Nome</label>
-                  <input type="text" class="form-control" id="nomeFilme" placeholder="Digite o nome da película" required>
-              </div>
-              <div class="form-group">
-                  <label for="marcaFilme">Marca da Película</label>
-                  <input type="text" class="form-control" id="marcaFilme" placeholder="Digite a marca da película" required>
-              </div>
-              <div class="form-group">
-                  <label for="descricaoFilme">Descrição</label>
-                  <textarea class="form-control" id="descricaoFilme" rows="3" placeholder="Digite a descrição da película" required></textarea>
-              </div>
-              <div class="form-group">
-                  <label for="precoFabricante">Preço Fabricante (R$)</label>
-                  <input type="number" step="0.01" class="form-control" id="precoFabricante" placeholder="Digite o preço do fabricante" required>
-              </div>
-              <div class="form-group">
-                  <label for="precoMaoObra">Preço Mão de Obra (R$)</label>
-                  <input type="number" step="0.01" class="form-control" id="precoMaoObra" placeholder="Digite o preço da mão de obra" required>
-              </div>
-              <div class="form-group">
-                  <label for="quantidadeEstoque">Quantidade em Estoque (m)</label>
-                  <input type="number" step="0.01" class="form-control" id="quantidadeEstoque" placeholder="Digite a quantidade em estoque" required>
-              </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-primary">Salvar Película</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div> <!-- Falta fechar o container-fluid -->
-</div> 
-  
-  
-  
-        
-<!-- Modal para Exibir Lista de Películas por Categoria -->
-<div class="modal fade" id="modalListaFilmes" tabindex="-1" aria-labelledby="modalListaFilmesLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl"> <!-- Tamanho maior para melhor visualização -->
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="modalListaFilmesLabel">Películas da Categoria</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
+        <!-- Seção "Películas" -->
+        <div id="peliculas" class="content-section">
             <div class="container-fluid">
-                <div class="row" id="listaFilmesCategoria">
+                <h2>Películas</h2>
+                <p>Aqui você pode gerenciar as películas disponíveis.</p>
+                
+                <!-- Cards das Categorias -->
+                <div class="row" id="categoriasContainer">
                     <!-- Cards serão inseridos aqui via JavaScript -->
                 </div>
+
+        <!-- Modal para Cadastrar/Editar Película -->
+        <div class="modal fade" id="modalCadastrarFilme" tabindex="-1" aria-labelledby="modalCadastrarFilmeLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <form id="formCadastrarFilme">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="modalCadastrarFilmeLabel">Cadastrar Película</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                      <input type="hidden" id="filmeId"> <!-- Campo oculto para o ID da película -->
+                      <input type="hidden" id="categoriaSelecionada">
+                      <div class="form-group">
+                          <label for="nomeFilme">Nome</label>
+                          <input type="text" class="form-control" id="nomeFilme" placeholder="Digite o nome da película" required>
+                      </div>
+                      <div class="form-group">
+                          <label for="marcaFilme">Marca da Película</label>
+                          <input type="text" class="form-control" id="marcaFilme" placeholder="Digite a marca da película" required>
+                      </div>
+                      <div class="form-group">
+                          <label for="descricaoFilme">Descrição</label>
+                          <textarea class="form-control" id="descricaoFilme" rows="3" placeholder="Digite a descrição da película" required></textarea>
+                      </div>
+                      <div class="form-group">
+                          <label for="precoFabricante">Preço Fabricante (R$)</label>
+                          <input type="number" step="0.01" class="form-control" id="precoFabricante" placeholder="Digite o preço do fabricante" required>
+                      </div>
+                      <div class="form-group">
+                          <label for="precoMaoObra">Preço Mão de Obra (R$)</label>
+                          <input type="number" step="0.01" class="form-control" id="precoMaoObra" placeholder="Digite o preço da mão de obra" required>
+                      </div>
+                      <div class="form-group">
+                          <label for="quantidadeEstoque">Quantidade em Estoque (m)</label>
+                          <input type="number" step="0.01" class="form-control" id="quantidadeEstoque" placeholder="Digite a quantidade em estoque" required>
+                      </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Película</button>
+                  </div>
+                </form>
+              </div>
             </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+          </div>
+        </div> <!-- Falta fechar o container-fluid -->
+        </div> 
+          
+        
+        
+    <!-- Modal para Exibir Lista de Películas por Categoria -->
+    <div class="modal fade" id="modalListaFilmes" tabindex="-1" aria-labelledby="modalListaFilmesLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl"> <!-- Tamanho maior para melhor visualização -->
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalListaFilmesLabel">Películas da Categoria</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row" id="listaFilmesCategoria">
+                        <!-- Cards serão inseridos aqui via JavaScript -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-  
+    
 
-
-
-        <!-- Seção "Veículos" -->
-        <div id="veiculo" class="content-section">
-            <div class="container-fluid">
-                <h2>Veículos</h2>
-                <p>Aqui você pode gerenciar os veículos.</p>
-                <!-- Conteúdo da seção "Veículos" -->
-            </div>
+    <!-- Seção "Veículos" -->
+    <div id="veiculo" class="content-section">
+        <div class="container-fluid">
+            <h2>Veículos</h2>
+            <p>Aqui você pode gerenciar os veículos.</p>
+            <!-- Conteúdo da seção "Veículos" -->
         </div>
+    </div>
 
 <!-- Seção "Serviços" -->
 <div id="servicos" class="content-section">
@@ -935,54 +510,71 @@
     </div>
 </div>
 
-        <!-- Seção "Agendamentos" -->
-        <div id="agendamento" class="content-section">
-            <div class="container-fluid">
-                <h2>Agendamentos</h2>
-                <p>Aqui você pode gerenciar os agendamentos.</p>
-                <!-- Conteúdo da seção "Agendamentos" -->
-            </div>
-        </div>
-
-        <!-- Seção "Formas de Pagamentos" -->
-        <div id="pagamentos" class="content-section">
-            <div class="container-fluid">
-                <h2>Formas de Pagamentos</h2>
-                <p>Aqui você pode gerenciar as formas de pagamento.</p>
-                <!-- Conteúdo da seção "Formas de Pagamentos" -->
-            </div>
-        </div>
-
-        <!-- Seção "Orçamento" -->
-        <div id="orcamento" class="content-section">
-            <div class="container-fluid">
-                <h2>Orçamento</h2>
-                <p>Aqui você pode criar e gerenciar orçamentos.</p>
-                <!-- Conteúdo da seção "Orçamento" -->
-            </div>
-        </div>
-
-        <!-- Seção "Fornecedores" -->
-        <div id="fornecedores" class="content-section">
-            <div class="container-fluid">
-                <h2>Fornecedores</h2>
-                <p>Aqui você pode gerenciar os fornecedores.</p>
-                <!-- Conteúdo da seção "Fornecedores" -->
-            </div>
-        </div>
-
-        <!-- Seção "Estoque" -->
-        <div id="estoque" class="content-section">
-            <div class="container-fluid">
-                <h2>Controle de Estoque</h2>
-                <p>Aqui você pode gerenciar o estoque.</p>
-                <!-- Conteúdo da seção "Estoque" -->
-            </div>
+    <!-- Seção "Agendamentos" -->
+    <div id="agendamento" class="content-section">
+        <div class="container-fluid">
+            <h2>Agendamentos</h2>
+            <p>Aqui você pode gerenciar os agendamentos.</p>
+            <!-- Conteúdo da seção "Agendamentos" -->
         </div>
     </div>
 
-    <!-- Modais e outros elementos -->
-    <!-- Aqui você pode adicionar modais ou outros elementos necessários -->
+    <!-- Seção "Formas de Pagamentos" -->
+    <div id="pagamentos" class="content-section">
+        <div class="container-fluid">
+            <h2>Formas de Pagamentos</h2>
+            <p>Aqui você pode gerenciar as formas de pagamento.</p>
+            <!-- Conteúdo da seção "Formas de Pagamentos" -->
+        </div>
+    </div>
+
+    <!-- Seção "Orçamento" -->
+    <div id="orcamento" class="content-section">
+        <div class="container-fluid">
+            <h2>Orçamento</h2>
+            <p>Aqui você pode criar e gerenciar orçamentos.</p>
+            <!-- Conteúdo da seção "Orçamento" -->
+        </div>
+    </div>
+
+    <!-- Seção "Fornecedores" -->
+    <div id="fornecedores" class="content-section">
+        <div class="container-fluid">
+            <h2>Fornecedores</h2>
+            <p>Aqui você pode gerenciar os fornecedores.</p>
+            <!-- Conteúdo da seção "Fornecedores" -->
+        </div>
+    </div>
+
+    <!-- Seção "Estoque" -->
+    <div id="estoque" class="content-section">
+        <div class="container-fluid">
+            <h2>Controle de Estoque</h2>
+            <p>Aqui você pode gerenciar o estoque.</p>
+            <!-- Conteúdo da seção "Estoque" -->
+        </div>
+    </div>
+</div>
+
+<!-- Modais e outros elementos -->
+<!-- Aqui você pode adicionar modais ou outros elementos necessários -->
+
+<!-- Toast de Feedback -->
+<div aria-live="polite" aria-atomic="true" style="position: fixed; top: 20px; right: 20px; min-width: 250px;">
+    <div class="toast" id="feedbackToast" data-delay="3000">
+        <div class="toast-header">
+            <strong class="mr-auto" id="toastTitle">Título</strong>
+            <small>Agora</small>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Fechar">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body" id="toastBody">
+            Mensagem
+        </div>
+    </div>
+</div>
+
 
     <!-- Scripts -->
     <!-- jQuery e Bootstrap JS -->
@@ -995,814 +587,29 @@
     <!-- Máscaras de input -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
-    <!-- Seu script JavaScript personalizado -->
- <!-- Seu script JavaScript personalizado -->
-<!-- Seu script JavaScript personalizado -->
-<script>
-    // Função para mostrar a seção selecionada
-    function showSection(sectionId) {
-    console.log('Mostrando seção:', sectionId); // Debug
-    
-    // Remove a classe 'active' de todas as seções
-    document.querySelectorAll('.content-section').forEach(section => {
-        section.classList.remove('active');
-    });
-    
-    // Adiciona a classe 'active' à seção selecionada
-    const selectedSection = document.getElementById(sectionId);
-    if (selectedSection) {
-        selectedSection.classList.add('active');
-        console.log('Seção ativada:', sectionId); // Debug
-    }
+    <!-- Definição da função mostrarToast -->
+    <script>
+        function mostrarToast(titulo, mensagem, tipo = 'info') {
+            $('#toastTitle').text(titulo);
+            $('#toastBody').text(mensagem);
 
-    // Atualiza o estado dos itens do menu
-    document.querySelectorAll('.menu-item').forEach(item => {
-        if (item.getAttribute('onclick').includes(sectionId)) {
-            item.classList.add('active');
-        } else {
-            item.classList.remove('active');
-        }
-    });
-
-    // Fecha a barra lateral em dispositivos móveis
-    if (window.innerWidth < 768) {
-        document.getElementById('sidebar').classList.remove('active');
-        document.getElementById('overlay').classList.remove('active');
-    }
-}
-
-    // Função para alternar a visibilidade da barra lateral em dispositivos móveis
-    function toggleSidebar() {
-        $('#sidebar').toggleClass('active');
-        $('#overlay').toggleClass('active');
-    }
-// Configuração do IndexedDB usando Dexie.js
-var db = new Dexie('CarFilmProDB');
-
-// Definição do schema do banco de dados
-db.version(4).stores({
-    empresa: 'id,nome,cnpj,cpf,whatsapp,email,cep,cidade,bairro,rua,numero,corTema,logo',
-    clientes: '++id,nome,cpfCnpj,telefone,email,empresa,endereco,numero,complemento,bairro,cidade,estado,cep',
-    filmes: '++id,nome,descricao,marca,precoFabricante,precoMaoObra,quantidadeEstoque,categoria',
-    servicos: '++id,tipo,nome,descricao,preco,observacoes,categoria'
-}).upgrade(tx => {
-    // Código de migração, se necessário
-});
-
-// Em caso de erro na abertura do banco
-db.open().catch(error => {
-    console.error("Erro ao abrir o banco de dados:", error);
-    if (error.name === 'VersionError') {
-        // Se houver erro de versão, deleta o banco e recarrega a página
-        Dexie.delete('CarFilmProDB').then(() => {
-            window.location.reload();
-        });
-    }
-});
-    // Variáveis globais e funções para "Minha Empresa"
-    var selectedColor = '#0D6EFD'; // Cor padrão
-    var logoBase64 = ''; // Armazena a imagem do logotipo em base64
-
-    // Função para salvar os dados da empresa no IndexedDB
-    function salvarEmpresa() {
-        var cnpj = $('#cnpjEmpresa').val();
-        var cpf = $('#cpfEmpresa').val();
-        var empresa = {
-            id: 1,
-            nome: $('#nomeEmpresa').val(),
-            cnpj: cnpj,
-            cpf: cpf,
-            whatsapp: $('#whatsappEmpresa').val(),
-            email: $('#emailEmpresa').val(),
-            cep: $('#cepEmpresa').val(),
-            cidade: $('#cidadeEmpresa').val(),
-            bairro: $('#bairroEmpresa').val(),
-            rua: $('#ruaEmpresa').val(),
-            numero: $('#numeroEmpresa').val(),
-            corTema: selectedColor,
-            logo: logoBase64
-        };
-        db.empresa.put(empresa).then(function() {
-            mostrarToast('Sucesso', 'Dados da empresa salvos com sucesso!', 'success');
-            aplicarCorTema(empresa.corTema);
-            atualizarInformacoesEmpresa(empresa);
-        }).catch(function(err) {
-            console.error(err);
-            mostrarToast('Erro', 'Erro ao salvar os dados da empresa.', 'danger');
-        });
-    }
-
-
-// Função para formatar o endereço completo
-function formatarEndereco(cliente) {
-    const partes = [];
-    if (cliente.endereco) partes.push(cliente.endereco);
-    if (cliente.numero) partes.push(cliente.numero);
-    if (cliente.complemento) partes.push(cliente.complemento);
-    if (cliente.bairro) partes.push(cliente.bairro);
-    if (cliente.cidade) partes.push(cliente.cidade);
-    if (cliente.estado) partes.push(cliente.estado);
-    if (cliente.cep) partes.push(cliente.cep);
-    
-    return partes.join(', ') || '-';
-}
-
-// Função para abrir o modal de cliente (novo ou edição)
-function abrirModalCliente(modo = 'novo') {
-    $('#modalClienteLabel').text(modo === 'novo' ? 'Novo Cliente' : 'Editar Cliente');
-    $('#formCliente')[0].reset();
-    $('#clienteId').val('');
-    $('#modalCliente').modal('show');
-}
-
-
-// Função para aplicar a máscara correta no CPF/CNPJ
-function aplicarMascaraCpfCnpj(valor) {
-    const numeros = valor.replace(/\D/g, '');
-    if (numeros.length > 11) {
-        return valor.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2}).*/, "$1.$2.$3/$4-$5");
-    } else {
-        return valor.replace(/^(\d{3})(\d{3})(\d{3})(\d{2}).*/, "$1.$2.$3-$4");
-    }
-}
-
-// Função para editar cliente
-function editarCliente(id) {
-    console.log('Editando cliente ID:', id);
-
-    db.clientes.get(parseInt(id)).then(cliente => {
-        if (cliente) {
-            console.log('Cliente encontrado:', cliente);
-            
-            // Preenche os campos do formulário
-            $('#clienteId').val(cliente.id);
-            $('#nomeCliente').val(cliente.nome || '');
-            $('#emailCliente').val(cliente.email || '');
-            $('#empresaCliente').val(cliente.empresa || '');
-            $('#enderecoCliente').val(cliente.endereco || '');
-            $('#numeroCliente').val(cliente.numero || '');
-            $('#complementoCliente').val(cliente.complemento || '');
-            $('#bairroCliente').val(cliente.bairro || '');
-            $('#cidadeCliente').val(cliente.cidade || '');
-            $('#estadoCliente').val(cliente.estado || '');
-            $('#cepCliente').val(cliente.cep || '');
-
-            // Remove máscaras antigas antes de aplicar as novas
-            $('#cpfCnpjCliente').unmask();
-            $('#telefoneCliente').unmask();
-            $('#cepCliente').unmask();
-
-            // Aplica os valores e depois as máscaras
-            $('#cpfCnpjCliente').val(cliente.cpfCnpj || '');
-            $('#telefoneCliente').val(cliente.telefone || '');
-            
-            // Reaplica as máscaras
-            var options = {
-                onKeyPress: function (input, e, field, options) {
-                    var masks = ['000.000.000-000', '00.000.000/0000-00'];
-                    var mask = (input.length > 14) ? masks[1] : masks[0];
-                    $('#cpfCnpjCliente').mask(mask, options);
-                }
-            };
-            
-            $('#cpfCnpjCliente').mask('000.000.000-000', options);
-            $('#telefoneCliente').mask('(00) 00000-0000');
-            $('#cepCliente').mask('00000-000');
-
-            // Força a aplicação da máscara correta baseada no valor atual
-            const cpfCnpjAtual = $('#cpfCnpjCliente').val().replace(/\D/g, '');
-            if (cpfCnpjAtual.length > 11) {
-                $('#cpfCnpjCliente').mask('00.000.000/0000-00');
+            // Ajustar a cor do cabeçalho do Toast com base no tipo
+            $('#feedbackToast .toast-header').removeClass('bg-success bg-danger bg-info text-white');
+            if (tipo === 'success') {
+                $('#feedbackToast .toast-header').addClass('bg-success text-white');
+            } else if (tipo === 'danger') {
+                $('#feedbackToast .toast-header').addClass('bg-danger text-white');
             } else {
-                $('#cpfCnpjCliente').mask('000.000.000-00');
+                $('#feedbackToast .toast-header').addClass('bg-info text-white');
             }
 
-            // Atualiza o título do modal
-            $('#modalClienteLabel').text('Editar Cliente');
-            
-            // Abre o modal
-            $('#modalCliente').modal('show');
-        } else {
-            console.error('Cliente não encontrado com ID:', id);
-            mostrarToast('Erro', 'Cliente não encontrado.', 'danger');
+            $('#feedbackToast').toast('show');
         }
-    }).catch(error => {
-        console.error('Erro ao carregar dados do cliente:', error);
-        mostrarToast('Erro', 'Não foi possível carregar os dados do cliente.', 'danger');
-    });
-}
-
-// Atualização na função de carregar clientes para garantir que o ID está sendo passado corretamente
-function carregarClientes() {
-    const tbody = document.getElementById('tabelaClientes');
-    tbody.innerHTML = '';
-
-    db.clientes.toArray().then(clientes => {
-        clientes.forEach(cliente => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${cliente.nome}</td>
-                <td>${cliente.cpfCnpj}</td>
-                <td>${cliente.telefone}</td>
-                <td>${cliente.email || '-'}</td>
-                <td>${formatarEndereco(cliente)}</td>
-                <td>${cliente.empresa || '-'}</td>
-                <td>
-                    <button class="btn btn-sm btn-info mr-2" onclick="editarCliente(${cliente.id})">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="btn btn-sm btn-danger" onclick="excluirCliente(${cliente.id})">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </td>
-            `;
-            tbody.appendChild(tr);
-        });
-    }).catch(error => {
-        console.error('Erro ao carregar clientes:', error);
-        mostrarToast('Erro', 'Não foi possível carregar a lista de clientes.', 'danger');
-    });
-}
-
-
-// Função para excluir cliente
-function excluirCliente(id) {
-    if (confirm('Tem certeza que deseja excluir este cliente?')) {
-        db.clientes.delete(id).then(() => {
-            carregarClientes();
-            mostrarToast('Sucesso', 'Cliente excluído com sucesso!', 'success');
-        }).catch(error => {
-            console.error('Erro ao excluir cliente:', error);
-            mostrarToast('Erro', 'Não foi possível excluir o cliente.', 'danger');
-        });
-    }
-}
-
-
-
-function inicializarComponentesClientes() {
-    // Aplicar máscaras nos campos
-    $('#telefoneCliente').mask('(00) 00000-0000');
-    $('#cepCliente').mask('00000-000');
-
-    // Remover máscaras antigas
-    $('#cpfCnpjCliente').unmask();
-
-    // Configurar máscara dinâmica para CPF/CNPJ
-    let tipoPessoa = 'CPF';
-    
-    $('#cpfCnpjCliente').on('keydown', function(e) {
-        const digit = e.key;
-        if (/^\d$/.test(digit)) {
-            const value = this.value.replace(/\D/g, '') + digit;
-            if (value.length <= 11) {
-                tipoPessoa = 'CPF';
-                $(this).mask('000.000.000-00');
-            } else {
-                tipoPessoa = 'CNPJ';
-                $(this).mask('00.000.000/0000-00');
-            }
-        }
-    });
-
-    // Buscar endereço pelo CEP
-    $('#cepCliente').on('blur', function() {
-        const cep = $(this).val().replace(/\D/g, '');
-        if (cep.length === 8) {
-            fetch(`https://viacep.com.br/ws/${cep}/json/`)
-                .then(response => response.json())
-                .then(data => {
-                    if (!data.erro) {
-                        $('#enderecoCliente').val(data.logradouro);
-                        $('#bairroCliente').val(data.bairro);
-                        $('#cidadeCliente').val(data.localidade);
-                        $('#estadoCliente').val(data.uf);
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro ao buscar CEP:', error);
-                });
-        }
-    });
-
-    // Configurar o evento de submissão do formulário
-    $('#formCliente').on('submit', async function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        
-        try {
-            const clienteId = $('#clienteId').val();
-            const cliente = {
-                nome: $('#nomeCliente').val(),
-                cpfCnpj: $('#cpfCnpjCliente').val(),
-                telefone: $('#telefoneCliente').val(),
-                email: $('#emailCliente').val(),
-                empresa: $('#empresaCliente').val(),
-                endereco: $('#enderecoCliente').val(),
-                numero: $('#numeroCliente').val(),
-                complemento: $('#complementoCliente').val(),
-                bairro: $('#bairroCliente').val(),
-                cidade: $('#cidadeCliente').val(),
-                estado: $('#estadoCliente').val(),
-                cep: $('#cepCliente').val()
-            };
-
-            // Validação básica
-            if (!cliente.nome || !cliente.cpfCnpj || !cliente.telefone) {
-                mostrarToast('Erro', 'Por favor, preencha todos os campos obrigatórios.', 'danger');
-                return false;
-            }
-
-            const numerosCpfCnpj = cliente.cpfCnpj.replace(/\D/g, '');
-            if (numerosCpfCnpj.length !== 11 && numerosCpfCnpj.length !== 14) {
-                mostrarToast('Erro', 'CPF/CNPJ inválido', 'danger');
-                return false;
-            }
-
-            if (clienteId) {
-                await db.clientes.update(parseInt(clienteId), cliente);
-            } else {
-                await db.clientes.add(cliente);
-            }
-
-            $('#modalCliente').modal('hide');
-            carregarClientes();
-            mostrarToast('Sucesso', `Cliente ${clienteId ? 'atualizado' : 'cadastrado'} com sucesso!`, 'success');
-            return false;
-        } catch (error) {
-            console.error('Erro ao salvar cliente:', error);
-            mostrarToast('Erro', 'Não foi possível salvar o cliente.', 'danger');
-            return false;
-        }
-    });
-
-    // Evento quando o modal é aberto
-    $('#modalCliente').on('show.bs.modal', function() {
-        const valor = $('#cpfCnpjCliente').val().replace(/\D/g, '');
-        if (valor.length > 11) {
-            $('#cpfCnpjCliente').mask('00.000.000/0000-00');
-        } else {
-            $('#cpfCnpjCliente').mask('000.000.000-00');
-        }
-    });
-
-    // Limpar formulário quando o modal for fechado
-    $('#modalCliente').on('hidden.bs.modal', function() {
-        $('#formCliente')[0].reset();
-        $('#clienteId').val('');
-    });
-}
-
-  
-
-
-
-
-
-    // Função para carregar os dados da empresa do IndexedDB
-    function carregarEmpresa() {
-        db.empresa.get(1).then(function(empresa) {
-            if (empresa) {
-                $('#nomeEmpresa').val(empresa.nome);
-                $('#cnpjEmpresa').val(empresa.cnpj);
-                $('#cpfEmpresa').val(empresa.cpf);
-                $('#whatsappEmpresa').val(empresa.whatsapp);
-                $('#emailEmpresa').val(empresa.email);
-                $('#cepEmpresa').val(empresa.cep);
-                $('#cidadeEmpresa').val(empresa.cidade);
-                $('#bairroEmpresa').val(empresa.bairro);
-                $('#ruaEmpresa').val(empresa.rua);
-                $('#numeroEmpresa').val(empresa.numero);
-
-                // Aplica a cor do tema se estiver definida
-                if (empresa.corTema) {
-                    selectedColor = empresa.corTema;
-                    aplicarCorTema(empresa.corTema);
-                    $('.color-swatch').each(function() {
-                        if ($(this).data('color') === empresa.corTema) {
-                            $(this).addClass('selected');
-                        }
-                    });
-                }
-
-                // Exibe o logotipo se estiver definido
-                if (empresa.logo) {
-                    logoBase64 = empresa.logo;
-                    exibirLogo(empresa.logo);
-                }
-
-                // Atualiza as informações da empresa no cabeçalho e no menu lateral
-                atualizarInformacoesEmpresa(empresa);
-            }
-        }).catch(function(err) {
-            console.error(err);
-            mostrarToast('Erro', 'Erro ao carregar os dados da empresa.', 'danger');
-        });
-    }
-
-    // Função para aplicar a cor do tema
-    function aplicarCorTema(cor) {
-        document.documentElement.style.setProperty('--primary-color', cor);
-    }
-
-    // Evento de clique na paleta de cores
-    $(document).on('click', '.color-swatch', function() {
-        $('.color-swatch').removeClass('selected');
-        $(this).addClass('selected');
-        selectedColor = $(this).data('color');
-        aplicarCorTema(selectedColor);
-    });
-
-    // Função para atualizar as informações da empresa no cabeçalho e no menu lateral
-    function atualizarInformacoesEmpresa(empresa) {
-        if (empresa.nome) {
-            $('#nomeEmpresaHeader').text(empresa.nome);
-            $('#nomeEmpresaSidebar').text(empresa.nome);
-        } else {
-            $('#nomeEmpresaHeader').text('CarFilm-Pro');
-            $('#nomeEmpresaSidebar').text('CarFilm-Pro');
-        }
-
-        if (empresa.cnpj || empresa.cpf) {
-            var documento = empresa.cnpj ? 'CNPJ: ' + empresa.cnpj : 'CPF: ' + empresa.cpf;
-            $('#cnpjEmpresaHeader').text(documento);
-            $('#cnpjEmpresaSidebar').text(documento);
-            $('#companyInfoHeader').addClass('visible');
-        } else {
-            $('#cnpjEmpresaHeader').text('');
-            $('#cnpjEmpresaSidebar').text('');
-            $('#companyInfoHeader').removeClass('visible');
-        }
-
-        if (empresa.logo) {
-            $('#logoEmpresaHeader img').attr('src', empresa.logo);
-            $('#logoEmpresaSidebar').attr('src', empresa.logo);
-        } else {
-            $('#logoEmpresaHeader img').attr('src', 'https://via.placeholder.com/40');
-            $('#logoEmpresaSidebar').attr('src', 'https://via.placeholder.com/80');
-        }
-    }
-
-    // Função para exibir o logotipo da empresa na pré-visualização
-    function exibirLogo(logo) {
-        $('#previewLogo img').attr('src', logo);
-    }
-
-    // Evento de mudança no input de upload do logotipo
-    $('#logoEmpresa').on('change', function(event) {
-        var file = event.target.files[0];
-        if (file && file.type.match('image.*')) {
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                logoBase64 = e.target.result;
-                exibirLogo(logoBase64);
-            };
-            reader.readAsDataURL(file);
-        } else {
-            mostrarToast('Erro', 'Por favor, selecione um arquivo de imagem válido.', 'danger');
-        }
-    });
-
-    // Evento de fechamento do modalCadastrarFilme para resetar o formulário
-    $('#modalCadastrarFilme').on('hidden.bs.modal', function () {
-        $('#formCadastrarFilme')[0].reset(); // Limpa os campos do formulário
-        $('#filmeId').val(''); // Reseta o campo oculto
-        $('#modalCadastrarFilmeLabel').text('Cadastrar Película'); // Reseta o título do modal
-        // Reconfigurar o formulário para adicionar novas películas
-        $('#formCadastrarFilme').off('submit').on('submit', salvarFilme);
-    });
-
-    // Inicialização ao carregar a página
-    $(document).ready(function() {
-        carregarEmpresa();
-
-        // Aplicação de máscaras nos inputs
-        $('#cnpjEmpresa').mask('00.000.000/0000-00', {reverse: true});
-        $('#cpfEmpresa').mask('000.000.000-00', {reverse: true});
-        $('#whatsappEmpresa').mask('(00) 00000-0000');
-        $('#cepEmpresa').mask('00000-000');
-
-        // Ajustar a altura do conteúdo principal
-        ajustarAlturaConteudo();
-        $(window).resize(function() {
-            ajustarAlturaConteudo();
-        });
-
-        // Exibir as categorias de películas com contadores
-        listarCategoriasComContadores();
-
-        // Configurar o evento de submissão do formulário de cadastro de película
-        $('#formCadastrarFilme').on('submit', salvarFilme);
-
-         // Inicializar componentes de clientes
-    inicializarComponentesClientes();
-    });
-
-    // Função para ajustar a altura do conteúdo principal dinamicamente
-    function ajustarAlturaConteudo() {
-        var alturaJanela = $(window).height();
-        var alturaHeader = $('.header').outerHeight();
-        $('#mainContent').css('min-height', alturaJanela - alturaHeader);
-    }
-
-    // Variáveis globais e funções para "Clientes"
-    // ... (todo o código JavaScript relacionado à seção "Clientes") ...
-
-    /** 
-     * Início das Funcionalidades de "Películas"
-     */
-
-    // Lista de Categorias Predefinidas
-    const categoriasPredefinidas = [
-        "Nanocerâmico",
-        "Nano Carbono",
-        "Fotocromático",
-        "Semi-refletiva",
-        "Refletiva",
-        "Antivandalismo",
-        "Profissional",
-        "Pigmentada",
-        "Sputtering",
-        "Híbrido"
-    ];
-
-    // Função para listar as categorias com contadores
-    function listarCategoriasComContadores() {
-        const container = $('#categoriasContainer');
-        container.empty(); // Limpa o container antes de adicionar os cards
-
-        categoriasPredefinidas.forEach(categoria => {
-            // Conta a quantidade de películas na categoria atual
-            db.filmes.where('categoria').equals(categoria).count().then(contador => {
-                const card = `
-                    <div class="col-md-4 col-sm-6 mb-3">
-                        <div class="card h-100">
-                            <div class="card-body d-flex flex-column justify-content-between align-items-center">
-                                <div class="text-center">
-                                    <i class="fas fa-film fa-3x mb-3"></i>
-                                    <h5 class="card-title">${categoria}</h5>
-                                </div>
-                                <div class="d-flex justify-content-between align-items-center w-100">
-                                    <button class="btn btn-primary btn-block mb-2" onclick="abrirModalCadastrarFilme('${categoria}')">Adicionar Película</button>
-                                    <button class="btn btn-info btn-block" onclick="abrirModalListaFilmes('${categoria}')">
-                                        <i class="fas fa-eye"></i> ${contador} ${contador === 1 ? 'Película' : 'Películas'}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                container.append(card);
-            }).catch(err => {
-                console.error(`Erro ao contar películas na categoria ${categoria}:`, err);
-            });
-        });
-    }
-
-    // Função para abrir o modal de cadastro de película (Adicionar)
-    function abrirModalCadastrarFilme(categoria) {
-        $('#categoriaSelecionada').val(categoria); // Define a categoria selecionada no campo oculto
-        $('#modalCadastrarFilmeLabel').text(`Cadastrar Película - ${categoria}`); // Atualiza o título do modal
-        $('#formCadastrarFilme')[0].reset(); // Limpa os campos do formulário
-        $('#filmeId').val(''); // Assegura que não há ID definido
-        // Reconfigurar o formulário para adicionar novas películas
-        $('#formCadastrarFilme').off('submit').on('submit', salvarFilme);
-        $('#modalCadastrarFilme').modal('show'); // Exibe o modal
-    }
-
-    // Função para salvar a película no IndexedDB
-    function salvarFilme(event) {
-        event.preventDefault(); // Previne o comportamento padrão do formulário
-
-        const filmeId = $('#filmeId').val(); // Verifica se é uma edição
-        const nome = $('#nomeFilme').val();
-        const marca = $('#marcaFilme').val();
-        const descricao = $('#descricaoFilme').val();
-        const precoFabricante = parseFloat($('#precoFabricante').val());
-        const precoMaoObra = parseFloat($('#precoMaoObra').val());
-        const quantidadeEstoque = parseFloat($('#quantidadeEstoque').val());
-        const categoria = $('#categoriaSelecionada').val();
-
-        // Validação básica
-        if (!nome || !marca || !descricao || isNaN(precoFabricante) || isNaN(precoMaoObra) || isNaN(quantidadeEstoque) || !categoria) {
-            mostrarToast('Erro', 'Por favor, preencha todos os campos corretamente.', 'danger');
-            return;
-        }
-
-        if (filmeId) {
-            // É uma edição
-            const filmeAtualizado = {
-                nome,
-                marca,
-                descricao,
-                precoFabricante,
-                precoMaoObra,
-                quantidadeEstoque,
-                categoria
-            };
-
-            // Atualiza a película no banco de dados
-            db.filmes.update(parseInt(filmeId), filmeAtualizado).then(() => {
-                $('#modalCadastrarFilme').modal('hide'); // Fecha o modal de cadastro/edição
-                listarCategoriasComContadores(); // Atualiza os contadores das categorias
-                mostrarToast('Sucesso', 'Película atualizada com sucesso!', 'success');
-            }).catch(err => {
-                console.error(err);
-                mostrarToast('Erro', 'Erro ao atualizar a película.', 'danger');
-            });
-        } else {
-            // É uma adição
-            const filme = {
-                nome,
-                marca,
-                descricao,
-                precoFabricante,
-                precoMaoObra,
-                quantidadeEstoque,
-                categoria
-            };
-
-            // Adiciona a película ao banco de dados
-            db.filmes.add(filme).then(() => {
-                $('#modalCadastrarFilme').modal('hide'); // Fecha o modal
-                listarCategoriasComContadores(); // Atualiza os contadores das categorias
-                mostrarToast('Sucesso', 'Película cadastrada com sucesso!', 'success');
-            }).catch(err => {
-                console.error(err);
-                mostrarToast('Erro', 'Erro ao cadastrar a película.', 'danger');
-            });
-        }
-    }
-
-    // Função para abrir o modal de lista de películas por categoria
-    function abrirModalListaFilmes(categoria) {
-        $('#modalListaFilmesLabel').text(`Películas da Categoria - ${categoria}`); // Atualiza o título do modal
-
-        // Recupera as películas da categoria selecionada
-        db.filmes.where('categoria').equals(categoria).toArray().then(filmes => {
-            const container = $('#listaFilmesCategoria');
-            container.empty(); // Limpa a área antes de adicionar os cards
-
-            if (filmes.length === 0) {
-                container.append('<div class="col-12 text-center">Nenhuma película cadastrada nesta categoria.</div>');
-            } else {
-                filmes.forEach(filme => {
-                    const card = `
-                        <div class="col-md-4 col-sm-6 mb-3">
-                            <div class="card">
-                                <div class="card-body d-flex flex-column">
-                                    <h5 class="card-title">${filme.nome}</h5>
-                                    <h6 class="card-subtitle mb-2 text-muted">${filme.marca}</h6>
-                                    <p class="card-text">${filme.descricao}</p>
-                                    <p class="card-text"><strong>Preço Fabricante:</strong> R$ ${filme.precoFabricante.toFixed(2)}</p>
-                                    <p class="card-text"><strong>Preço Mão de Obra:</strong> R$ ${filme.precoMaoObra.toFixed(2)}</p>
-                                    <p class="card-text"><strong>Quantidade em Estoque:</strong> ${filme.quantidadeEstoque.toFixed(2)} m</p>
-                                    <div class="mt-auto btn-group">
-                                        <button class="btn btn-info btn-sm mr-2 editar-filme" data-id="${filme.id}" data-categoria="${categoria}"><i class="fas fa-edit"></i> Editar</button>
-                                        <button class="btn btn-danger btn-sm excluir-filme" data-id="${filme.id}" data-categoria="${categoria}"><i class="fas fa-trash-alt"></i> Excluir</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    container.append(card);
-                });
-            }
-
-            $('#modalListaFilmes').modal('show'); // Exibe o modal com a lista de películas
-        }).catch(err => {
-            console.error(`Erro ao recuperar películas da categoria ${categoria}:`, err);
-            mostrarToast('Erro', 'Erro ao carregar a lista de películas.', 'danger');
-        });
-    }
-
-    // Função para excluir uma película
-    function excluirFilme(id, categoria) {
-        if(confirm('Tem certeza que deseja excluir esta película?')) {
-            db.filmes.delete(id).then(() => {
-                listarCategoriasComContadores(); // Atualiza os contadores das categorias
-                abrirModalListaFilmes(categoria); // Atualiza a lista no modal
-                mostrarToast('Sucesso', 'Película excluída com sucesso!', 'success');
-            }).catch(err => {
-                console.error(err);
-                mostrarToast('Erro', 'Erro ao excluir a película.', 'danger');
-            });
-        }
-    }
-
-    // Função para editar uma película
-    function editarFilme(id, categoria) {
-        db.filmes.get(id).then(filme => {
-            if(filme) {
-                // Preencher os campos do formulário com os dados da película
-                $('#filmeId').val(filme.id);
-                $('#nomeFilme').val(filme.nome);
-                $('#marcaFilme').val(filme.marca);
-                $('#descricaoFilme').val(filme.descricao);
-                $('#precoFabricante').val(filme.precoFabricante);
-                $('#precoMaoObra').val(filme.precoMaoObra);
-                $('#quantidadeEstoque').val(filme.quantidadeEstoque);
-                $('#categoriaSelecionada').val(filme.categoria);
-
-                // Atualizar o título do modal para "Editar Película"
-                $('#modalCadastrarFilmeLabel').text(`Editar Película - ${categoria}`);
-
-                // Alterar o comportamento do formulário para salvar a edição
-                $('#formCadastrarFilme').off('submit').on('submit', function(event) {
-                    event.preventDefault(); // Previne o comportamento padrão do formulário
-
-                    // Coleta os dados atualizados do formulário
-                    const filmeId = $('#filmeId').val();
-                    const nome = $('#nomeFilme').val();
-                    const marca = $('#marcaFilme').val();
-                    const descricao = $('#descricaoFilme').val();
-                    const precoFabricante = parseFloat($('#precoFabricante').val());
-                    const precoMaoObra = parseFloat($('#precoMaoObra').val());
-                    const quantidadeEstoque = parseFloat($('#quantidadeEstoque').val());
-                    const categoriaAtualizada = $('#categoriaSelecionada').val();
-
-                    // Validação básica
-                    if (!nome || !marca || !descricao || isNaN(precoFabricante) || isNaN(precoMaoObra) || isNaN(quantidadeEstoque) || !categoriaAtualizada) {
-                        mostrarToast('Erro', 'Por favor, preencha todos os campos corretamente.', 'danger');
-                        return;
-                    }
-
-                    // Cria o objeto atualizado da película
-                    const filmeAtualizado = {
-                        nome,
-                        marca,
-                        descricao,
-                        precoFabricante,
-                        precoMaoObra,
-                        quantidadeEstoque,
-                        categoria: categoriaAtualizada
-                    };
-
-                    // Atualiza a película no banco de dados
-                    db.filmes.update(parseInt(filmeId), filmeAtualizado).then(() => {
-                        $('#modalCadastrarFilme').modal('hide'); // Fecha o modal de cadastro/edição
-                        $('#modalListaFilmes').modal('hide'); // Fecha o modal de lista
-                        listarCategoriasComContadores(); // Atualiza os contadores das categorias
-                        mostrarToast('Sucesso', 'Película atualizada com sucesso!', 'success');
-                        // Reconfigurar o formulário para adicionar novas películas
-                        $('#formCadastrarFilme').off('submit').on('submit', salvarFilme);
-                    }).catch(err => {
-                        console.error(err);
-                        mostrarToast('Erro', 'Erro ao atualizar a película.', 'danger');
-                    });
-                });
-
-                // Fechar o modal de lista antes de abrir o modal de cadastro/edição
-                $('#modalListaFilmes').modal('hide');
-
-                // Abrir o modal de cadastro/edição
-                $('#modalCadastrarFilme').modal('show');
-            }
-        }).catch(err => {
-            console.error(err);
-            mostrarToast('Erro', 'Erro ao recuperar os dados da película.', 'danger');
-        });
-    }
-
-    /** 
-     * Funcionalidades de Toast para Feedback ao Usuário
-     */
-
-    // Função para exibir Toasts de Feedback
-    function mostrarToast(titulo, mensagem, tipo = 'info') {
-        $('#toastTitle').text(titulo);
-        $('#toastBody').text(mensagem);
-
-        // Ajustar a cor do cabeçalho do Toast com base no tipo
-        $('#feedbackToast .toast-header').removeClass('bg-success bg-danger bg-info text-white');
-        if (tipo === 'success') {
-            $('#feedbackToast .toast-header').addClass('bg-success text-white');
-        } else if (tipo === 'danger') {
-            $('#feedbackToast .toast-header').addClass('bg-danger text-white');
-        } else {
-            $('#feedbackToast .toast-header').addClass('bg-info text-white');
-        }
-
-        $('#feedbackToast').toast('show');
-    }
-
-    // Evento para gerenciar cliques nos botões Editar e Excluir dentro do modalListaFilmes
-    $(document).on('click', '.editar-filme', function() {
-        const id = $(this).data('id');
-        const categoria = $(this).data('categoria');
-        editarFilme(id, categoria);
-    });
-
-    $(document).on('click', '.excluir-filme', function() {
-        const id = $(this).data('id');
-        const categoria = $(this).data('categoria');
-        excluirFilme(id, categoria);
-    });
-
-</script>
-
-<script src="servicos.js"></script>
-
+    </script>
+
+    <script src="servicos.js"></script>
+    <!-- Seu script JavaScript personalizado para Películas -->
+    <script src="js/peliculas.js"></script>
 
 </body>
 </html>
