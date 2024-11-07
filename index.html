@@ -17,6 +17,52 @@
 
     <!-- Seu CSS personalizado -->
     <style>
+/* Estilos personalizados para os cards de categorias */
+.card {
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-info {
+    display: flex;
+    align-items: center;
+}
+
+.btn-info i {
+    margin-right: 5px;
+}
+
+/* Estilos para os cards de películas no modal */
+#modalListaFilmes .card {
+    min-height: 100%;
+}
+
+@media (max-width: 576px) {
+    /* Ajustes para dispositivos móveis */
+    #modalListaFilmes .card-body {
+        padding: 10px;
+    }
+
+    #modalListaFilmes .card-title {
+        font-size: 1.1rem;
+    }
+
+    #modalListaFilmes .card-subtitle {
+        font-size: 0.9rem;
+    }
+
+    #modalListaFilmes .btn {
+        font-size: 0.8rem;
+        padding: 5px 10px;
+    }
+}
+
+
         /* Definição de variáveis CSS para facilitar a mudança de cores */
         :root {
             --primary-color: #0D6EFD; /* Cor padrão do tema */
@@ -254,6 +300,101 @@
             background-color: #0056b3;
             border-color: #0056b3;
         }
+        .card {
+            border: none; /* Remove a borda padrão */
+            border-radius: 10px; /* Bordas arredondadas */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+            transition: transform 0.3s, box-shadow 0.3s; /* Transição suave para hover */
+            background-color: #ffffff; /* Fundo branco */
+        }
+
+        .card:hover {
+            transform: translateY(-10px); /* Elevação ao passar o mouse */
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); /* Sombra mais intensa */
+        }
+
+        /* Estilos aprimorados para os cards de películas no modal */
+        #modalListaFilmes .card {
+            border: none; /* Remove a borda padrão */
+            border-radius: 10px; /* Bordas arredondadas */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+            transition: transform 0.3s, box-shadow 0.3s; /* Transição suave para hover */
+            background-color: #f8f9fa; /* Fundo ligeiramente cinza */
+        }
+
+        #modalListaFilmes .card:hover {
+            transform: translateY(-5px); /* Elevação ao passar o mouse */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Sombra mais intensa */
+        }
+
+        /* Estilos aprimorados para os títulos dos cards */
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #343a40; /* Cor do título */
+        }
+
+        .card-subtitle {
+            font-size: 1rem;
+            color: #6c757d; /* Cor do subtítulo */
+        }
+
+        /* Estilos aprimorados para os textos do card */
+        .card-text {
+            font-size: 0.95rem;
+            color: #495057; /* Cor do texto */
+            margin-bottom: 0.5rem;
+        }
+
+        /* Estilos aprimorados para os botões */
+        .card .btn {
+            width: 48%; /* Largura uniforme para os botões */
+            margin-bottom: 0.5rem; /* Espaçamento inferior */
+            font-size: 0.9rem; /* Tamanho de fonte reduzido */
+            padding: 0.4rem 0.8rem; /* Padding consistente */
+            border-radius: 5px; /* Bordas arredondadas */
+        }
+
+        /* Ajustes para o botão de ação dentro dos cards de películas */
+        #listaFilmesCategoria .card .btn-info,
+        #listaFilmesCategoria .card .btn-danger {
+            margin-top: 0.5rem; /* Espaçamento superior */
+        }
+
+        /* Estilos para organizar os botões em uma linha */
+        .btn-group {
+            width: 100%;
+        }
+
+        .btn-group .btn {
+            flex: 1;
+            margin: 0 2px;
+        }
+
+        /* Ajustes para dispositivos móveis */
+        @media (max-width: 576px) {
+            .card-title {
+                font-size: 1.1rem;
+            }
+
+            .card-subtitle {
+                font-size: 0.9rem;
+            }
+
+            .card-text {
+                font-size: 0.85rem;
+            }
+
+            .card .btn {
+                width: 100%;
+                margin-bottom: 0.3rem;
+            }
+
+            #listaFilmesCategoria .card .btn-info,
+            #listaFilmesCategoria .card .btn-danger {
+                margin-top: 0.3rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -410,7 +551,7 @@
             <!-- Cards serão inseridos aqui via JavaScript -->
         </div>
 
-        <!-- Modal para Cadastrar Película -->
+<!-- Modal para Cadastrar/Editar Película -->
 <div class="modal fade" id="modalCadastrarFilme" tabindex="-1" aria-labelledby="modalCadastrarFilmeLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -422,10 +563,15 @@
             </button>
           </div>
           <div class="modal-body">
+              <input type="hidden" id="filmeId"> <!-- Campo oculto para o ID da película -->
               <input type="hidden" id="categoriaSelecionada">
               <div class="form-group">
                   <label for="nomeFilme">Nome</label>
                   <input type="text" class="form-control" id="nomeFilme" placeholder="Digite o nome da película" required>
+              </div>
+              <div class="form-group">
+                  <label for="marcaFilme">Marca da Película</label>
+                  <input type="text" class="form-control" id="marcaFilme" placeholder="Digite a marca da película" required>
               </div>
               <div class="form-group">
                   <label for="descricaoFilme">Descrição</label>
@@ -453,42 +599,34 @@
     </div>
   </div>
   
+  
+  
         
-        <!-- Modal para Exibir Lista de Películas por Categoria -->
-        <div class="modal fade" id="modalListaFilmes" tabindex="-1" aria-labelledby="modalListaFilmesLabel" aria-hidden="true">
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="modalListaFilmesLabel">Películas da Categoria</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                  <table class="table table-bordered" id="listaFilmesCategoria">
-                      <thead>
-                          <tr>
-                              <th>Nome</th>
-                              <th>Descrição</th>
-                              <th>Preço Fabricante</th>
-                              <th>Preço Mão de Obra</th>
-                              <th>Quantidade em Estoque (m)</th>
-                              <th>Ações</th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                          <!-- Filmes serão inseridos aqui via JavaScript -->
-                      </tbody>
-                  </table>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-              </div>
-            </div>
-          </div>
+<!-- Modal para Exibir Lista de Películas por Categoria -->
+<div class="modal fade" id="modalListaFilmes" tabindex="-1" aria-labelledby="modalListaFilmesLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl"> <!-- Tamanho maior para melhor visualização -->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalListaFilmesLabel">Películas da Categoria</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
+        <div class="modal-body">
+            <div class="container-fluid">
+                <div class="row" id="listaFilmesCategoria">
+                    <!-- Cards serão inseridos aqui via JavaScript -->
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
+  
+
 
 
         <!-- Seção "Veículos" -->
@@ -571,6 +709,7 @@
 
     <!-- Seu script JavaScript personalizado -->
  <!-- Seu script JavaScript personalizado -->
+<!-- Seu script JavaScript personalizado -->
 <script>
     // Função para mostrar a seção selecionada
     function showSection(sectionId) {
@@ -613,7 +752,7 @@
     db.version(2).stores({
         empresa: 'id,nome,cnpj,cpf,whatsapp,email,cep,cidade,bairro,rua,numero,corTema,logo',
         clientes: '++id,nome,cpfCnpj,telefone,email,endereco',
-        filmes: '++id,nome,descricao,precoFabricante,precoMaoObra,quantidadeEstoque,categoria' // Nova tabela para películas
+        filmes: '++id,nome,descricao,marca,precoFabricante,precoMaoObra,quantidadeEstoque,categoria'
     });
 
     // Variáveis globais e funções para "Minha Empresa"
@@ -640,9 +779,12 @@
             logo: logoBase64
         };
         db.empresa.put(empresa).then(function() {
-            alert('Dados da empresa salvos com sucesso!');
+            mostrarToast('Sucesso', 'Dados da empresa salvos com sucesso!', 'success');
             aplicarCorTema(empresa.corTema);
             atualizarInformacoesEmpresa(empresa);
+        }).catch(function(err) {
+            console.error(err);
+            mostrarToast('Erro', 'Erro ao salvar os dados da empresa.', 'danger');
         });
     }
 
@@ -681,6 +823,9 @@
                 // Atualiza as informações da empresa no cabeçalho e no menu lateral
                 atualizarInformacoesEmpresa(empresa);
             }
+        }).catch(function(err) {
+            console.error(err);
+            mostrarToast('Erro', 'Erro ao carregar os dados da empresa.', 'danger');
         });
     }
 
@@ -743,8 +888,17 @@
             };
             reader.readAsDataURL(file);
         } else {
-            alert('Por favor, selecione um arquivo de imagem válido.');
+            mostrarToast('Erro', 'Por favor, selecione um arquivo de imagem válido.', 'danger');
         }
+    });
+
+    // Evento de fechamento do modalCadastrarFilme para resetar o formulário
+    $('#modalCadastrarFilme').on('hidden.bs.modal', function () {
+        $('#formCadastrarFilme')[0].reset(); // Limpa os campos do formulário
+        $('#filmeId').val(''); // Reseta o campo oculto
+        $('#modalCadastrarFilmeLabel').text('Cadastrar Película'); // Reseta o título do modal
+        // Reconfigurar o formulário para adicionar novas películas
+        $('#formCadastrarFilme').off('submit').on('submit', salvarFilme);
     });
 
     // Inicialização ao carregar a página
@@ -815,9 +969,9 @@
                                     <h5 class="card-title">${categoria}</h5>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center w-100">
-                                    <button class="btn btn-primary" onclick="abrirModalCadastrarFilme('${categoria}')">Adicionar Película</button>
-                                    <button class="btn btn-info" onclick="abrirModalListaFilmes('${categoria}')">
-                                        <i class="fas fa-eye"></i> ${contador}
+                                    <button class="btn btn-primary btn-block mb-2" onclick="abrirModalCadastrarFilme('${categoria}')">Adicionar Película</button>
+                                    <button class="btn btn-info btn-block" onclick="abrirModalListaFilmes('${categoria}')">
+                                        <i class="fas fa-eye"></i> ${contador} ${contador === 1 ? 'Película' : 'Películas'}
                                     </button>
                                 </div>
                             </div>
@@ -831,11 +985,14 @@
         });
     }
 
-    // Função para abrir o modal de cadastro de película
+    // Função para abrir o modal de cadastro de película (Adicionar)
     function abrirModalCadastrarFilme(categoria) {
         $('#categoriaSelecionada').val(categoria); // Define a categoria selecionada no campo oculto
         $('#modalCadastrarFilmeLabel').text(`Cadastrar Película - ${categoria}`); // Atualiza o título do modal
         $('#formCadastrarFilme')[0].reset(); // Limpa os campos do formulário
+        $('#filmeId').val(''); // Assegura que não há ID definido
+        // Reconfigurar o formulário para adicionar novas películas
+        $('#formCadastrarFilme').off('submit').on('submit', salvarFilme);
         $('#modalCadastrarFilme').modal('show'); // Exibe o modal
     }
 
@@ -843,8 +1000,9 @@
     function salvarFilme(event) {
         event.preventDefault(); // Previne o comportamento padrão do formulário
 
-        // Coleta os dados do formulário
+        const filmeId = $('#filmeId').val(); // Verifica se é uma edição
         const nome = $('#nomeFilme').val();
+        const marca = $('#marcaFilme').val();
         const descricao = $('#descricaoFilme').val();
         const precoFabricante = parseFloat($('#precoFabricante').val());
         const precoMaoObra = parseFloat($('#precoMaoObra').val());
@@ -852,30 +1010,54 @@
         const categoria = $('#categoriaSelecionada').val();
 
         // Validação básica
-        if (!nome || !descricao || isNaN(precoFabricante) || isNaN(precoMaoObra) || isNaN(quantidadeEstoque) || !categoria) {
-            alert('Por favor, preencha todos os campos corretamente.');
+        if (!nome || !marca || !descricao || isNaN(precoFabricante) || isNaN(precoMaoObra) || isNaN(quantidadeEstoque) || !categoria) {
+            mostrarToast('Erro', 'Por favor, preencha todos os campos corretamente.', 'danger');
             return;
         }
 
-        // Cria o objeto da película
-        const filme = {
-            nome,
-            descricao,
-            precoFabricante,
-            precoMaoObra,
-            quantidadeEstoque,
-            categoria
-        };
+        if (filmeId) {
+            // É uma edição
+            const filmeAtualizado = {
+                nome,
+                marca,
+                descricao,
+                precoFabricante,
+                precoMaoObra,
+                quantidadeEstoque,
+                categoria
+            };
 
-        // Adiciona a película ao banco de dados
-        db.filmes.add(filme).then(() => {
-            $('#modalCadastrarFilme').modal('hide'); // Fecha o modal
-            listarCategoriasComContadores(); // Atualiza os contadores das categorias
-            alert('Película cadastrada com sucesso!');
-        }).catch(err => {
-            console.error(err);
-            alert('Erro ao cadastrar a película.');
-        });
+            // Atualiza a película no banco de dados
+            db.filmes.update(parseInt(filmeId), filmeAtualizado).then(() => {
+                $('#modalCadastrarFilme').modal('hide'); // Fecha o modal de cadastro/edição
+                listarCategoriasComContadores(); // Atualiza os contadores das categorias
+                mostrarToast('Sucesso', 'Película atualizada com sucesso!', 'success');
+            }).catch(err => {
+                console.error(err);
+                mostrarToast('Erro', 'Erro ao atualizar a película.', 'danger');
+            });
+        } else {
+            // É uma adição
+            const filme = {
+                nome,
+                marca,
+                descricao,
+                precoFabricante,
+                precoMaoObra,
+                quantidadeEstoque,
+                categoria
+            };
+
+            // Adiciona a película ao banco de dados
+            db.filmes.add(filme).then(() => {
+                $('#modalCadastrarFilme').modal('hide'); // Fecha o modal
+                listarCategoriasComContadores(); // Atualiza os contadores das categorias
+                mostrarToast('Sucesso', 'Película cadastrada com sucesso!', 'success');
+            }).catch(err => {
+                console.error(err);
+                mostrarToast('Erro', 'Erro ao cadastrar a película.', 'danger');
+            });
+        }
     }
 
     // Função para abrir o modal de lista de películas por categoria
@@ -884,34 +1066,39 @@
 
         // Recupera as películas da categoria selecionada
         db.filmes.where('categoria').equals(categoria).toArray().then(filmes => {
-            const tbody = $('#listaFilmesCategoria tbody');
-            tbody.empty(); // Limpa a tabela antes de adicionar as linhas
+            const container = $('#listaFilmesCategoria');
+            container.empty(); // Limpa a área antes de adicionar os cards
 
             if (filmes.length === 0) {
-                tbody.append('<tr><td colspan="6" class="text-center">Nenhuma película cadastrada nesta categoria.</td></tr>');
+                container.append('<div class="col-12 text-center">Nenhuma película cadastrada nesta categoria.</div>');
             } else {
                 filmes.forEach(filme => {
-                    const row = `
-                        <tr>
-                            <td>${filme.nome}</td>
-                            <td>${filme.descricao}</td>
-                            <td>R$ ${filme.precoFabricante.toFixed(2)}</td>
-                            <td>R$ ${filme.precoMaoObra.toFixed(2)}</td>
-                            <td>${filme.quantidadeEstoque.toFixed(2)} m</td>
-                            <td>
-                                <button class="btn btn-sm btn-info mr-2" onclick="editarFilme(${filme.id}, '${categoria}')"><i class="fas fa-edit"></i></button>
-                                <button class="btn btn-sm btn-danger" onclick="excluirFilme(${filme.id}, '${categoria}')"><i class="fas fa-trash-alt"></i></button>
-                            </td>
-                        </tr>
+                    const card = `
+                        <div class="col-md-4 col-sm-6 mb-3">
+                            <div class="card">
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title">${filme.nome}</h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">${filme.marca}</h6>
+                                    <p class="card-text">${filme.descricao}</p>
+                                    <p class="card-text"><strong>Preço Fabricante:</strong> R$ ${filme.precoFabricante.toFixed(2)}</p>
+                                    <p class="card-text"><strong>Preço Mão de Obra:</strong> R$ ${filme.precoMaoObra.toFixed(2)}</p>
+                                    <p class="card-text"><strong>Quantidade em Estoque:</strong> ${filme.quantidadeEstoque.toFixed(2)} m</p>
+                                    <div class="mt-auto btn-group">
+                                        <button class="btn btn-info btn-sm mr-2 editar-filme" data-id="${filme.id}" data-categoria="${categoria}"><i class="fas fa-edit"></i> Editar</button>
+                                        <button class="btn btn-danger btn-sm excluir-filme" data-id="${filme.id}" data-categoria="${categoria}"><i class="fas fa-trash-alt"></i> Excluir</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     `;
-                    tbody.append(row);
+                    container.append(card);
                 });
             }
 
             $('#modalListaFilmes').modal('show'); // Exibe o modal com a lista de películas
         }).catch(err => {
             console.error(`Erro ao recuperar películas da categoria ${categoria}:`, err);
-            alert('Erro ao carregar a lista de películas.');
+            mostrarToast('Erro', 'Erro ao carregar a lista de películas.', 'danger');
         });
     }
 
@@ -921,10 +1108,10 @@
             db.filmes.delete(id).then(() => {
                 listarCategoriasComContadores(); // Atualiza os contadores das categorias
                 abrirModalListaFilmes(categoria); // Atualiza a lista no modal
-                alert('Película excluída com sucesso!');
+                mostrarToast('Sucesso', 'Película excluída com sucesso!', 'success');
             }).catch(err => {
                 console.error(err);
-                alert('Erro ao excluir a película.');
+                mostrarToast('Erro', 'Erro ao excluir a película.', 'danger');
             });
         }
     }
@@ -933,20 +1120,27 @@
     function editarFilme(id, categoria) {
         db.filmes.get(id).then(filme => {
             if(filme) {
-                $('#categoriaSelecionada').val(filme.categoria); // Define a categoria no campo oculto
-                $('#modalCadastrarFilmeLabel').text(`Editar Película - ${filme.categoria}`); // Atualiza o título do modal
+                // Preencher os campos do formulário com os dados da película
+                $('#filmeId').val(filme.id);
                 $('#nomeFilme').val(filme.nome);
+                $('#marcaFilme').val(filme.marca);
                 $('#descricaoFilme').val(filme.descricao);
                 $('#precoFabricante').val(filme.precoFabricante);
                 $('#precoMaoObra').val(filme.precoMaoObra);
                 $('#quantidadeEstoque').val(filme.quantidadeEstoque);
+                $('#categoriaSelecionada').val(filme.categoria);
+
+                // Atualizar o título do modal para "Editar Película"
+                $('#modalCadastrarFilmeLabel').text(`Editar Película - ${categoria}`);
 
                 // Alterar o comportamento do formulário para salvar a edição
                 $('#formCadastrarFilme').off('submit').on('submit', function(event) {
                     event.preventDefault(); // Previne o comportamento padrão do formulário
 
                     // Coleta os dados atualizados do formulário
+                    const filmeId = $('#filmeId').val();
                     const nome = $('#nomeFilme').val();
+                    const marca = $('#marcaFilme').val();
                     const descricao = $('#descricaoFilme').val();
                     const precoFabricante = parseFloat($('#precoFabricante').val());
                     const precoMaoObra = parseFloat($('#precoMaoObra').val());
@@ -954,14 +1148,15 @@
                     const categoriaAtualizada = $('#categoriaSelecionada').val();
 
                     // Validação básica
-                    if (!nome || !descricao || isNaN(precoFabricante) || isNaN(precoMaoObra) || isNaN(quantidadeEstoque) || !categoriaAtualizada) {
-                        alert('Por favor, preencha todos os campos corretamente.');
+                    if (!nome || !marca || !descricao || isNaN(precoFabricante) || isNaN(precoMaoObra) || isNaN(quantidadeEstoque) || !categoriaAtualizada) {
+                        mostrarToast('Erro', 'Por favor, preencha todos os campos corretamente.', 'danger');
                         return;
                     }
 
                     // Cria o objeto atualizado da película
                     const filmeAtualizado = {
                         nome,
+                        marca,
                         descricao,
                         precoFabricante,
                         precoMaoObra,
@@ -970,32 +1165,68 @@
                     };
 
                     // Atualiza a película no banco de dados
-                    db.filmes.update(id, filmeAtualizado).then(() => {
-                        $('#modalCadastrarFilme').modal('hide'); // Fecha o modal
+                    db.filmes.update(parseInt(filmeId), filmeAtualizado).then(() => {
+                        $('#modalCadastrarFilme').modal('hide'); // Fecha o modal de cadastro/edição
+                        $('#modalListaFilmes').modal('hide'); // Fecha o modal de lista
                         listarCategoriasComContadores(); // Atualiza os contadores das categorias
-                        abrirModalListaFilmes(categoriaAtualizada); // Atualiza a lista no modal
-                        alert('Película atualizada com sucesso!');
+                        mostrarToast('Sucesso', 'Película atualizada com sucesso!', 'success');
                         // Reconfigurar o formulário para adicionar novas películas
                         $('#formCadastrarFilme').off('submit').on('submit', salvarFilme);
                     }).catch(err => {
                         console.error(err);
-                        alert('Erro ao atualizar a película.');
+                        mostrarToast('Erro', 'Erro ao atualizar a película.', 'danger');
                     });
                 });
 
-                $('#modalCadastrarFilme').modal('show'); // Exibe o modal com os dados para edição
+                // Fechar o modal de lista antes de abrir o modal de cadastro/edição
+                $('#modalListaFilmes').modal('hide');
+
+                // Abrir o modal de cadastro/edição
+                $('#modalCadastrarFilme').modal('show');
             }
         }).catch(err => {
             console.error(err);
-            alert('Erro ao recuperar os dados da película.');
+            mostrarToast('Erro', 'Erro ao recuperar os dados da película.', 'danger');
         });
     }
 
     /** 
-     * Fim das Funcionalidades de "Películas"
+     * Funcionalidades de Toast para Feedback ao Usuário
      */
 
+    // Função para exibir Toasts de Feedback
+    function mostrarToast(titulo, mensagem, tipo = 'info') {
+        $('#toastTitle').text(titulo);
+        $('#toastBody').text(mensagem);
+
+        // Ajustar a cor do cabeçalho do Toast com base no tipo
+        $('#feedbackToast .toast-header').removeClass('bg-success bg-danger bg-info text-white');
+        if (tipo === 'success') {
+            $('#feedbackToast .toast-header').addClass('bg-success text-white');
+        } else if (tipo === 'danger') {
+            $('#feedbackToast .toast-header').addClass('bg-danger text-white');
+        } else {
+            $('#feedbackToast .toast-header').addClass('bg-info text-white');
+        }
+
+        $('#feedbackToast').toast('show');
+    }
+
+    // Evento para gerenciar cliques nos botões Editar e Excluir dentro do modalListaFilmes
+    $(document).on('click', '.editar-filme', function() {
+        const id = $(this).data('id');
+        const categoria = $(this).data('categoria');
+        editarFilme(id, categoria);
+    });
+
+    $(document).on('click', '.excluir-filme', function() {
+        const id = $(this).data('id');
+        const categoria = $(this).data('categoria');
+        excluirFilme(id, categoria);
+    });
+
 </script>
+
 
 </body>
 </html>
