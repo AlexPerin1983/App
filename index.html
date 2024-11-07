@@ -532,13 +532,142 @@
         </div>
 
         <!-- Seção "Clientes" -->
-        <div id="clientes" class="content-section">
-            <div class="container-fluid">
-                <h2>Clientes</h2>
-                <!-- Conteúdo da seção "Clientes" -->
-                <!-- Aqui você pode adicionar a tabela de clientes, formulários, etc. -->
+<div id="clientes" class="content-section">
+    <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Clientes</h2>
+            <button class="btn btn-primary" onclick="abrirModalCliente()">
+                <i class="fas fa-plus"></i> Novo Cliente
+            </button>
+        </div>
+
+        <!-- Tabela de Clientes -->
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>CPF/CNPJ</th>
+                        <th>Telefone</th>
+                        <th>Email</th>
+                        <th>Endereço</th>
+                        <th>Empresa</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaClientes">
+                    <!-- Os clientes serão inseridos aqui via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+     <!-- Modal para Cadastro/Edição de Cliente -->
+     <div class="modal fade" id="modalCliente" tabindex="-1" aria-labelledby="modalClienteLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalClienteLabel">Novo Cliente</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="formCliente">
+                        <input type="hidden" id="clienteId">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="nomeCliente">Nome*</label>
+                                    <input type="text" class="form-control" id="nomeCliente" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="cpfCnpjCliente">CPF/CNPJ*</label>
+                                    <input type="text" class="form-control" id="cpfCnpjCliente" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="telefoneCliente">Telefone*</label>
+                                    <input type="text" class="form-control" id="telefoneCliente" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="emailCliente">Email</label>
+                                    <input type="email" class="form-control" id="emailCliente">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="empresaCliente">Empresa</label>
+                                    <input type="text" class="form-control" id="empresaCliente">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="cepCliente">CEP</label>
+                                    <input type="text" class="form-control" id="cepCliente">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="enderecoCliente">Endereço</label>
+                                    <input type="text" class="form-control" id="enderecoCliente">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="numeroCliente">Número</label>
+                                    <input type="text" class="form-control" id="numeroCliente">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="complementoCliente">Complemento</label>
+                                    <input type="text" class="form-control" id="complementoCliente">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="bairroCliente">Bairro</label>
+                                    <input type="text" class="form-control" id="bairroCliente">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="cidadeCliente">Cidade</label>
+                                    <input type="text" class="form-control" id="cidadeCliente">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="estadoCliente">Estado</label>
+                                    <input type="text" class="form-control" id="estadoCliente">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!-- Atualização do footer do modal -->
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+    <button type="submit" class="btn btn-primary" form="formCliente">Salvar</button>
+</div>
             </div>
         </div>
+    </div>
+</div>
 
    <!-- Seção "Películas" -->
 <div id="peliculas" class="content-section">
@@ -749,12 +878,11 @@
 
     // Configuração do IndexedDB usando Dexie.js
     var db = new Dexie('CarFilmProDB');
-    db.version(2).stores({
-        empresa: 'id,nome,cnpj,cpf,whatsapp,email,cep,cidade,bairro,rua,numero,corTema,logo',
-        clientes: '++id,nome,cpfCnpj,telefone,email,endereco',
-        filmes: '++id,nome,descricao,marca,precoFabricante,precoMaoObra,quantidadeEstoque,categoria'
-    });
-
+    db.version(3).stores({
+    empresa: 'id,nome,cnpj,cpf,whatsapp,email,cep,cidade,bairro,rua,numero,corTema,logo',
+    clientes: '++id,nome,cpfCnpj,telefone,email,empresa,endereco,numero,complemento,bairro,cidade,estado,cep',
+    filmes: '++id,nome,descricao,marca,precoFabricante,precoMaoObra,quantidadeEstoque,categoria'
+});
     // Variáveis globais e funções para "Minha Empresa"
     var selectedColor = '#0D6EFD'; // Cor padrão
     var logoBase64 = ''; // Armazena a imagem do logotipo em base64
@@ -787,6 +915,273 @@
             mostrarToast('Erro', 'Erro ao salvar os dados da empresa.', 'danger');
         });
     }
+
+
+// Função para formatar o endereço completo
+function formatarEndereco(cliente) {
+    const partes = [];
+    if (cliente.endereco) partes.push(cliente.endereco);
+    if (cliente.numero) partes.push(cliente.numero);
+    if (cliente.complemento) partes.push(cliente.complemento);
+    if (cliente.bairro) partes.push(cliente.bairro);
+    if (cliente.cidade) partes.push(cliente.cidade);
+    if (cliente.estado) partes.push(cliente.estado);
+    if (cliente.cep) partes.push(cliente.cep);
+    
+    return partes.join(', ') || '-';
+}
+
+// Função para abrir o modal de cliente (novo ou edição)
+function abrirModalCliente(modo = 'novo') {
+    $('#modalClienteLabel').text(modo === 'novo' ? 'Novo Cliente' : 'Editar Cliente');
+    $('#formCliente')[0].reset();
+    $('#clienteId').val('');
+    $('#modalCliente').modal('show');
+}
+
+
+// Função para aplicar a máscara correta no CPF/CNPJ
+function aplicarMascaraCpfCnpj(valor) {
+    const numeros = valor.replace(/\D/g, '');
+    if (numeros.length > 11) {
+        return valor.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2}).*/, "$1.$2.$3/$4-$5");
+    } else {
+        return valor.replace(/^(\d{3})(\d{3})(\d{3})(\d{2}).*/, "$1.$2.$3-$4");
+    }
+}
+
+// Função para editar cliente
+function editarCliente(id) {
+    console.log('Editando cliente ID:', id);
+
+    db.clientes.get(parseInt(id)).then(cliente => {
+        if (cliente) {
+            console.log('Cliente encontrado:', cliente);
+            
+            // Preenche os campos do formulário
+            $('#clienteId').val(cliente.id);
+            $('#nomeCliente').val(cliente.nome || '');
+            $('#emailCliente').val(cliente.email || '');
+            $('#empresaCliente').val(cliente.empresa || '');
+            $('#enderecoCliente').val(cliente.endereco || '');
+            $('#numeroCliente').val(cliente.numero || '');
+            $('#complementoCliente').val(cliente.complemento || '');
+            $('#bairroCliente').val(cliente.bairro || '');
+            $('#cidadeCliente').val(cliente.cidade || '');
+            $('#estadoCliente').val(cliente.estado || '');
+            $('#cepCliente').val(cliente.cep || '');
+
+            // Remove máscaras antigas antes de aplicar as novas
+            $('#cpfCnpjCliente').unmask();
+            $('#telefoneCliente').unmask();
+            $('#cepCliente').unmask();
+
+            // Aplica os valores e depois as máscaras
+            $('#cpfCnpjCliente').val(cliente.cpfCnpj || '');
+            $('#telefoneCliente').val(cliente.telefone || '');
+            
+            // Reaplica as máscaras
+            var options = {
+                onKeyPress: function (input, e, field, options) {
+                    var masks = ['000.000.000-000', '00.000.000/0000-00'];
+                    var mask = (input.length > 14) ? masks[1] : masks[0];
+                    $('#cpfCnpjCliente').mask(mask, options);
+                }
+            };
+            
+            $('#cpfCnpjCliente').mask('000.000.000-000', options);
+            $('#telefoneCliente').mask('(00) 00000-0000');
+            $('#cepCliente').mask('00000-000');
+
+            // Força a aplicação da máscara correta baseada no valor atual
+            const cpfCnpjAtual = $('#cpfCnpjCliente').val().replace(/\D/g, '');
+            if (cpfCnpjAtual.length > 11) {
+                $('#cpfCnpjCliente').mask('00.000.000/0000-00');
+            } else {
+                $('#cpfCnpjCliente').mask('000.000.000-00');
+            }
+
+            // Atualiza o título do modal
+            $('#modalClienteLabel').text('Editar Cliente');
+            
+            // Abre o modal
+            $('#modalCliente').modal('show');
+        } else {
+            console.error('Cliente não encontrado com ID:', id);
+            mostrarToast('Erro', 'Cliente não encontrado.', 'danger');
+        }
+    }).catch(error => {
+        console.error('Erro ao carregar dados do cliente:', error);
+        mostrarToast('Erro', 'Não foi possível carregar os dados do cliente.', 'danger');
+    });
+}
+
+// Atualização na função de carregar clientes para garantir que o ID está sendo passado corretamente
+function carregarClientes() {
+    const tbody = document.getElementById('tabelaClientes');
+    tbody.innerHTML = '';
+
+    db.clientes.toArray().then(clientes => {
+        clientes.forEach(cliente => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${cliente.nome}</td>
+                <td>${cliente.cpfCnpj}</td>
+                <td>${cliente.telefone}</td>
+                <td>${cliente.email || '-'}</td>
+                <td>${formatarEndereco(cliente)}</td>
+                <td>${cliente.empresa || '-'}</td>
+                <td>
+                    <button class="btn btn-sm btn-info mr-2" onclick="editarCliente(${cliente.id})">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-sm btn-danger" onclick="excluirCliente(${cliente.id})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }).catch(error => {
+        console.error('Erro ao carregar clientes:', error);
+        mostrarToast('Erro', 'Não foi possível carregar a lista de clientes.', 'danger');
+    });
+}
+
+
+// Função para excluir cliente
+function excluirCliente(id) {
+    if (confirm('Tem certeza que deseja excluir este cliente?')) {
+        db.clientes.delete(id).then(() => {
+            carregarClientes();
+            mostrarToast('Sucesso', 'Cliente excluído com sucesso!', 'success');
+        }).catch(error => {
+            console.error('Erro ao excluir cliente:', error);
+            mostrarToast('Erro', 'Não foi possível excluir o cliente.', 'danger');
+        });
+    }
+}
+
+
+
+function inicializarComponentesClientes() {
+    // Aplicar máscaras nos campos
+    $('#telefoneCliente').mask('(00) 00000-0000');
+    $('#cepCliente').mask('00000-000');
+
+    // Remover máscaras antigas
+    $('#cpfCnpjCliente').unmask();
+
+    // Configurar máscara dinâmica para CPF/CNPJ
+    let tipoPessoa = 'CPF';
+    
+    $('#cpfCnpjCliente').on('keydown', function(e) {
+        const digit = e.key;
+        if (/^\d$/.test(digit)) {
+            const value = this.value.replace(/\D/g, '') + digit;
+            if (value.length <= 11) {
+                tipoPessoa = 'CPF';
+                $(this).mask('000.000.000-00');
+            } else {
+                tipoPessoa = 'CNPJ';
+                $(this).mask('00.000.000/0000-00');
+            }
+        }
+    });
+
+    // Buscar endereço pelo CEP
+    $('#cepCliente').on('blur', function() {
+        const cep = $(this).val().replace(/\D/g, '');
+        if (cep.length === 8) {
+            fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.erro) {
+                        $('#enderecoCliente').val(data.logradouro);
+                        $('#bairroCliente').val(data.bairro);
+                        $('#cidadeCliente').val(data.localidade);
+                        $('#estadoCliente').val(data.uf);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar CEP:', error);
+                });
+        }
+    });
+
+    // Configurar o evento de submissão do formulário
+    $('#formCliente').on('submit', async function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        
+        try {
+            const clienteId = $('#clienteId').val();
+            const cliente = {
+                nome: $('#nomeCliente').val(),
+                cpfCnpj: $('#cpfCnpjCliente').val(),
+                telefone: $('#telefoneCliente').val(),
+                email: $('#emailCliente').val(),
+                empresa: $('#empresaCliente').val(),
+                endereco: $('#enderecoCliente').val(),
+                numero: $('#numeroCliente').val(),
+                complemento: $('#complementoCliente').val(),
+                bairro: $('#bairroCliente').val(),
+                cidade: $('#cidadeCliente').val(),
+                estado: $('#estadoCliente').val(),
+                cep: $('#cepCliente').val()
+            };
+
+            // Validação básica
+            if (!cliente.nome || !cliente.cpfCnpj || !cliente.telefone) {
+                mostrarToast('Erro', 'Por favor, preencha todos os campos obrigatórios.', 'danger');
+                return false;
+            }
+
+            const numerosCpfCnpj = cliente.cpfCnpj.replace(/\D/g, '');
+            if (numerosCpfCnpj.length !== 11 && numerosCpfCnpj.length !== 14) {
+                mostrarToast('Erro', 'CPF/CNPJ inválido', 'danger');
+                return false;
+            }
+
+            if (clienteId) {
+                await db.clientes.update(parseInt(clienteId), cliente);
+            } else {
+                await db.clientes.add(cliente);
+            }
+
+            $('#modalCliente').modal('hide');
+            carregarClientes();
+            mostrarToast('Sucesso', `Cliente ${clienteId ? 'atualizado' : 'cadastrado'} com sucesso!`, 'success');
+            return false;
+        } catch (error) {
+            console.error('Erro ao salvar cliente:', error);
+            mostrarToast('Erro', 'Não foi possível salvar o cliente.', 'danger');
+            return false;
+        }
+    });
+
+    // Evento quando o modal é aberto
+    $('#modalCliente').on('show.bs.modal', function() {
+        const valor = $('#cpfCnpjCliente').val().replace(/\D/g, '');
+        if (valor.length > 11) {
+            $('#cpfCnpjCliente').mask('00.000.000/0000-00');
+        } else {
+            $('#cpfCnpjCliente').mask('000.000.000-00');
+        }
+    });
+
+    // Limpar formulário quando o modal for fechado
+    $('#modalCliente').on('hidden.bs.modal', function() {
+        $('#formCliente')[0].reset();
+        $('#clienteId').val('');
+    });
+}
+
+  
+
+
+
+
 
     // Função para carregar os dados da empresa do IndexedDB
     function carregarEmpresa() {
@@ -922,6 +1317,9 @@
 
         // Configurar o evento de submissão do formulário de cadastro de película
         $('#formCadastrarFilme').on('submit', salvarFilme);
+
+         // Inicializar componentes de clientes
+    inicializarComponentesClientes();
     });
 
     // Função para ajustar a altura do conteúdo principal dinamicamente
