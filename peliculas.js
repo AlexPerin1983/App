@@ -1,7 +1,6 @@
 // peliculas.js
 
-// Funções e variáveis relacionadas à seção "Películas"
-(function() {
+const PeliculasModule = (function() {
     // Lista de Categorias Predefinidas
     const categoriasPredefinidas = [
         "Nanocerâmico",
@@ -16,13 +15,106 @@
         "Híbrido"
     ];
 
+    // Carrega o HTML base da seção
+    function carregarHTML() {
+        const container = document.getElementById('peliculas');
+        container.innerHTML = `
+            <div class="container-fluid">
+                <h2>Películas</h2>
+                <p>Aqui você pode gerenciar as películas disponíveis.</p>
+                
+                <!-- Cards das Categorias -->
+                <div class="row" id="categoriasContainer">
+                    <!-- Cards serão inseridos aqui via JavaScript -->
+                </div>
+
+                <!-- Modal para Cadastrar/Editar Película -->
+                <div class="modal fade" id="modalCadastrarFilme" tabindex="-1" aria-labelledby="modalCadastrarFilmeLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form id="formCadastrarFilme">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modalCadastrarFilmeLabel">Cadastrar Película</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <input type="hidden" id="filmeId">
+                                    <input type="hidden" id="categoriaSelecionada">
+                                    <div class="form-group">
+                                        <label for="nomeFilme">Nome</label>
+                                        <input type="text" class="form-control" id="nomeFilme" placeholder="Digite o nome da película" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="marcaFilme">Marca da Película</label>
+                                        <input type="text" class="form-control" id="marcaFilme" placeholder="Digite a marca da película" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="descricaoFilme">Descrição</label>
+                                        <textarea class="form-control" id="descricaoFilme" rows="3" placeholder="Digite a descrição da película" required></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="precoFabricante">Preço Fabricante (R$)</label>
+                                        <input type="number" step="0.01" class="form-control" id="precoFabricante" placeholder="Digite o preço do fabricante" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="precoMaoObra">Preço Mão de Obra (R$)</label>
+                                        <input type="number" step="0.01" class="form-control" id="precoMaoObra" placeholder="Digite o preço da mão de obra" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="quantidadeEstoque">Quantidade em Estoque (m)</label>
+                                        <input type="number" step="0.01" class="form-control" id="quantidadeEstoque" placeholder="Digite a quantidade em estoque" required>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-primary">Salvar Película</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal para Exibir Lista de Películas por Categoria -->
+                <div class="modal fade" id="modalListaFilmes" tabindex="-1" aria-labelledby="modalListaFilmesLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalListaFilmesLabel">Películas da Categoria</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container-fluid">
+                                    <div class="row" id="listaFilmesCategoria">
+                                        <!-- Cards serão inseridos aqui via JavaScript -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Após carregar o HTML, configura os eventos do formulário
+        $('#formCadastrarFilme').on('submit', function(event) {
+            event.preventDefault();
+            salvarFilme();
+        });
+    }
+
     // Função para listar as categorias com contadores
     function listarCategoriasComContadores() {
         const container = $('#categoriasContainer');
-        container.empty(); // Limpa o container antes de adicionar os cards
+        container.empty();
 
         categoriasPredefinidas.forEach(categoria => {
-            // Conta a quantidade de películas na categoria atual
             db.filmes.where('categoria').equals(categoria).count().then(contador => {
                 const card = `
                     <div class="col-md-4 col-sm-6 mb-3">
@@ -33,8 +125,10 @@
                                     <h5 class="card-title">${categoria}</h5>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center w-100">
-                                    <button class="btn btn-primary btn-block mb-2" onclick="abrirModalCadastrarFilme('${categoria}')">Adicionar Película</button>
-                                    <button class="btn btn-info btn-block" onclick="abrirModalListaFilmes('${categoria}')">
+                                    <button class="btn btn-primary btn-block mb-2" onclick="PeliculasModule.abrirModalCadastrarFilme('${categoria}')">
+                                        Adicionar Película
+                                    </button>
+                                    <button class="btn btn-info btn-block" onclick="PeliculasModule.abrirModalListaFilmes('${categoria}')">
                                         <i class="fas fa-eye"></i> ${contador} ${contador === 1 ? 'Película' : 'Películas'}
                                     </button>
                                 </div>
@@ -45,93 +139,62 @@
                 container.append(card);
             }).catch(err => {
                 console.error(`Erro ao contar películas na categoria ${categoria}:`, err);
+                mostrarToast('Erro', `Erro ao contar películas na categoria ${categoria}`, 'danger');
             });
         });
     }
 
-    // Função para abrir o modal de cadastro de película (Adicionar)
-    window.abrirModalCadastrarFilme = function(categoria) {
-        $('#categoriaSelecionada').val(categoria); // Define a categoria selecionada no campo oculto
-        $('#modalCadastrarFilmeLabel').text(`Cadastrar Película - ${categoria}`); // Atualiza o título do modal
-        $('#formCadastrarFilme')[0].reset(); // Limpa os campos do formulário
-        $('#filmeId').val(''); // Assegura que não há ID definido
-        // Reconfigurar o formulário para adicionar novas películas
-        $('#formCadastrarFilme').off('submit').on('submit', salvarFilme);
-        $('#modalCadastrarFilme').modal('show'); // Exibe o modal
+    // Função para abrir o modal de cadastro
+    function abrirModalCadastrarFilme(categoria) {
+        $('#categoriaSelecionada').val(categoria);
+        $('#modalCadastrarFilmeLabel').text(`Cadastrar Película - ${categoria}`);
+        $('#formCadastrarFilme')[0].reset();
+        $('#filmeId').val('');
+        $('#modalCadastrarFilme').modal('show');
     }
 
-    // Função para salvar a película no IndexedDB
-    window.salvarFilme = function(event) {
-        event.preventDefault(); // Previne o comportamento padrão do formulário
-
-        const filmeId = $('#filmeId').val(); // Verifica se é uma edição
-        const nome = $('#nomeFilme').val();
-        const marca = $('#marcaFilme').val();
-        const descricao = $('#descricaoFilme').val();
-        const precoFabricante = parseFloat($('#precoFabricante').val());
-        const precoMaoObra = parseFloat($('#precoMaoObra').val());
-        const quantidadeEstoque = parseFloat($('#quantidadeEstoque').val());
-        const categoria = $('#categoriaSelecionada').val();
+    // Função para salvar película
+    function salvarFilme() {
+        const filmeId = $('#filmeId').val();
+        const filme = {
+            nome: $('#nomeFilme').val(),
+            marca: $('#marcaFilme').val(),
+            descricao: $('#descricaoFilme').val(),
+            precoFabricante: parseFloat($('#precoFabricante').val()),
+            precoMaoObra: parseFloat($('#precoMaoObra').val()),
+            quantidadeEstoque: parseFloat($('#quantidadeEstoque').val()),
+            categoria: $('#categoriaSelecionada').val()
+        };
 
         // Validação básica
-        if (!nome || !marca || !descricao || isNaN(precoFabricante) || isNaN(precoMaoObra) || isNaN(quantidadeEstoque) || !categoria) {
+        if (!filme.nome || !filme.marca || !filme.descricao || 
+            isNaN(filme.precoFabricante) || isNaN(filme.precoMaoObra) || 
+            isNaN(filme.quantidadeEstoque) || !filme.categoria) {
             mostrarToast('Erro', 'Por favor, preencha todos os campos corretamente.', 'danger');
             return;
         }
 
-        if (filmeId) {
-            // É uma edição
-            const filmeAtualizado = {
-                nome,
-                marca,
-                descricao,
-                precoFabricante,
-                precoMaoObra,
-                quantidadeEstoque,
-                categoria
-            };
+        const saveOperation = filmeId ? 
+            db.filmes.update(parseInt(filmeId), filme) : 
+            db.filmes.add(filme);
 
-            // Atualiza a película no banco de dados
-            db.filmes.update(parseInt(filmeId), filmeAtualizado).then(() => {
-                $('#modalCadastrarFilme').modal('hide'); // Fecha o modal de cadastro/edição
-                listarCategoriasComContadores(); // Atualiza os contadores das categorias
-                mostrarToast('Sucesso', 'Película atualizada com sucesso!', 'success');
-            }).catch(err => {
-                console.error(err);
-                mostrarToast('Erro', 'Erro ao atualizar a película.', 'danger');
-            });
-        } else {
-            // É uma adição
-            const filme = {
-                nome,
-                marca,
-                descricao,
-                precoFabricante,
-                precoMaoObra,
-                quantidadeEstoque,
-                categoria
-            };
-
-            // Adiciona a película ao banco de dados
-            db.filmes.add(filme).then(() => {
-                $('#modalCadastrarFilme').modal('hide'); // Fecha o modal
-                listarCategoriasComContadores(); // Atualiza os contadores das categorias
-                mostrarToast('Sucesso', 'Película cadastrada com sucesso!', 'success');
-            }).catch(err => {
-                console.error(err);
-                mostrarToast('Erro', 'Erro ao cadastrar a película.', 'danger');
-            });
-        }
+        saveOperation.then(() => {
+            $('#modalCadastrarFilme').modal('hide');
+            listarCategoriasComContadores();
+            mostrarToast('Sucesso', `Película ${filmeId ? 'atualizada' : 'cadastrada'} com sucesso!`, 'success');
+        }).catch(err => {
+            console.error('Erro ao salvar película:', err);
+            mostrarToast('Erro', 'Erro ao salvar a película.', 'danger');
+        });
     }
 
-    // Função para abrir o modal de lista de películas por categoria
-    window.abrirModalListaFilmes = function(categoria) {
-        $('#modalListaFilmesLabel').text(`Películas da Categoria - ${categoria}`); // Atualiza o título do modal
+    // Função para abrir o modal de lista de películas
+    function abrirModalListaFilmes(categoria) {
+        $('#modalListaFilmesLabel').text(`Películas da Categoria - ${categoria}`);
 
-        // Recupera as películas da categoria selecionada
         db.filmes.where('categoria').equals(categoria).toArray().then(filmes => {
             const container = $('#listaFilmesCategoria');
-            container.empty(); // Limpa a área antes de adicionar os cards
+            container.empty();
 
             if (filmes.length === 0) {
                 container.append('<div class="col-12 text-center">Nenhuma película cadastrada nesta categoria.</div>');
@@ -140,16 +203,20 @@
                     const card = `
                         <div class="col-md-4 col-sm-6 mb-3">
                             <div class="card">
-                                <div class="card-body d-flex flex-column">
+                                <div class="card-body">
                                     <h5 class="card-title">${filme.nome}</h5>
                                     <h6 class="card-subtitle mb-2 text-muted">${filme.marca}</h6>
                                     <p class="card-text">${filme.descricao}</p>
                                     <p class="card-text"><strong>Preço Fabricante:</strong> R$ ${filme.precoFabricante.toFixed(2)}</p>
                                     <p class="card-text"><strong>Preço Mão de Obra:</strong> R$ ${filme.precoMaoObra.toFixed(2)}</p>
                                     <p class="card-text"><strong>Quantidade em Estoque:</strong> ${filme.quantidadeEstoque.toFixed(2)} m</p>
-                                    <div class="mt-auto btn-group">
-                                        <button class="btn btn-info btn-sm mr-2 editar-filme" data-id="${filme.id}" data-categoria="${categoria}"><i class="fas fa-edit"></i> Editar</button>
-                                        <button class="btn btn-danger btn-sm excluir-filme" data-id="${filme.id}" data-categoria="${categoria}"><i class="fas fa-trash-alt"></i> Excluir</button>
+                                    <div class="btn-group w-100">
+                                        <button class="btn btn-info btn-sm" onclick="PeliculasModule.editarFilme(${filme.id}, '${categoria}')">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </button>
+                                        <button class="btn btn-danger btn-sm" onclick="PeliculasModule.excluirFilme(${filme.id}, '${categoria}')">
+                                            <i class="fas fa-trash"></i> Excluir
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -159,32 +226,17 @@
                 });
             }
 
-            $('#modalListaFilmes').modal('show'); // Exibe o modal com a lista de películas
+            $('#modalListaFilmes').modal('show');
         }).catch(err => {
-            console.error(`Erro ao recuperar películas da categoria ${categoria}:`, err);
+            console.error('Erro ao carregar películas:', err);
             mostrarToast('Erro', 'Erro ao carregar a lista de películas.', 'danger');
         });
     }
 
-    // Função para excluir uma película
-    window.excluirFilme = function(id, categoria) {
-        if(confirm('Tem certeza que deseja excluir esta película?')) {
-            db.filmes.delete(id).then(() => {
-                listarCategoriasComContadores(); // Atualiza os contadores das categorias
-                abrirModalListaFilmes(categoria); // Atualiza a lista no modal
-                mostrarToast('Sucesso', 'Película excluída com sucesso!', 'success');
-            }).catch(err => {
-                console.error(err);
-                mostrarToast('Erro', 'Erro ao excluir a película.', 'danger');
-            });
-        }
-    }
-
-    // Função para editar uma película
-    window.editarFilme = function(id, categoria) {
+    // Função para editar película
+    function editarFilme(id, categoria) {
         db.filmes.get(id).then(filme => {
-            if(filme) {
-                // Preencher os campos do formulário com os dados da película
+            if (filme) {
                 $('#filmeId').val(filme.id);
                 $('#nomeFilme').val(filme.nome);
                 $('#marcaFilme').val(filme.marca);
@@ -194,85 +246,53 @@
                 $('#quantidadeEstoque').val(filme.quantidadeEstoque);
                 $('#categoriaSelecionada').val(filme.categoria);
 
-                // Atualizar o título do modal para "Editar Película"
                 $('#modalCadastrarFilmeLabel').text(`Editar Película - ${categoria}`);
-
-                // Alterar o comportamento do formulário para salvar a edição
-                $('#formCadastrarFilme').off('submit').on('submit', function(event) {
-                    event.preventDefault(); // Previne o comportamento padrão do formulário
-
-                    // Coleta os dados atualizados do formulário
-                    const filmeId = $('#filmeId').val();
-                    const nome = $('#nomeFilme').val();
-                    const marca = $('#marcaFilme').val();
-                    const descricao = $('#descricaoFilme').val();
-                    const precoFabricante = parseFloat($('#precoFabricante').val());
-                    const precoMaoObra = parseFloat($('#precoMaoObra').val());
-                    const quantidadeEstoque = parseFloat($('#quantidadeEstoque').val());
-                    const categoriaAtualizada = $('#categoriaSelecionada').val();
-
-                    // Validação básica
-                    if (!nome || !marca || !descricao || isNaN(precoFabricante) || isNaN(precoMaoObra) || isNaN(quantidadeEstoque) || !categoriaAtualizada) {
-                        mostrarToast('Erro', 'Por favor, preencha todos os campos corretamente.', 'danger');
-                        return;
-                    }
-
-                    // Cria o objeto atualizado da película
-                    const filmeAtualizado = {
-                        nome,
-                        marca,
-                        descricao,
-                        precoFabricante,
-                        precoMaoObra,
-                        quantidadeEstoque,
-                        categoria: categoriaAtualizada
-                    };
-
-                    // Atualiza a película no banco de dados
-                    db.filmes.update(parseInt(filmeId), filmeAtualizado).then(() => {
-                        $('#modalCadastrarFilme').modal('hide'); // Fecha o modal de cadastro/edição
-                        $('#modalListaFilmes').modal('hide'); // Fecha o modal de lista
-                        listarCategoriasComContadores(); // Atualiza os contadores das categorias
-                        mostrarToast('Sucesso', 'Película atualizada com sucesso!', 'success');
-                        // Reconfigurar o formulário para adicionar novas películas
-                        $('#formCadastrarFilme').off('submit').on('submit', salvarFilme);
-                    }).catch(err => {
-                        console.error(err);
-                        mostrarToast('Erro', 'Erro ao atualizar a película.', 'danger');
-                    });
-                });
-
-                // Fechar o modal de lista antes de abrir o modal de cadastro/edição
                 $('#modalListaFilmes').modal('hide');
-
-                // Abrir o modal de cadastro/edição
                 $('#modalCadastrarFilme').modal('show');
             }
         }).catch(err => {
-            console.error(err);
-            mostrarToast('Erro', 'Erro ao recuperar os dados da película.', 'danger');
+            console.error('Erro ao carregar película para edição:', err);
+            mostrarToast('Erro', 'Erro ao carregar os dados da película.', 'danger');
         });
     }
 
-    // Eventos para botões Editar e Excluir dentro do modalListaFilmes
-    $(document).on('click', '.editar-filme', function() {
-        const id = $(this).data('id');
-        const categoria = $(this).data('categoria');
-        editarFilme(id, categoria);
-    });
+    // Função para excluir película
+    function excluirFilme(id, categoria) {
+        if (confirm('Tem certeza que deseja excluir esta película?')) {
+            db.filmes.delete(id).then(() => {
+                listarCategoriasComContadores();
+                abrirModalListaFilmes(categoria);
+                mostrarToast('Sucesso', 'Película excluída com sucesso!', 'success');
+            }).catch(err => {
+                console.error('Erro ao excluir película:', err);
+                mostrarToast('Erro', 'Erro ao excluir a película.', 'danger');
+            });
+        }
+    }
 
-    $(document).on('click', '.excluir-filme', function() {
-        const id = $(this).data('id');
-        const categoria = $(this).data('categoria');
-        excluirFilme(id, categoria);
-    });
+    // Inicialização do módulo
+    function init() {
+        document.addEventListener('section:shown', function(e) {
+            if (e.detail.sectionId === 'peliculas') {
+                carregarHTML();
+                listarCategoriasComContadores();
+            }
+        });
+    }
 
-    // Inicialização ao carregar a página
-    $(document).ready(function() {
-        listarCategoriasComContadores();
-
-        // Configurar o evento de submissão do formulário de cadastro de película
-        $('#formCadastrarFilme').on('submit', salvarFilme);
-    });
-
+    // Retorna as funções públicas
+    return {
+        init,
+        abrirModalCadastrarFilme,
+        abrirModalListaFilmes,
+        editarFilme,
+        excluirFilme,
+        salvarFilme
+    };
 })();
+
+// Inicializa o módulo
+document.addEventListener('DOMContentLoaded', () => PeliculasModule.init());
+
+// Expõe funções globalmente
+window.PeliculasModule = PeliculasModule;
