@@ -17,6 +17,50 @@
 
     <!-- Seu CSS personalizado -->
     <style>
+        /* Estilos específicos para os cards de serviços */
+#servicos .card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+#servicos .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+#servicos .card-header {
+    border-radius: 10px 10px 0 0;
+    padding: 1.5rem;
+}
+
+#servicos .card-header i {
+    margin-bottom: 1rem;
+}
+
+#servicos .btn {
+    width: 100%;
+    margin-bottom: 0.5rem;
+    transition: all 0.3s;
+}
+
+#servicos .btn:hover {
+    transform: translateY(-2px);
+}
+
+/* Cores específicas para cada tipo de serviço */
+#servicos .card-header.bg-primary i {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+#servicos .card-header.bg-success i {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+#servicos .card-header.bg-info i {
+    color: rgba(255, 255, 255, 0.9);
+}
 /* Estilos personalizados para os cards de categorias */
 .card {
     cursor: pointer;
@@ -727,6 +771,8 @@
       </div>
     </div>
   </div>
+</div> <!-- Falta fechar o container-fluid -->
+</div> 
   
   
   
@@ -767,14 +813,127 @@
             </div>
         </div>
 
-        <!-- Seção "Serviços" -->
-        <div id="servicos" class="content-section">
-            <div class="container-fluid">
-                <h2>Serviços</h2>
-                <p>Aqui você pode gerenciar os serviços oferecidos pela sua empresa.</p>
-                <!-- Conteúdo da seção "Serviços" -->
+<!-- Seção "Serviços" -->
+<div id="servicos" class="content-section">
+    <div class="container-fluid">
+        <!-- Cabeçalho da seção -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Serviços</h2>
+        </div>
+
+        <!-- Cards dos tipos de serviços -->
+        <div class="row">
+            <!-- Card PPF (Paint Protection Film) -->
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-header text-center bg-primary text-white">
+                        <i class="fas fa-shield-alt fa-3x mb-2"></i>
+                        <h5 class="card-title">PPF - Paint Protection Film</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center mb-3">
+                            <p class="text-muted">Proteção de Pintura Automotiva</p>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <button class="btn btn-primary mb-2" onclick="abrirModalAdicionarServico('ppf')">
+                                <i class="fas fa-plus mr-2"></i>
+                                Adicionar Serviço
+                            </button>
+                            <button class="btn btn-info" onclick="abrirModalListaServicos('ppf')">
+                                <i class="fas fa-list mr-2"></i>
+                                Ver Serviços (<span class="contador-servicos-ppf">0</span>)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card Envelopamento -->
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-header text-center bg-success text-white">
+                        <i class="fas fa-car fa-3x mb-2"></i>
+                        <h5 class="card-title">Envelopamento</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center mb-3">
+                            <p class="text-muted">Personalização Automotiva</p>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <button class="btn btn-success mb-2" onclick="abrirModalAdicionarServico('envelopamento')">
+                                <i class="fas fa-plus mr-2"></i>
+                                Adicionar Serviço
+                            </button>
+                            <button class="btn btn-info" onclick="abrirModalListaServicos('envelopamento')">
+                                <i class="fas fa-list mr-2"></i>
+                                Ver Serviços (<span class="contador-servicos-envelopamento">0</span>)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card Window Film -->
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-header text-center bg-info text-white">
+                        <i class="fas fa-window-maximize fa-3x mb-2"></i>
+                        <h5 class="card-title">Window Film</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center mb-3">
+                            <p class="text-muted">Películas Automotivas</p>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <button class="btn btn-info mb-2" onclick="abrirModalAdicionarServico('window-film')">
+                                <i class="fas fa-plus mr-2"></i>
+                                Adicionar Serviço
+                            </button>
+                            <button class="btn btn-info" onclick="abrirModalListaServicos('window-film')">
+                                <i class="fas fa-list mr-2"></i>
+                                Ver Serviços (<span class="contador-servicos-window-film">0</span>)
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+    </div> <!-- /.container-fluid -->
+</div> <!-- /#servicos -->
+
+<!-- Modal de Serviço (Adicionar/Editar) -->
+<div class="modal fade" id="modalServico" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalServicoLabel">Adicionar Serviço</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- O formulário será injetado aqui via JavaScript -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Lista de Serviços -->
+<div class="modal fade" id="modalListaServicos" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalListaServicosLabel">Lista de Serviços</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- A lista será injetada aqui via JavaScript -->
+            </div>
+        </div>
+    </div>
+</div>
 
         <!-- Seção "Agendamentos" -->
         <div id="agendamento" class="content-section">
@@ -842,46 +1001,63 @@
 <script>
     // Função para mostrar a seção selecionada
     function showSection(sectionId) {
-        // Remove a classe 'active' de todas as seções
-        $('.content-section').removeClass('active');
-        // Adiciona a classe 'active' à seção selecionada
-        $('#' + sectionId).addClass('active');
-
-        // Atualiza o estado dos itens do menu
-        $('.menu-item').removeClass('active');
-        $('.menu-item').each(function() {
-            if ($(this).attr('onclick').includes("'" + sectionId + "'")) {
-                $(this).addClass('active');
-            }
-        });
-
-        // Fecha a barra lateral em dispositivos móveis
-        if ($(window).width() < 768) {
-            $('#sidebar').removeClass('active');
-            $('#overlay').removeClass('active');
-        }
-
-        // Carregar conteúdo específico ao entrar na seção, se necessário
-        if (sectionId === 'clientes') {
-            carregarClientes();
-        }
-        if (sectionId === 'peliculas') {
-            listarCategoriasComContadores(); // Atualiza os contadores das categorias quando a seção é aberta
-        }
+    console.log('Mostrando seção:', sectionId); // Debug
+    
+    // Remove a classe 'active' de todas as seções
+    document.querySelectorAll('.content-section').forEach(section => {
+        section.classList.remove('active');
+    });
+    
+    // Adiciona a classe 'active' à seção selecionada
+    const selectedSection = document.getElementById(sectionId);
+    if (selectedSection) {
+        selectedSection.classList.add('active');
+        console.log('Seção ativada:', sectionId); // Debug
     }
+
+    // Atualiza o estado dos itens do menu
+    document.querySelectorAll('.menu-item').forEach(item => {
+        if (item.getAttribute('onclick').includes(sectionId)) {
+            item.classList.add('active');
+        } else {
+            item.classList.remove('active');
+        }
+    });
+
+    // Fecha a barra lateral em dispositivos móveis
+    if (window.innerWidth < 768) {
+        document.getElementById('sidebar').classList.remove('active');
+        document.getElementById('overlay').classList.remove('active');
+    }
+}
 
     // Função para alternar a visibilidade da barra lateral em dispositivos móveis
     function toggleSidebar() {
         $('#sidebar').toggleClass('active');
         $('#overlay').toggleClass('active');
     }
+// Configuração do IndexedDB usando Dexie.js
+var db = new Dexie('CarFilmProDB');
 
-    // Configuração do IndexedDB usando Dexie.js
-    var db = new Dexie('CarFilmProDB');
-    db.version(3).stores({
+// Definição do schema do banco de dados
+db.version(4).stores({
     empresa: 'id,nome,cnpj,cpf,whatsapp,email,cep,cidade,bairro,rua,numero,corTema,logo',
     clientes: '++id,nome,cpfCnpj,telefone,email,empresa,endereco,numero,complemento,bairro,cidade,estado,cep',
-    filmes: '++id,nome,descricao,marca,precoFabricante,precoMaoObra,quantidadeEstoque,categoria'
+    filmes: '++id,nome,descricao,marca,precoFabricante,precoMaoObra,quantidadeEstoque,categoria',
+    servicos: '++id,tipo,nome,descricao,preco,observacoes,categoria'
+}).upgrade(tx => {
+    // Código de migração, se necessário
+});
+
+// Em caso de erro na abertura do banco
+db.open().catch(error => {
+    console.error("Erro ao abrir o banco de dados:", error);
+    if (error.name === 'VersionError') {
+        // Se houver erro de versão, deleta o banco e recarrega a página
+        Dexie.delete('CarFilmProDB').then(() => {
+            window.location.reload();
+        });
+    }
 });
     // Variáveis globais e funções para "Minha Empresa"
     var selectedColor = '#0D6EFD'; // Cor padrão
@@ -1624,6 +1800,8 @@ function inicializarComponentesClientes() {
     });
 
 </script>
+
+<script src="servicos.js"></script>
 
 
 </body>
