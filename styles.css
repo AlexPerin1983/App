@@ -1,422 +1,504 @@
-/* Estilos específicos para os cards de serviços */
-#servicos .card {
-border: none;
-border-radius: 10px;
-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-transition: transform 0.3s, box-shadow 0.3s;
-}
-
-#servicos .card:hover {
-transform: translateY(-5px);
-box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-#servicos .card-header {
-border-radius: 10px 10px 0 0;
-padding: 1.5rem;
-}
-
-#servicos .card-header i {
-margin-bottom: 1rem;
-}
-
-#servicos .btn {
-width: 100%;
-margin-bottom: 0.5rem;
-transition: all 0.3s;
-}
-
-#servicos .btn:hover {
-transform: translateY(-2px);
-}
-
-/* Cores específicas para cada tipo de serviço */
-#servicos .card-header.bg-primary i {
-color: rgba(255, 255, 255, 0.9);
-}
-
-#servicos .card-header.bg-success i {
-color: rgba(255, 255, 255, 0.9);
-}
-
-#servicos .card-header.bg-info i {
-color: rgba(255, 255, 255, 0.9);
-}
-/* Estilos personalizados para os cards de categorias */
-.card {
-cursor: pointer;
-transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.card:hover {
-transform: translateY(-5px);
-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.btn-info {
-display: flex;
-align-items: center;
-}
-
-.btn-info i {
-margin-right: 5px;
-}
-
-/* Estilos para os cards de películas no modal */
-#modalListaFilmes .card {
-min-height: 100%;
-}
-
-@media (max-width: 576px) {
-/* Ajustes para dispositivos móveis */
-#modalListaFilmes .card-body {
-padding: 10px;
-}
-
-#modalListaFilmes .card-title {
-font-size: 1.1rem;
-}
-
-#modalListaFilmes .card-subtitle {
-font-size: 0.9rem;
-}
-
-#modalListaFilmes .btn {
-font-size: 0.8rem;
-padding: 5px 10px;
-}
-}
 
 
-/* Definição de variáveis CSS para facilitar a mudança de cores */
-:root {
-    --primary-color: #0D6EFD; /* Cor padrão do tema */
-}
-
-/* Estilos básicos para o corpo da página */
-body {
-    margin: 0;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background: #F8F9FA; /* Cor de fundo */
-    font-size: 14px;
-}
-
-/* Estilos para o cabeçalho */
-.header {
-    background-color: var(--primary-color); /* Utiliza a cor primária definida */
-    color: white;
-    padding: 0 16px;
-    display: flex;
-    align-items: center;
-    height: 56px;
-    position: fixed; /* Fixa o cabeçalho no topo */
-    top: 0;
-    width: 100%;
-    z-index: 1000; /* Garante que o cabeçalho fique acima de outros elementos */
-}
-
-/* Botão para alternar a barra lateral (visível em dispositivos móveis) */
-.header .toggle-menu {
-    font-size: 24px;
-    cursor: pointer;
-    margin-right: 16px;
-}
-
-/* Logo da empresa no cabeçalho */
-.header .logo {
-    font-weight: bold;
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-}
-.header .logo img {
-    height: 40px;
-    width: 40px;
-    margin-right: 8px;
-    object-fit: cover;
-}
-
-/* Informações da empresa no cabeçalho (aparecem se houver dados cadastrados) */
-.header .company-info {
-    margin-left: auto;
-    font-size: 14px;
-    display: none; /* Oculto por padrão */
-    align-items: center;
-}
-.header .company-info.visible {
-    display: flex; /* Exibe quando possui a classe 'visible' */
-}
-
-/* Estilos para a barra lateral (menu) */
-.sidebar {
-    background: #fff;
-    position: fixed;
-    top: 56px; /* Abaixo do cabeçalho */
-    left: -250px; /* Oculta a barra lateral inicialmente */
-    height: calc(100vh - 56px); /* Altura total da tela menos a altura do cabeçalho */
-    width: 250px;
-    overflow-y: auto; /* Permite rolagem se o conteúdo exceder a altura */
-    border-right: 1px solid #dee2e6;
-    transition: all 0.3s; /* Transição suave ao mostrar/ocultar */
-    z-index: 1001;
-}
-.sidebar.active {
-    left: 0; /* Exibe a barra lateral quando possui a classe 'active' */
-}
-
-/* Estilos para os itens do menu */
-.menu-item {
-    padding: 12px 16px;
-    color: #495057;
-    font-size: 14px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-}
-.menu-item:hover, .menu-item.active {
-    background-color: var(--primary-color); /* Muda a cor de fundo ao passar o mouse ou quando ativo */
-    color: white;
-}
-.menu-item i {
-    margin-right: 8px; /* Espaço entre o ícone e o texto */
-}
-
-/* Informações do usuário no menu lateral (visível em dispositivos móveis) */
-.sidebar .user-info {
-    padding: 12px;
-    text-align: center;
-    border-bottom: 1px solid #dee2e6;
-}
-.sidebar .user-info .user-name {
-    font-size: 16px;
-    font-weight: bold;
-}
-.sidebar .user-info .user-cnpj {
-    font-size: 12px;
-    color: #6c757d;
-}
-.sidebar .user-info img {
-    border-radius: 50%; /* Deixa a imagem circular */
-    width: 80px;
-    height: 80px;
-    margin-bottom: 8px;
-    object-fit: cover;
-}
-
-/* Estilos para o conteúdo principal */
-.main-content {
-    margin-top: 56px; /* Compensa a altura do cabeçalho */
-    padding: 16px;
-    transition: all 0.3s;
-}
-/* Esconde todas as seções por padrão */
+/* Estilos para as seções de conteúdo */
 .content-section {
     display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
-/* Exibe a seção ativa */
+
 .content-section.active {
     display: block;
+    opacity: 1;
 }
 
-/* Overlay para dispositivos móveis (quando a barra lateral está ativa) */
-.overlay {
-    display: none;
-    position: fixed;
-    top: 56px;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5); /* Fundo semitransparente */
-    z-index: 1000;
-}
-.overlay.active {
-    display: block;
+/* Garantir que o conteúdo principal ocupe toda a altura disponível */
+#mainContent {
+    min-height: calc(100vh - 56px);
+    padding: 20px;
+    margin-left: 0;
+    transition: margin-left 0.3s;
 }
 
-/* Estilos para dispositivos com largura mínima de 768px (desktop) */
 @media (min-width: 768px) {
-    .sidebar {
-        left: 0; /* Exibe a barra lateral permanentemente */
+    #mainContent {
+        margin-left: 250px;
     }
-    .header .toggle-menu {
-        display: none; /* Oculta o botão de menu no cabeçalho */
+}
+
+
+
+/* Estilos para os cards do dashboard */
+
+
+.border-left-primary {
+    border-left: 4px solid var(--primary-color);
+}
+
+.border-left-success {
+    border-left: 4px solid #198754;
+}
+
+.border-left-info {
+    border-left: 4px solid #0dcaf0;
+}
+
+.text-gray-300 {
+    color: #dddfeb!important;
+}
+
+.text-gray-800 {
+    color: #5a5c69!important;
+}
+
+/* Estilos para os botões de atalho */
+#inicio .btn-light {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    transition: all 0.3s;
+}
+
+#inicio .btn-light:hover {
+    background-color: #e9ecef;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+#inicio .btn-light i {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+/* Animação para os cards */
+#inicio .card {
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+#inicio .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Estilos específicos para os cards de serviços */
+
+#servicos .card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
     }
-    .main-content {
-        margin-left: 250px; /* Compensa a largura da barra lateral */
+    
+    #servicos .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     }
-    .overlay {
-        display: none; /* Oculta o overlay */
+    
+    #servicos .card-header {
+    border-radius: 10px 10px 0 0;
+    padding: 1.5rem;
     }
-    .header .company-info {
+    
+    #servicos .card-header i {
+    margin-bottom: 1rem;
+    }
+    
+    #servicos .btn {
+    width: 100%;
+    margin-bottom: 0.5rem;
+    transition: all 0.3s;
+    }
+    
+    #servicos .btn:hover {
+    transform: translateY(-2px);
+    }
+    
+    /* Cores específicas para cada tipo de serviço */
+    #servicos .card-header.bg-primary i {
+    color: rgba(255, 255, 255, 0.9);
+    }
+    
+    #servicos .card-header.bg-success i {
+    color: rgba(255, 255, 255, 0.9);
+    }
+    
+    #servicos .card-header.bg-info i {
+    color: rgba(255, 255, 255, 0.9);
+    }
+    /* Estilos personalizados para os cards de categorias */
+    .card {
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .btn-info {
+    display: flex;
+    align-items: center;
+    }
+    
+    .btn-info i {
+    margin-right: 5px;
+    }
+    
+    /* Estilos para os cards de películas no modal */
+    #modalListaFilmes .card {
+    min-height: 100%;
+    }
+    
+    @media (max-width: 576px) {
+    /* Ajustes para dispositivos móveis */
+    #modalListaFilmes .card-body {
+    padding: 10px;
+    }
+    
+    #modalListaFilmes .card-title {
+    font-size: 1.1rem;
+    }
+    
+    #modalListaFilmes .card-subtitle {
+    font-size: 0.9rem;
+    }
+    
+    #modalListaFilmes .btn {
+    font-size: 0.8rem;
+    padding: 5px 10px;
+    }
+    }
+    
+    
+    /* Definição de variáveis CSS para facilitar a mudança de cores */
+    :root {
+        --primary-color: #0D6EFD; /* Cor padrão do tema */
+    }
+    
+    /* Estilos básicos para o corpo da página */
+    body {
+        margin: 0;
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        background: #F8F9FA; /* Cor de fundo */
         font-size: 14px;
     }
-}
-
-/* Ajustes de estilo para dispositivos móveis */
-@media (max-width: 767.98px) {
+    
+    /* Estilos para o cabeçalho */
     .header {
-        padding: 0 12px;
-        height: 50px;
+        background-color: var(--primary-color); /* Utiliza a cor primária definida */
+        color: white;
+        padding: 0 16px;
+        display: flex;
+        align-items: center;
+        height: 56px;
+        position: fixed; /* Fixa o cabeçalho no topo */
+        top: 0;
+        width: 100%;
+        z-index: 1000; /* Garante que o cabeçalho fique acima de outros elementos */
     }
+    
+    /* Botão para alternar a barra lateral (visível em dispositivos móveis) */
+    .header .toggle-menu {
+        font-size: 24px;
+        cursor: pointer;
+        margin-right: 16px;
+    }
+    
+    /* Logo da empresa no cabeçalho */
     .header .logo {
-        font-size: 16px;
+        font-weight: bold;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
     }
     .header .logo img {
-        height: 32px;
-        width: 32px;
+        height: 40px;
+        width: 40px;
         margin-right: 8px;
+        object-fit: cover;
     }
-    .menu-item {
-        padding: 8px 12px;
+    
+    /* Informações da empresa no cabeçalho (aparecem se houver dados cadastrados) */
+    .header .company-info {
+        margin-left: auto;
         font-size: 14px;
+        display: none; /* Oculto por padrão */
+        align-items: center;
     }
+    .header .company-info.visible {
+        display: flex; /* Exibe quando possui a classe 'visible' */
+    }
+    
+    /* Estilos para a barra lateral (menu) */
+    .sidebar {
+        background: #fff;
+        position: fixed;
+        top: 56px; /* Abaixo do cabeçalho */
+        left: -250px; /* Oculta a barra lateral inicialmente */
+        height: calc(100vh - 56px); /* Altura total da tela menos a altura do cabeçalho */
+        width: 250px;
+        overflow-y: auto; /* Permite rolagem se o conteúdo exceder a altura */
+        border-right: 1px solid #dee2e6;
+        transition: all 0.3s; /* Transição suave ao mostrar/ocultar */
+        z-index: 1001;
+    }
+    .sidebar.active {
+        left: 0; /* Exibe a barra lateral quando possui a classe 'active' */
+    }
+    
+    /* Estilos para os itens do menu */
+    .menu-item {
+        padding: 12px 16px;
+        color: #495057;
+        font-size: 14px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+    }
+    .menu-item:hover, .menu-item.active {
+        background-color: var(--primary-color); /* Muda a cor de fundo ao passar o mouse ou quando ativo */
+        color: white;
+    }
+    .menu-item i {
+        margin-right: 8px; /* Espaço entre o ícone e o texto */
+    }
+    
+    /* Informações do usuário no menu lateral (visível em dispositivos móveis) */
     .sidebar .user-info {
         padding: 12px;
+        text-align: center;
+        border-bottom: 1px solid #dee2e6;
     }
     .sidebar .user-info .user-name {
-        font-size: 14px;
+        font-size: 16px;
+        font-weight: bold;
+    }
+    .sidebar .user-info .user-cnpj {
+        font-size: 12px;
+        color: #6c757d;
     }
     .sidebar .user-info img {
-        width: 60px;
-        height: 60px;
+        border-radius: 50%; /* Deixa a imagem circular */
+        width: 80px;
+        height: 80px;
+        margin-bottom: 8px;
+        object-fit: cover;
     }
+    
+    /* Estilos para o conteúdo principal */
     .main-content {
-        padding: 12px;
+        margin-top: 56px; /* Compensa a altura do cabeçalho */
+        padding: 16px;
+        transition: all 0.3s;
     }
-    h2 {
-        font-size: 20px;
+    /* Esconde todas as seções por padrão */
+    .content-section {
+        display: none;
     }
-    .btn {
-        font-size: 14px;
-        padding: 6px 12px;
+    /* Exibe a seção ativa */
+    .content-section.active {
+        display: block;
     }
-    label {
-        font-size: 14px;
+    
+    /* Overlay para dispositivos móveis (quando a barra lateral está ativa) */
+    .overlay {
+        display: none;
+        position: fixed;
+        top: 56px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5); /* Fundo semitransparente */
+        z-index: 1000;
     }
-    input, select, textarea {
-        font-size: 14px;
-        padding: 6px 8px;
+    .overlay.active {
+        display: block;
     }
-}
-
-/* Estilo para a paleta de cores */
-.color-palette {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-.color-swatch {
-    width: 32px;
-    height: 32px;
-    border-radius: 4px;
-    cursor: pointer;
-    border: 2px solid transparent;
-}
-.color-swatch.selected {
-    border-color: #000; /* Destaque para a cor selecionada */
-}
-
-/* Estilos personalizados para botões */
-.btn-primary {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-}
-.btn-primary:hover {
-    background-color: #0056b3;
-    border-color: #0056b3;
-}
-.card {
-    border: none; /* Remove a borda padrão */
-    border-radius: 10px; /* Bordas arredondadas */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
-    transition: transform 0.3s, box-shadow 0.3s; /* Transição suave para hover */
-    background-color: #ffffff; /* Fundo branco */
-}
-
-.card:hover {
-    transform: translateY(-10px); /* Elevação ao passar o mouse */
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); /* Sombra mais intensa */
-}
-
-/* Estilos aprimorados para os cards de películas no modal */
-#modalListaFilmes .card {
-    border: none; /* Remove a borda padrão */
-    border-radius: 10px; /* Bordas arredondadas */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
-    transition: transform 0.3s, box-shadow 0.3s; /* Transição suave para hover */
-    background-color: #f8f9fa; /* Fundo ligeiramente cinza */
-}
-
-#modalListaFilmes .card:hover {
-    transform: translateY(-5px); /* Elevação ao passar o mouse */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Sombra mais intensa */
-}
-
-/* Estilos aprimorados para os títulos dos cards */
-.card-title {
-    font-size: 1.25rem;
-    font-weight: bold;
-    color: #343a40; /* Cor do título */
-}
-
-.card-subtitle {
-    font-size: 1rem;
-    color: #6c757d; /* Cor do subtítulo */
-}
-
-/* Estilos aprimorados para os textos do card */
-.card-text {
-    font-size: 0.95rem;
-    color: #495057; /* Cor do texto */
-    margin-bottom: 0.5rem;
-}
-
-/* Estilos aprimorados para os botões */
-.card .btn {
-    width: 48%; /* Largura uniforme para os botões */
-    margin-bottom: 0.5rem; /* Espaçamento inferior */
-    font-size: 0.9rem; /* Tamanho de fonte reduzido */
-    padding: 0.4rem 0.8rem; /* Padding consistente */
-    border-radius: 5px; /* Bordas arredondadas */
-}
-
-/* Ajustes para o botão de ação dentro dos cards de películas */
-#listaFilmesCategoria .card .btn-info,
-#listaFilmesCategoria .card .btn-danger {
-    margin-top: 0.5rem; /* Espaçamento superior */
-}
-
-/* Estilos para organizar os botões em uma linha */
-.btn-group {
-    width: 100%;
-}
-
-.btn-group .btn {
-    flex: 1;
-    margin: 0 2px;
-}
-
-/* Ajustes para dispositivos móveis */
-@media (max-width: 576px) {
+    
+    /* Estilos para dispositivos com largura mínima de 768px (desktop) */
+    @media (min-width: 768px) {
+        .sidebar {
+            left: 0; /* Exibe a barra lateral permanentemente */
+        }
+        .header .toggle-menu {
+            display: none; /* Oculta o botão de menu no cabeçalho */
+        }
+        .main-content {
+            margin-left: 250px; /* Compensa a largura da barra lateral */
+        }
+        .overlay {
+            display: none; /* Oculta o overlay */
+        }
+        .header .company-info {
+            font-size: 14px;
+        }
+    }
+    
+    /* Ajustes de estilo para dispositivos móveis */
+    @media (max-width: 767.98px) {
+        .header {
+            padding: 0 12px;
+            height: 50px;
+        }
+        .header .logo {
+            font-size: 16px;
+        }
+        .header .logo img {
+            height: 32px;
+            width: 32px;
+            margin-right: 8px;
+        }
+        .menu-item {
+            padding: 8px 12px;
+            font-size: 14px;
+        }
+        .sidebar .user-info {
+            padding: 12px;
+        }
+        .sidebar .user-info .user-name {
+            font-size: 14px;
+        }
+        .sidebar .user-info img {
+            width: 60px;
+            height: 60px;
+        }
+        .main-content {
+            padding: 12px;
+        }
+        h2 {
+            font-size: 20px;
+        }
+        .btn {
+            font-size: 14px;
+            padding: 6px 12px;
+        }
+        label {
+            font-size: 14px;
+        }
+        input, select, textarea {
+            font-size: 14px;
+            padding: 6px 8px;
+        }
+    }
+    
+    /* Estilo para a paleta de cores */
+    .color-palette {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .color-swatch {
+        width: 32px;
+        height: 32px;
+        border-radius: 4px;
+        cursor: pointer;
+        border: 2px solid transparent;
+    }
+    .color-swatch.selected {
+        border-color: #000; /* Destaque para a cor selecionada */
+    }
+    
+    /* Estilos personalizados para botões */
+    .btn-primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+    .card {
+        border: none; /* Remove a borda padrão */
+        border-radius: 10px; /* Bordas arredondadas */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+        transition: transform 0.3s, box-shadow 0.3s; /* Transição suave para hover */
+        background-color: #ffffff; /* Fundo branco */
+    }
+    
+    .card:hover {
+        transform: translateY(-10px); /* Elevação ao passar o mouse */
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); /* Sombra mais intensa */
+    }
+    
+    /* Estilos aprimorados para os cards de películas no modal */
+    #modalListaFilmes .card {
+        border: none; /* Remove a borda padrão */
+        border-radius: 10px; /* Bordas arredondadas */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+        transition: transform 0.3s, box-shadow 0.3s; /* Transição suave para hover */
+        background-color: #f8f9fa; /* Fundo ligeiramente cinza */
+    }
+    
+    #modalListaFilmes .card:hover {
+        transform: translateY(-5px); /* Elevação ao passar o mouse */
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Sombra mais intensa */
+    }
+    
+    /* Estilos aprimorados para os títulos dos cards */
     .card-title {
-        font-size: 1.1rem;
+        font-size: 1.25rem;
+        font-weight: bold;
+        color: #343a40; /* Cor do título */
     }
-
+    
     .card-subtitle {
-        font-size: 0.9rem;
+        font-size: 1rem;
+        color: #6c757d; /* Cor do subtítulo */
     }
-
+    
+    /* Estilos aprimorados para os textos do card */
     .card-text {
-        font-size: 0.85rem;
+        font-size: 0.95rem;
+        color: #495057; /* Cor do texto */
+        margin-bottom: 0.5rem;
     }
-
+    
+    /* Estilos aprimorados para os botões */
     .card .btn {
-        width: 100%;
-        margin-bottom: 0.3rem;
+        width: 48%; /* Largura uniforme para os botões */
+        margin-bottom: 0.5rem; /* Espaçamento inferior */
+        font-size: 0.9rem; /* Tamanho de fonte reduzido */
+        padding: 0.4rem 0.8rem; /* Padding consistente */
+        border-radius: 5px; /* Bordas arredondadas */
     }
-
+    
+    /* Ajustes para o botão de ação dentro dos cards de películas */
     #listaFilmesCategoria .card .btn-info,
     #listaFilmesCategoria .card .btn-danger {
-        margin-top: 0.3rem;
+        margin-top: 0.5rem; /* Espaçamento superior */
     }
-}
+    
+    /* Estilos para organizar os botões em uma linha */
+    .btn-group {
+        width: 100%;
+    }
+    
+    .btn-group .btn {
+        flex: 1;
+        margin: 0 2px;
+    }
+    
+    /* Ajustes para dispositivos móveis */
+    @media (max-width: 576px) {
+        .card-title {
+            font-size: 1.1rem;
+        }
+    
+        .card-subtitle {
+            font-size: 0.9rem;
+        }
+    
+        .card-text {
+            font-size: 0.85rem;
+        }
+    
+        .card .btn {
+            width: 100%;
+            margin-bottom: 0.3rem;
+        }
+    
+        #listaFilmesCategoria .card .btn-info,
+        #listaFilmesCategoria .card .btn-danger {
+            margin-top: 0.3rem;
+        }
+    }
