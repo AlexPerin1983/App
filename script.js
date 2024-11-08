@@ -3,58 +3,69 @@
 // Configuração do IndexedDB usando Dexie.js
 const db = new Dexie('CarFilmProDB');
 
-// Definição do schema do banco de dados
+// Definição do schema do banco de dados na versão 5
 db.version(5).stores({
     empresa: 'id,nome,cnpj,cpf,whatsapp,email,cep,cidade,bairro,rua,numero,corTema,logo',
     clientes: '++id,nome,cpfCnpj,telefone,email,empresa,endereco,numero,complemento,bairro,cidade,estado,cep',
     filmes: '++id,nome,descricao,marca,precoFabricante,precoMaoObra,quantidadeEstoque,categoria',
     servicos: '++id,tipo,nome,descricao,preco,observacoes,categoria',
-    agendamentos: '++id,clienteId,servicoId,data,hora,observacoes,status'
+    agendamentos: '++id,clienteId,servicoId,data,hora,observacoes,status',
+    orcamentos: '++id,clienteId,items,data,total,observacoes',
+    pagamentos: '++id,tipo,detalhes,observacoes' // Definindo a store de pagamentos
 });
 
-// Em caso de erro na abertura do banco
-db.open().catch(error => {
-    console.error("Erro ao abrir o banco de dados:", error);
-    if (error.name === 'VersionError') {
-        Dexie.delete('CarFilmProDB').then(() => {
-            window.location.reload();
-        });
-    }
+// Atualização do banco de dados para a versão 6 que inclui o campo 'horarios' na store 'empresa'
+db.version(6).stores({
+    empresa: 'id,nome,cnpj,cpf,whatsapp,email,cep,cidade,bairro,rua,numero,corTema,logo,horarios'
 });
 
-// Função para mostrar a seção selecionada
+// Inicializa a store pagamentos
+db.pagamentos = db.table('pagamentos');
+
+// Função para exibir mensagens de feedback (Toast)
+function mostrarToast(titulo, mensagem, tipo = 'info') {
+    const toastElement = $('#feedbackToast');
+    toastElement.find('#toastTitle').text(titulo);
+    toastElement.find('#toastBody').text(mensagem);
+    toastElement.removeClass('bg-info bg-success bg-danger bg-warning');
+    toastElement.addClass(`bg-${tipo}`);
+    toastElement.toast('show');
+}
+
+// Função para navegar entre as seções do sistema
 function showSection(sectionId) {
     console.log('Mostrando seção:', sectionId);
-    
-    // Remove a classe 'active' de todas as seções
+
+    // Ocultar todas as seções
     document.querySelectorAll('.content-section').forEach(section => {
         section.classList.remove('active');
         section.style.display = 'none';
     });
-    
-    // Adiciona a classe 'active' à seção selecionada
+
+    // Exibir a seção selecionada
     const selectedSection = document.getElementById(sectionId);
     if (selectedSection) {
         selectedSection.classList.add('active');
         selectedSection.style.display = 'block';
-        
-        // Dispara evento de seção mostrada
+
+        // Disparar evento personalizado para que o módulo correspondente atualize seu conteúdo
         const event = new CustomEvent('section:shown', { detail: { sectionId: sectionId } });
         document.dispatchEvent(event);
     } else {
         console.error(`Seção com ID '${sectionId}' não encontrada.`);
+        mostrarToast('Aviso', `A seção "${sectionId}" não foi encontrada.`, 'warning');
     }
 
-    // Atualiza o menu lateral
+    // Atualizar o menu lateral
     document.querySelectorAll('.menu-item').forEach(item => {
-        if (item.getAttribute('onclick').includes(sectionId)) {
+        if (item.getAttribute('data-section') === sectionId) {
             item.classList.add('active');
         } else {
             item.classList.remove('active');
         }
     });
 
-    // Fecha o menu lateral em dispositivos móveis
+    // Fechar o menu lateral em dispositivos móveis
     if (window.innerWidth < 768) {
         toggleSidebar();
     }
@@ -64,7 +75,7 @@ function showSection(sectionId) {
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
-    
+
     sidebar.classList.toggle('active');
     overlay.classList.toggle('active');
 }
@@ -102,14 +113,61 @@ function aplicarCorTema(cor) {
     document.documentElement.style.setProperty('--primary-color', cor);
 }
 
-// Função para exibir mensagens de feedback (Toast)
-function mostrarToast(titulo, mensagem, tipo = 'info') {
-    const toast = $('#feedbackToast');
-    toast.find('#toastTitle').text(titulo);
-    toast.find('#toastBody').text(mensagem);
-    toast.removeClass('bg-info bg-success bg-danger bg-warning');
-    toast.addClass(`bg-${tipo}`);
-    toast.toast('show');
-}
-
-// Se precisar adicionar mais funções globais, faça aqui
+// Escutar eventos para inicializar módulos
+document.addEventListener('section:shown', (e) => {
+    const sectionId = e.detail.sectionId;
+    switch (sectionId) {
+        case 'inicio':
+            if (InicioModule && typeof InicioModule.init === 'function') {
+                InicioModule.init();
+            }
+            break;
+        case 'clientes':
+            if (ClientesModule && typeof ClientesModule.init === 'function') {
+                ClientesModule.init();
+            }
+            break;
+        case 'servicos':
+            if (ServicosModule && typeof ServicosModule.init === 'function') {
+                ServicosModule.init();
+            }
+            break;
+        case 'peliculas':
+            if (PeliculasModule && typeof PeliculasModule.init === 'function') {
+                PeliculasModule.init();
+            }
+            break;
+        case 'agendamentos':
+            if (AgendamentosModule && typeof AgendamentosModule.init === 'function') {
+                AgendamentosModule.init();
+            }
+            break;
+        case 'orcamentos':
+            if (OrcamentosModule && typeof OrcamentosModule.init === 'function') {
+                OrcamentosModule.init();
+            }
+            break;
+        case 'pagamentos':
+            if (PagamentosModule && typeof PagamentosModule.init === 'function') {
+                PagamentosModule.init();
+            }
+            break;
+        case 'fornecedores':
+            if (FornecedoresModule && typeof FornecedoresModule.init === 'function') {
+                FornecedoresModule.init();
+            }
+            break;
+        case 'estoque':
+            if (EstoqueModule && typeof EstoqueModule.init === 'function') {
+                EstoqueModule.init();
+            }
+            break;
+        case 'empresa':
+            if (EmpresaModule && typeof EmpresaModule.init === 'function') {
+                EmpresaModule.init();
+            }
+            break;
+        default:
+            console.warn(`Módulo para a seção "${sectionId}" não está registrado.`);
+    }
+});
