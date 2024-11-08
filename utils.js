@@ -31,3 +31,8 @@ function dispararEvento(nome, detalhes = {}) {
     const evento = new CustomEvent(nome, { detail: detalhes });
     document.dispatchEvent(evento);
 }
+
+// Converte string formatada para número
+function parsearMoeda(valor) {
+    return parseFloat(valor.replace(/[^0-9,.-]+/g, "").replace(',', '.')) || 0;
+}
